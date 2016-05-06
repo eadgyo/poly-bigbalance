@@ -1,6 +1,5 @@
 package org.polytech.polybigbalance;
 
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -10,7 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class HelloWorld
+public class PolyBigBalance
 {
 
     // We need to strongly reference callback instances.
@@ -22,13 +21,11 @@ public class HelloWorld
 
     public static void main(String[] args)
     {
-        new HelloWorld().run();
+        new PolyBigBalance().run();
     }
 
     public void run()
     {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
         try
         {
             init();
@@ -61,11 +58,8 @@ public class HelloWorld
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
-        int WIDTH = 300;
-        int HEIGHT = 300;
-
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, Constants.WINDOW_TITLE, NULL, NULL);
         if(window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -83,7 +77,8 @@ public class HelloWorld
         // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Center our window
-        glfwSetWindowPos(window, (vidmode.width() - WIDTH) / 2, (vidmode.height() - HEIGHT) / 2);
+        glfwSetWindowPos(window,
+                (vidmode.width() - Constants.WINDOW_WIDTH) / 2, (vidmode.height() - Constants.WINDOW_HEIGHT) / 2);
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
@@ -104,13 +99,15 @@ public class HelloWorld
         GL.createCapabilities();
 
         // Set the clear color
-        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while(glfwWindowShouldClose(window) == GLFW_FALSE)
         {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            glFlush();
 
             glfwSwapBuffers(window); // swap the color buffers
 

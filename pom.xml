@@ -83,7 +83,7 @@
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>org.polytech.polybigbalance.HelloWorld</argument>
+                        <argument>org.polytech.polybigbalance.PolyBigBalance</argument>
                     </arguments>
                 </configuration>
             </plugin>
