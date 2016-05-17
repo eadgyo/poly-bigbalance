@@ -8,9 +8,11 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.polytech.polybigbalance.graphics.Rectangle;
+import org.polytech.polybigbalance.graphics.Text2D;
 import org.polytech.polybigbalance.graphics.Vec2;
 
 import java.awt.*;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import static com.hackoeur.jglm.Matrices.lookAt;
@@ -136,9 +138,20 @@ public class PolyBigBalance
 
         Rectangle r1, r2;
         r1 = new Rectangle(new Vec2(100.0f, 100.0f), new Vec2(200.0f, 100.0f), Color.GRAY,
-                Constants.SHADERS_PATH + "VertexShader.glsl", Constants.SHADERS_PATH + "FragmentShader.glsl");
+                Constants.SHADERS_PATH + "ColorVertShader.glsl", Constants.SHADERS_PATH + "ColorFragShader.glsl");
         r2 = new Rectangle(new Vec2(100.0f, 300.0f), new Vec2(200.0f, 100.0f), Color.GRAY,
-                Constants.SHADERS_PATH + "VertexShader.glsl", Constants.SHADERS_PATH + "FragmentShader.glsl");
+                Constants.SHADERS_PATH + "ColorVertShader.glsl", Constants.SHADERS_PATH + "ColorFragShader.glsl");
+
+        Text2D text = null;
+        try
+        {
+            text = new Text2D("src/main/resources/font.bmp", "Hello, world!", new Vec2(50.0f, 50.0f), 32,
+                    Constants.SHADERS_PATH + "TextVertShader.glsl", Constants.SHADERS_PATH + "TextFragShader.glsl");
+        }
+        catch(IOException e)
+        {
+            System.err.println(e.getMessage());
+        }
 
 
         // Set the clear color
@@ -159,6 +172,10 @@ public class PolyBigBalance
 
             r1.display(mvpBuffer);
             r2.display(mvpBuffer);
+            if(text != null)
+            {
+                text.display(mvpBuffer);
+            }
 
             glfwSwapBuffers(window); // swap the color buffers
 
@@ -169,5 +186,9 @@ public class PolyBigBalance
 
         r1.delete();
         r2.delete();
+        if(text != null)
+        {
+            text.delete();
+        }
     }
 }

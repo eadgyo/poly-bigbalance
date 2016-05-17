@@ -3,15 +3,12 @@ package org.polytech.polybigbalance.graphics;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 /**
  * Defines an object that can be displayed
@@ -60,23 +57,14 @@ public abstract class Displayable
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.indicesBuffer, GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        // Creating the VAO
-        if(glIsVertexArray(this.vao))
-        {
-            glDeleteVertexArrays(this.vao);
-        }
-
-        this.vao = glGenVertexArrays();
-        glBindVertexArray(this.vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this.vboVertices);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, Float.BYTES * 6, 0);
-
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, false, Float.BYTES * 6, Float.BYTES * 3);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
+        this.createVao();
     }
+
+    /**
+     * Creates the VAO
+     */
+    protected abstract void createVao();
+
 
     /**
      * Displays the object
@@ -86,13 +74,13 @@ public abstract class Displayable
     {
         glUseProgram(this.shader.getProgramId());
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.vboIndices);
-        glBindVertexArray(this.vao);
-        glUniformMatrix4fv(glGetUniformLocation(this.shader.getProgramId(), "MVP"), false, mvpBuffer);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.vboIndices);
+                glBindVertexArray(this.vao);
+                    glUniformMatrix4fv(glGetUniformLocation(this.shader.getProgramId(), "MVP"), false, mvpBuffer);
 
-        glDrawElements(GL_TRIANGLES, this.indicesBuffer);
-        glBindVertexArray(0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                    glDrawElements(GL_TRIANGLES, this.indicesBuffer);
+                glBindVertexArray(0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
         glUseProgram(0);
     }

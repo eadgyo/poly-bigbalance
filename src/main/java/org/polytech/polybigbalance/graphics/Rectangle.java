@@ -4,6 +4,14 @@ import org.lwjgl.BufferUtils;
 
 import java.awt.*;
 
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+
 /**
  * Allows to draw a 2D rectangle
  */
@@ -63,5 +71,25 @@ public class Rectangle extends Displayable
         this.indicesBuffer.put(indices).flip();
 
         super.init();
+    }
+
+    @Override
+    protected void createVao()
+    {
+        if(glIsVertexArray(this.vao))
+        {
+            glDeleteVertexArrays(this.vao);
+        }
+
+        this.vao = glGenVertexArrays();
+        glBindVertexArray(this.vao);
+            glBindBuffer(GL_ARRAY_BUFFER, this.vboVertices);
+                glEnableVertexAttribArray(0);
+                glVertexAttribPointer(0, 3, GL_FLOAT, false, Float.BYTES * 6, 0);
+
+                glEnableVertexAttribArray(1);
+                glVertexAttribPointer(1, 3, GL_FLOAT, false, Float.BYTES * 6, Float.BYTES * 3);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
     }
 }
