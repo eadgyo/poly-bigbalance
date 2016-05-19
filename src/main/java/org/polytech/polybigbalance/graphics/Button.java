@@ -9,10 +9,10 @@ public class Button
     private Rectangle rectangle;
     private Text2D text;
 
-    public Button(Vec2 position, String text, String fontPath, Shader colorShader, Shader textShader) throws IOException
+    public Button(Vec2 position, String text, int font, Shader colorShader, Shader textShader)
     {
         Vec2 textPosition = new Vec2(position.getX() + 5.0f, position.getY() + 5.0f);
-        this.text = new Text2D(fontPath, text, textPosition, 24, textShader);
+        this.text = new Text2D(font, text, textPosition, 24, textShader);
 
         Vec2 textSize = this.text.getPixelSize();
         Vec2 rectangleSize = new Vec2(textSize.getX() + 10.0f, textSize.getY() + 10.0f);

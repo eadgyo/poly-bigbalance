@@ -28,26 +28,26 @@ public class Text2D extends Displayable
     private int samplerId;
 
     /**
-     * @param fontPath path to the font as a BMP file
+     * @param font ID of the font
      * @param text text to display
      * @param pos top left corner of the text's first letter
      * @param size size of the text
      * @param shader shader to use
      * @throws IOException
      */
-    public Text2D(String fontPath, String text, Vec2 pos, int size, Shader shader) throws IOException
+    public Text2D(int font, String text, Vec2 pos, int size, Shader shader)
     {
         super(shader);
 
         this.text = text;
         this.pos = pos;
         this.size = size;
-        this.textureId = Texture.loadFromFile(fontPath);
+        this.textureId = font;
         this.init();
     }
 
     /**
-     * @param fontPath path to the font as a BMP file
+     * @param font ID of the texture
      * @param text text to display
      * @param pos top left corner of the text's first letter
      * @param size size of the text
@@ -55,30 +55,28 @@ public class Text2D extends Displayable
      * @param pathFragmentShader path to the file containing the fragment shader's code
      * @throws IOException
      */
-    public Text2D(String fontPath, String text, Vec2 pos, int size, String pathVertexShader, String pathFragmentShader)
-            throws IOException
+    public Text2D(int font, String text, Vec2 pos, int size, String pathVertexShader, String pathFragmentShader)
     {
         super(pathVertexShader, pathFragmentShader);
 
         this.text = text;
         this.pos = pos;
         this.size = size;
-        this.textureId = Texture.loadFromFile(fontPath);
+        this.textureId = font;
         this.init();
     }
 
     /**
-     * @param fontPath path to the font as a BMP file
+     * @param font ID of the font
      * @param text text to display
      * @param pos top left corner of the text's first letter
      * @param pathVertexShader path to the file containing the vertex shader's code
      * @param pathFragmentShader path to the file containing the fragment shader's code
      * @throws IOException
      */
-    public Text2D(String fontPath, String text, Vec2 pos, String pathVertexShader, String pathFragmentShader)
-            throws IOException
+    public Text2D(int font, String text, Vec2 pos, String pathVertexShader, String pathFragmentShader)
     {
-        this(fontPath, text, pos, 16, pathVertexShader, pathFragmentShader);
+        this(font, text, pos, 16, pathVertexShader, pathFragmentShader);
     }
 
     @Override

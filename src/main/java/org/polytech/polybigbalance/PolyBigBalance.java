@@ -9,6 +9,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.polytech.polybigbalance.graphics.Button;
 import org.polytech.polybigbalance.graphics.Shader;
+import org.polytech.polybigbalance.graphics.Texture;
 import org.polytech.polybigbalance.graphics.Vec2;
 
 import java.io.IOException;
@@ -143,16 +144,19 @@ public class PolyBigBalance
         colorShader.load();
         textShader.load();
 
-        Button button = null;
+        // Loading the textures
+        int fontTexture = -1;
         try
         {
-            button = new Button(new Vec2(100.0f, 100.0f), "Button", "src/main/resources/font.bmp", colorShader,
-                    textShader);
+            fontTexture = Texture.loadFromFile(Constants.RESOURCES_PATH + "font.bmp");
         }
         catch(IOException e)
         {
-            e.printStackTrace();
+            System.err.println("Error while loading file '" + Constants.RESOURCES_PATH + "font.bmp' : " + e.getMessage());
+            return;
         }
+
+        Button button = new Button(new Vec2(100.0f, 100.0f), "Button", fontTexture, colorShader, textShader);
 
 
         // Set the clear color
@@ -171,10 +175,7 @@ public class PolyBigBalance
             FloatBuffer mvpBuffer = BufferUtils.createFloatBuffer(mvp.getNumColumns() * mvp.getNumRows());
             mvpBuffer.put(mvp.getBuffer()).flip();
 
-            if(button != null)
-            {
-                button.display(mvpBuffer);
-            }
+            button.display(mvpBuffer);
 
             glfwSwapBuffers(window); // swap the color buffers
 
@@ -183,9 +184,6 @@ public class PolyBigBalance
             glfwPollEvents();
         }
 
-        if(button != null)
-        {
-            button.delete();
-        }
+        button.delete();
     }
 }
