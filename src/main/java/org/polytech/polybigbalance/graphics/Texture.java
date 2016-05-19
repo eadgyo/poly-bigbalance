@@ -23,11 +23,19 @@ public abstract class Texture
      * @return ID of the created texture
      * @throws IOException
      */
-    public static int loadFromFile(String imagePath) throws IOException
+    public static int loadFromFile(String imagePath) throws ReadFileException
     {
         final short BYTES_PER_PIXEL = 4;
 
-        BufferedImage img = ImageIO.read(new File(imagePath));
+        BufferedImage img = null;
+        try
+        {
+            img = ImageIO.read(new File(imagePath));
+        }
+        catch(IOException e)
+        {
+            throw new ReadFileException(e, imagePath);
+        }
 
         // Loading all the pixels
         int[] pixels = new int[img.getWidth() * img.getHeight()];

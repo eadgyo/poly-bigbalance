@@ -7,12 +7,8 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.polytech.polybigbalance.graphics.Button;
-import org.polytech.polybigbalance.graphics.Shader;
-import org.polytech.polybigbalance.graphics.Texture;
-import org.polytech.polybigbalance.graphics.Vec2;
+import org.polytech.polybigbalance.graphics.*;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import static com.hackoeur.jglm.Matrices.lookAt;
@@ -145,14 +141,14 @@ public class PolyBigBalance
         textShader.load();
 
         // Loading the textures
-        int fontTexture = -1;
+        int fontTexture;
         try
         {
             fontTexture = Texture.loadFromFile(Constants.RESOURCES_PATH + "font.bmp");
         }
-        catch(IOException e)
+        catch(ReadFileException e)
         {
-            System.err.println("Error while loading file '" + Constants.RESOURCES_PATH + "font.bmp' : " + e.getMessage());
+            System.err.println("Error while loading file '" + e.getFileName() + "': " + e.getMessage());
             return;
         }
 
