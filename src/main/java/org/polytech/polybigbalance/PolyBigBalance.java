@@ -7,12 +7,10 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.polytech.polybigbalance.graphics.Rectangle;
+import org.polytech.polybigbalance.graphics.Button;
 import org.polytech.polybigbalance.graphics.Shader;
-import org.polytech.polybigbalance.graphics.Text2D;
 import org.polytech.polybigbalance.graphics.Vec2;
 
-import java.awt.*;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
@@ -145,18 +143,15 @@ public class PolyBigBalance
         colorShader.load();
         textShader.load();
 
-        Rectangle r1, r2;
-        r1 = new Rectangle(new Vec2(100.0f, 100.0f), new Vec2(200.0f, 100.0f), Color.GRAY, colorShader);
-        r2 = new Rectangle(new Vec2(100.0f, 300.0f), new Vec2(200.0f, 100.0f), Color.RED, colorShader);
-
-        Text2D text = null;
+        Button button = null;
         try
         {
-            text = new Text2D("src/main/resources/font.bmp", "Hello, world!", new Vec2(50.0f, 50.0f), 32, textShader);
+            button = new Button(new Vec2(100.0f, 100.0f), "Button", "src/main/resources/font.bmp", colorShader,
+                    textShader);
         }
         catch(IOException e)
         {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
 
 
@@ -176,11 +171,9 @@ public class PolyBigBalance
             FloatBuffer mvpBuffer = BufferUtils.createFloatBuffer(mvp.getNumColumns() * mvp.getNumRows());
             mvpBuffer.put(mvp.getBuffer()).flip();
 
-            r1.display(mvpBuffer);
-            r2.display(mvpBuffer);
-            if(text != null)
+            if(button != null)
             {
-                text.display(mvpBuffer);
+                button.display(mvpBuffer);
             }
 
             glfwSwapBuffers(window); // swap the color buffers
@@ -190,11 +183,9 @@ public class PolyBigBalance
             glfwPollEvents();
         }
 
-        r1.delete();
-        r2.delete();
-        if(text != null)
+        if(button != null)
         {
-            text.delete();
+            button.delete();
         }
     }
 }

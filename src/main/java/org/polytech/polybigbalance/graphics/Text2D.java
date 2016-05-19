@@ -157,4 +157,9 @@ public class Text2D extends Displayable
             glDisable(GL_BLEND);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+
+    public Vec2 getPixelSize()
+    {
+        return new Vec2(this.size * this.text.length(), this.size);
+    }
 }
