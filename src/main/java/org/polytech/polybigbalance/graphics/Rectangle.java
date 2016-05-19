@@ -24,6 +24,22 @@ public class Rectangle extends Displayable
      * @param position position of the top left corner
      * @param dimension width and the height of the rectangle
      * @param color color that will fill the rectangle
+     * @param shader shader to use
+     */
+    public Rectangle(Vec2 position, Vec2 dimension, Color color, Shader shader)
+    {
+        super(shader);
+
+        this.pos = position;
+        this.dim = dimension;
+        this.color = color;
+        this.init();
+    }
+
+    /**
+     * @param position position of the top left corner
+     * @param dimension width and the height of the rectangle
+     * @param color color that will fill the rectangle
      * @param pathVertexShader path to the file containing the vertex shader's code
      * @param pathFragmentShader path to the file containing the fragment shader's code
      */

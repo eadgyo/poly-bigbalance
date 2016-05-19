@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.polytech.polybigbalance.graphics.Rectangle;
+import org.polytech.polybigbalance.graphics.Shader;
 import org.polytech.polybigbalance.graphics.Text2D;
 import org.polytech.polybigbalance.graphics.Vec2;
 
@@ -136,17 +137,22 @@ public class PolyBigBalance
         Mat4 mvp = projection.multiply(view).multiply(model);
 
 
+        // Loading the shaders
+        Shader colorShader = new Shader(Constants.SHADERS_PATH + "ColorVertShader.glsl", Constants.SHADERS_PATH +
+                                                                                         "ColorFragShader.glsl");
+        Shader textShader = new Shader(Constants.SHADERS_PATH + "TextVertShader.glsl", Constants.SHADERS_PATH +
+                                                                                       "TextFragShader.glsl");
+        colorShader.load();
+        textShader.load();
+
         Rectangle r1, r2;
-        r1 = new Rectangle(new Vec2(100.0f, 100.0f), new Vec2(200.0f, 100.0f), Color.GRAY,
-                Constants.SHADERS_PATH + "ColorVertShader.glsl", Constants.SHADERS_PATH + "ColorFragShader.glsl");
-        r2 = new Rectangle(new Vec2(100.0f, 300.0f), new Vec2(200.0f, 100.0f), Color.GRAY,
-                Constants.SHADERS_PATH + "ColorVertShader.glsl", Constants.SHADERS_PATH + "ColorFragShader.glsl");
+        r1 = new Rectangle(new Vec2(100.0f, 100.0f), new Vec2(200.0f, 100.0f), Color.GRAY, colorShader);
+        r2 = new Rectangle(new Vec2(100.0f, 300.0f), new Vec2(200.0f, 100.0f), Color.RED, colorShader);
 
         Text2D text = null;
         try
         {
-            text = new Text2D("src/main/resources/font.bmp", "Hello, world!", new Vec2(50.0f, 50.0f), 32,
-                    Constants.SHADERS_PATH + "TextVertShader.glsl", Constants.SHADERS_PATH + "TextFragShader.glsl");
+            text = new Text2D("src/main/resources/font.bmp", "Hello, world!", new Vec2(50.0f, 50.0f), 32, textShader);
         }
         catch(IOException e)
         {

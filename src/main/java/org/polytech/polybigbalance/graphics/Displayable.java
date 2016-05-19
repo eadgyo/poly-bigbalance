@@ -21,6 +21,14 @@ public abstract class Displayable
     protected ShortBuffer indicesBuffer;
 
     /**
+     * @param shader shader to use
+     */
+    public Displayable(Shader shader)
+    {
+        this.shader = shader;
+    }
+
+    /**
      * @param pathVertexShader path to the file containing the vertex shader's code
      * @param pathFragmentShader path to the file containing the fragment shader's code
      */

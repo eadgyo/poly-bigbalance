@@ -32,6 +32,25 @@ public class Text2D extends Displayable
      * @param text text to display
      * @param pos top left corner of the text's first letter
      * @param size size of the text
+     * @param shader shader to use
+     * @throws IOException
+     */
+    public Text2D(String fontPath, String text, Vec2 pos, int size, Shader shader) throws IOException
+    {
+        super(shader);
+
+        this.text = text;
+        this.pos = pos;
+        this.size = size;
+        this.textureId = Texture.loadFromFile(fontPath);
+        this.init();
+    }
+
+    /**
+     * @param fontPath path to the font as a BMP file
+     * @param text text to display
+     * @param pos top left corner of the text's first letter
+     * @param size size of the text
      * @param pathVertexShader path to the file containing the vertex shader's code
      * @param pathFragmentShader path to the file containing the fragment shader's code
      * @throws IOException
