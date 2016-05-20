@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
  */
 public class Button
 {
-    private Rectangle rectangle;
+    private GLRectangle rectangle;
     private Text2D text;
 
     /**
@@ -25,7 +25,7 @@ public class Button
 
         Vec2 textSize = this.text.getPixelSize();
         Vec2 rectangleSize = new Vec2(textSize.getX() + 10.0f, textSize.getY() + 10.0f);
-        this.rectangle = new Rectangle(position, rectangleSize, Color.GRAY, rectangleShader);
+        this.rectangle = new GLRectangle(position, rectangleSize, Color.GRAY, rectangleShader);
     }
 
     /**

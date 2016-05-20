@@ -1,23 +1,37 @@
 package org.polytech.polybigbalance;
 
-import com.hackoeur.jglm.Mat4;
-import com.hackoeur.jglm.Vec3;
-import org.lwjgl.BufferUtils;
+
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
+import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import org.polytech.polybigbalance.graphics.*;
-
-import java.nio.FloatBuffer;
-
-import static com.hackoeur.jglm.Matrices.lookAt;
-import static com.hackoeur.jglm.Matrices.ortho;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * Main class
@@ -49,13 +63,13 @@ public class PolyBigBalance
 
             // Release window and window callbacks
             glfwDestroyWindow(window);
-            keyCallback.release();
+            //keyCallback.release();
         }
         finally
         {
             // Terminate GLFW and release the GLFWErrorCallback
             glfwTerminate();
-            errorCallback.release();
+            //errorCallback.release();
         }
     }
 
@@ -69,6 +83,7 @@ public class PolyBigBalance
         glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
+        
         if(glfwInit() != GLFW_TRUE)
             throw new IllegalStateException("Unable to initialize GLFW");
 
@@ -111,10 +126,15 @@ public class PolyBigBalance
         glfwShowWindow(window);
     }
 
+    private void loop()
+    {
+	
+    }
+    
     /**
      * Game loop
      */
-    private void loop()
+    private void test()
     {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -122,14 +142,15 @@ public class PolyBigBalance
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
-
+        
+        /*
         int vertexArrayId = glGenVertexArrays();
         glBindVertexArray(vertexArrayId);
 
-        Mat4 projection = ortho(0.0f, (float)Constants.WINDOW_WIDTH, (float)Constants.WINDOW_HEIGHT, 0.0f, 1.0f, 0.0f);
-        Mat4 view = lookAt(new Vec3(0, 0, 1), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
-        Mat4 model = new Mat4(1.0f);
-        Mat4 mvp = projection.multiply(view).multiply(model);
+        Matrix3 projection = ortho(0.0f, (float)Constants.WINDOW_WIDTH, (float)Constants.WINDOW_HEIGHT, 0.0f, 1.0f, 0.0f);
+        Matrix3 view = new Matrix3(0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
+        Matrix3 model = new Mat4(1.0f);
+        Matrix3 mvp = projection.multiply(view).multiply(model);
 
 
         // Loading the shaders
@@ -180,6 +201,6 @@ public class PolyBigBalance
             glfwPollEvents();
         }
 
-        button.delete();
+        button.delete();*/
     }
 }
