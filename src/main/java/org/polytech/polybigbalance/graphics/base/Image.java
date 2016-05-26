@@ -1,5 +1,6 @@
 package org.polytech.polybigbalance.graphics.base;
 
+import org.polytech.polybigbalance.graphics.Graphics;
 import org.polytech.polybigbalance.graphics.Surface;
 import org.polytech.polybigbalance.graphics.myColor;
 
@@ -16,6 +17,8 @@ public class Image
     protected Rectangle rec;
     protected int startFrame;
     protected int endFrame;
+    protected float frameDuration;
+    protected float time;
     
     public Image()
     {
@@ -26,10 +29,16 @@ public class Image
 	spriteData = new SpriteData();
 	color = new myColor(1.0f, 1.0f, 1.0f, 1.0f);
 	colorFilter = new myColor();
+	frameDuration = 0;
+	time = 0;
+	
+	rec = new Rectangle();
     }
     
     public Image(Image image)
     {
+	rec = new Rectangle();
+	
 	set(image);
     }
     
@@ -40,19 +49,16 @@ public class Image
     
     public Image(Surface surface, int x, int y, int width, int height)
     {
-	startFrame = 0;
-	endFrame = 0;
 	spriteData = new SpriteData();
 	color = new myColor(1.0f, 1.0f, 1.0f, 1.0f);
 	colorFilter = new myColor();
+	rec = new Rectangle();
 	
 	initialize(surface, x, y, width, height);
     }
     
     public Image(Surface surface, int width, int height, int currentFrame)
     {
-	startFrame = 0;
-	endFrame = 0;
 	spriteData = new SpriteData();
 	color = new myColor(1.0f, 1.0f, 1.0f, 1.0f);
 	colorFilter = new myColor();
@@ -187,6 +193,26 @@ public class Image
 	return spriteData;
     }
 
+    public float getTime()
+    {
+	return time;
+    }
+    
+    public float getFrameDuration()
+    {
+	return frameDuration;
+    }
+    
+    public int getStartFrame()
+    {
+	return startFrame;
+    }
+    
+    public int getEndFrame()
+    {
+	return endFrame;
+    }
+    
 ///////////////////
 //	Set      //
 ///////////////////
@@ -199,6 +225,18 @@ public class Image
         rec.set(image.getRectangle());
         setColorFilter(image.getColorFilter());
         setColor(image.getColor());
+        setFrames(image.getStartFrame(), image.getEndFrame());
+        setTime(image.getTime());
+    }
+    
+    public void setFrameDuration(float dt)
+    {
+	frameDuration = dt;
+    }
+    
+    public void setTime(float time)
+    {
+	this.time = time;
     }
     
     public void setFrames(int start, int end)
@@ -356,21 +394,39 @@ public class Image
 	spriteData.surface = null;
     }
     
+    public void nextFrame()
+    {
+	currentFrame = ((currentFrame + 1) > endFrame)? startFrame + (currentFrame + 1)%endFrame : currentFrame + 1;
+	setRect();
+    }
+    
+    public void update(float dt)
+    {
+	time += dt;
+	while (time > frameDuration)
+	{
+	    time -= frameDuration;
+	    currentFrame++;
+	}
+	currentFrame = ((currentFrame) > endFrame)? startFrame + (currentFrame)%endFrame : currentFrame;
+	setRect();
+    }
+    
     public void setRect()
     {
 	spriteData.rect.set((currentFrame % cols)*spriteData.rect.w,
 		(currentFrame / cols)*spriteData.rect.h);
     }
     
-    public void setFullRect()
+    public void setRect(int width, int height)
     {
 	spriteData.rect.set((currentFrame % cols)*spriteData.rect.w,
 		(currentFrame / cols)*spriteData.rect.h,
-		spriteData.rect.w,
-		spriteData.rect.h);
+		width,
+		height);
     }
     
-    public void setFullRect(int x, int y, int width, int height)
+    public void setRect(int x, int y, int width, int height)
     {
 	spriteData.rect.set(x,
 		y,
@@ -389,7 +445,11 @@ public class Image
 	this.currentFrame = currentFrame;
 	this.spriteData.surface = surface;
 	this.rec.set(new Vector2D(width*0.5f, height*0.5f), new Vector2D(width, height), 0);
-	setFullRect();
+
+	setRect(width, height);
+	
+	startFrame = 0;
+	endFrame = cols * surface.h / height;
     }
     
     public void initialize(Surface surface, int x, int y, int width, int height)
@@ -398,7 +458,18 @@ public class Image
 	this.currentFrame = (x/width) + (y/height)*(cols);
 	this.spriteData.surface = surface;
 	this.rec.set(new Vector2D(width*0.5f, height*0.5f), new Vector2D(width, height), 0);
-	setFullRect(x, y, width, height);
+	setRect(x, y, width, height);
+	
+	startFrame = 0;
+	endFrame = cols * surface.h / height;
+    }
+    
+    public void draw(Graphics g)
+    {
+	if (spriteData.surface == null || color.a < 0.01f)
+	    return;
+	
+	g.render(this);
     }
     
     ///////////////////////////////
