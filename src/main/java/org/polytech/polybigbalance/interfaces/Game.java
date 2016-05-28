@@ -18,10 +18,12 @@ import java.util.Map;
 public class Game extends Interface
 {
     private Map<String, Layer> layers;
+    private boolean drawing;
 
     public Game(Level level)
     {
         this.layers = new HashMap<>();
+        this.drawing = false;
 
         level.initialize();
         this.layers.put("level", level);
@@ -43,9 +45,18 @@ public class Game extends Interface
     @Override
     public InterfaceEvent handleEvent(Input input)
     {
-        // TODO make the player draw a rectangle
-        ((Score) this.layers.get("score")).setScore(1000);
-        return null;
+        if(input.getMouseDown(Input.MOUSE_BUTTON_1))
+        {
+            this.drawing = true;
+            ((Level) this.layers.get("level")).drawRectangle(input.getMousePosV());
+        }
+        else if(this.drawing)
+        {
+            this.drawing = false;
+            ((Level) this.layers.get("level")).endDrawRectangle();
+        }
+
+        return InterfaceEvent.OK;
     }
 
     @Override

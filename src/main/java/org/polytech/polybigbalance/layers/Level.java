@@ -21,6 +21,9 @@ public abstract class Level extends Layer
     protected Map<Rectangle, RigidBody> rectangles;
     private Rectangle groundForm;
 
+    private Rectangle drawingRectangle;
+    private Vector2D drawingFirstPoint;
+
     protected Engine physEngine;
     protected Gravity gravity;
 
@@ -41,12 +44,60 @@ public abstract class Level extends Layer
     {
         this.groundForm = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 25),
                 new Vector2D(Constants.WINDOW_WIDTH + 1, 51), 0);
+        this.groundForm.endForm();
 
         RigidBody ground = new RigidBody();
         ground.setForm(this.groundForm);
         ground.setPosition(this.groundForm.getCenter());
         ground.initPhysics();
         this.physEngine.addElement(ground);
+    }
+
+    /**
+     * Allows the user to draw a rectangle
+     * @param position mouse cursor's position
+     */
+    public void drawRectangle(Vector2D position)
+    {
+        if(this.drawingRectangle != null)
+        {
+            Vector2D center = new Vector2D((this.drawingFirstPoint.x + position.x) / 2,
+                    (this.drawingFirstPoint.y + position.y) / 2);
+
+            Vector2D length = new Vector2D(Math.abs(this.drawingFirstPoint.x - position.x),
+                    Math.abs(this.drawingFirstPoint.y - position.y));
+
+            this.drawingRectangle.set(center, length, 0.0f);
+        }
+        else
+        {
+            this.drawingRectangle = new Rectangle(position, new Vector2D(0.0f, 0.0f), 0.0f);
+            this.drawingFirstPoint = position;
+        }
+    }
+
+    /**
+     * Ends the drawing of the new rectangle and adds it to the list of existing rectangles
+     */
+    public void endDrawRectangle()
+    {
+        if(this.drawingRectangle != null)
+        {
+            this.drawingRectangle.endForm();
+
+            RigidBody rect = new RigidBody();
+            rect.setMass(100.0f);
+            rect.setForm(this.drawingRectangle);
+            rect.setPosition(this.drawingRectangle.getCenter());
+            rect.initPhysics();
+
+            this.physEngine.addElement(rect);
+            this.physEngine.addForce(rect, this.gravity);
+
+            this.rectangles.put(this.drawingRectangle, rect);
+
+            this.drawingRectangle = null;
+        }
     }
 
     @Override
@@ -61,6 +112,14 @@ public abstract class Level extends Layer
         {
             g.drawForm(r);
             g.fillForm(r);
+        }
+
+
+        if(this.drawingRectangle != null)
+        {
+            g.setColor(0.0f, 1.0f, 1.0f);
+            g.drawForm(this.drawingRectangle);
+            g.fillForm(this.drawingRectangle);
         }
     }
 

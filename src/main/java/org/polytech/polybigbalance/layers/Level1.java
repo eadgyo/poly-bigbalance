@@ -32,6 +32,7 @@ public class Level1 extends Level
             rect.setForm(rectForm);
             rect.setPosition(rectForm.getCenter());
             rect.initPhysics();
+
             this.physEngine.addElement(rect);
             this.physEngine.addForce(rect, this.gravity);
         }
