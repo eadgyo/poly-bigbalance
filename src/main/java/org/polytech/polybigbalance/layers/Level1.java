@@ -12,7 +12,7 @@ public class Level1 extends Level
 {
     public Level1()
     {
-        super();
+        super(100);
     }
 
     @Override

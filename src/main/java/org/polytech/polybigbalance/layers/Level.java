@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public abstract class Level extends Layer
 {
+    private final int BASE;
+
     protected Map<Rectangle, RigidBody> rectangles;
     private Rectangle groundForm;
 
@@ -27,11 +29,16 @@ public abstract class Level extends Layer
     protected Engine physEngine;
     protected Gravity gravity;
 
-    public Level()
+    /**
+     * @param base value use to calculate the maximum and minimum sizes of drawn rectangles
+     */
+    public Level(int base)
     {
         super();
         super.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         this.rectangles = new HashMap<>();
+
+        this.BASE = base;
 
         this.physEngine = new Engine();
         this.gravity = new Gravity(new Vector2D(0, 100.0f));
@@ -83,18 +90,21 @@ public abstract class Level extends Layer
     {
         if(this.drawingRectangle != null)
         {
-            this.drawingRectangle.endForm();
+            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()))
+            {
+                this.drawingRectangle.endForm();
 
-            RigidBody rect = new RigidBody();
-            rect.setMass(100.0f);
-            rect.setForm(this.drawingRectangle);
-            rect.setPosition(this.drawingRectangle.getCenter());
-            rect.initPhysics();
+                RigidBody rect = new RigidBody();
+                rect.setMass(100.0f);
+                rect.setForm(this.drawingRectangle);
+                rect.setPosition(this.drawingRectangle.getCenter());
+                rect.initPhysics();
 
-            this.physEngine.addElement(rect);
-            this.physEngine.addForce(rect, this.gravity);
+                this.physEngine.addElement(rect);
+                this.physEngine.addForce(rect, this.gravity);
 
-            this.rectangles.put(this.drawingRectangle, rect);
+                this.rectangles.put(this.drawingRectangle, rect);
+            }
 
             this.drawingRectangle = null;
         }
@@ -117,7 +127,15 @@ public abstract class Level extends Layer
 
         if(this.drawingRectangle != null)
         {
-            g.setColor(0.0f, 1.0f, 1.0f);
+            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()))
+            {
+                g.setColor(0.0f, 1.0f, 1.0f);
+            }
+            else
+            {
+                g.setColor(1.0f, 0.2f, 0.2f);
+            }
+
             g.drawForm(this.drawingRectangle);
             g.fillForm(this.drawingRectangle);
         }
@@ -127,5 +145,18 @@ public abstract class Level extends Layer
     public void update(float dt)
     {
         this.physEngine.update(dt);
+    }
+
+    private boolean isRectangleSizeValid(float width, float height)
+    {
+        if(width * height < this.BASE * this.BASE)
+        {
+            if(width < this.BASE * 2 && height < this.BASE * 2)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
