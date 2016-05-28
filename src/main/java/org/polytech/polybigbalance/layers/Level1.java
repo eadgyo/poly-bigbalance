@@ -1,6 +1,5 @@
 package org.polytech.polybigbalance.layers;
 
-import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
 import org.cora.physics.entities.RigidBody;
@@ -22,9 +21,9 @@ public class Level1 extends Level
         super.initialize();
 
         this.rectangles.put(new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2),
-                new Vector2D(200, 100), 0), new RigidBody());
+                new Vector2D(200, 100), 0.0f), new RigidBody());
 
-        for(Form rectForm : this.rectangles.keySet())
+        for(Rectangle rectForm : this.rectangles.keySet())
         {
             rectForm.endForm();
             RigidBody rect = this.rectangles.get(rectForm);

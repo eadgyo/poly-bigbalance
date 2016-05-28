@@ -14,6 +14,8 @@ import org.polytech.polybigbalance.base.Layer;
 public class Score extends Layer
 {
     private int score;
+    private boolean scoreChanged;
+
     private Font font;
     private TextRenderer text;
     private Image textImage;
@@ -44,25 +46,31 @@ public class Score extends Layer
         this.text.setMaxWidth(width);
         this.text.setFontColor(myColor.WHITE());
         this.text.setBackColor(myColor.BLACK());
+
+        this.setScore(0);
     }
 
     /**
      * Updates the score
      * @param score new score
-     * @param g graphics that will display the text
      */
-    public void setScore(int score, Graphics g)
+    public void setScore(int score)
     {
+        this.scoreChanged = true;
         this.score = score;
         String s = "Score : " + this.score;
 
         this.textImage = this.text.transformToImage(s, this.x, this.y);
-        g.loadTextureGL(this.textImage.getSpriteData().surface);
     }
 
     @Override
     public void render(Graphics g)
     {
+        if(this.scoreChanged)
+        {
+            g.loadTextureGL(this.textImage.getSpriteData().surface);
+        }
+
         g.render(this.textImage);
     }
 

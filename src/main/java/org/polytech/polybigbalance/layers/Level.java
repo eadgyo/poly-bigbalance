@@ -20,7 +20,6 @@ public abstract class Level extends Layer
 {
     protected Map<Rectangle, RigidBody> rectangles;
     private Rectangle groundForm;
-    private RigidBody ground;
 
     protected Engine physEngine;
     protected Gravity gravity;
@@ -43,11 +42,11 @@ public abstract class Level extends Layer
         this.groundForm = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 25),
                 new Vector2D(Constants.WINDOW_WIDTH + 1, 51), 0);
 
-        this.ground = new RigidBody();
-        this.ground.setForm(this.groundForm);
-        this.ground.setPosition(this.groundForm.getCenter());
-        this.ground.initPhysics();
-        this.physEngine.addElement(this.ground);
+        RigidBody ground = new RigidBody();
+        ground.setForm(this.groundForm);
+        ground.setPosition(this.groundForm.getCenter());
+        ground.initPhysics();
+        this.physEngine.addElement(ground);
     }
 
     @Override
