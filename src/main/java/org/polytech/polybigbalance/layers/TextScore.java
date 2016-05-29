@@ -11,7 +11,7 @@ import org.polytech.polybigbalance.base.Layer;
 /**
  * Displays the score of the player
  */
-public class Score extends Layer
+public class TextScore extends Layer
 {
     private int score;
     private boolean scoreChanged;
@@ -29,7 +29,7 @@ public class Score extends Layer
      * @param width text's width
      * @param height text's height
      */
-    public Score(Surface fontSurface, int x, int y, int width, int height)
+    public TextScore(Surface fontSurface, int x, int y, int width, int height)
     {
         super();
         super.initialize(x, y, width, height);

@@ -7,7 +7,7 @@ import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.layers.Level;
-import org.polytech.polybigbalance.layers.Score;
+import org.polytech.polybigbalance.layers.TextScore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class Game extends Interface
         level.initialize();
         this.layers.put("level", level);
 
-        this.layers.put("score", new Score(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2, 30, 200, 40));
+        this.layers.put("score", new TextScore(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2, 30, 200, 40));
     }
 
     @Override
