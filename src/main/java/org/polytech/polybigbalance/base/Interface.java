@@ -2,6 +2,9 @@ package org.polytech.polybigbalance.base;
 
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
+
+import java.util.Set;
+
 /**
  * Interface make easier menu creation
  * Interface starts at the origin of the screen
@@ -26,9 +29,9 @@ public abstract class Interface
         this.height = height;
     }
 
-    public abstract InterfaceEvent update(float dt);
+    public abstract Set<InterfaceEvent> update(float dt);
 
-    public abstract InterfaceEvent handleEvent(Input input);
+    public abstract Set<InterfaceEvent> handleEvent(Input input);
 
     public abstract void render(Graphics g);
 

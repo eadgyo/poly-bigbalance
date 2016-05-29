@@ -1,8 +1,12 @@
 package org.polytech.polybigbalance.base;
 
 import org.cora.graphics.graphics.Graphics;
+import org.cora.graphics.input.Input;
 import org.cora.maths.Vector2D;
 import org.cora.maths.sRectangle;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Used in interface to display group of objects
@@ -87,4 +91,11 @@ public abstract class Layer
     {
         return bounds.isInsideBorder(pos);
     }
+
+    /**
+     *
+     * @param input inputs manager
+     * @return events
+     */
+    public Set<LayerEvent> handleEvent(Input input) {return EnumSet.of(LayerEvent.NO_COLLISION); }
 }

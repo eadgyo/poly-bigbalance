@@ -11,8 +11,10 @@ import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.TextScore;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Handles a game
@@ -54,18 +56,18 @@ public class Game extends Interface
     }
 
     @Override
-    public InterfaceEvent update(float dt)
+    public Set<InterfaceEvent> update(float dt)
     {
         for(Layer l : this.layers.values())
         {
             l.update(dt);
         }
 
-        return InterfaceEvent.OK;
+        return EnumSet.of(InterfaceEvent.OK);
     }
 
     @Override
-    public InterfaceEvent handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvent(Input input)
     {
         if(input.getMouseDown(Input.MOUSE_BUTTON_1))
         {
@@ -83,7 +85,7 @@ public class Game extends Interface
             }
         }
 
-        return InterfaceEvent.OK;
+        return EnumSet.of(InterfaceEvent.OK);
     }
 
     @Override

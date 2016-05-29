@@ -9,6 +9,9 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 public class Menu extends Interface
 {
     private TextButton buttons[];
@@ -35,13 +38,13 @@ public class Menu extends Interface
     }
 
     @Override
-    public InterfaceEvent update(float dt)
+    public Set<InterfaceEvent> update(float dt)
     {
-        return null;
+        return EnumSet.of(InterfaceEvent.OK);
     }
 
     @Override
-    public InterfaceEvent handleEvent(Input input)
+    public Set<InterfaceEvent>  handleEvent(Input input)
     {
         if(input.isMouseMoving())
         {
@@ -71,21 +74,21 @@ public class Menu extends Interface
                     switch(i)
                     {
                         case 0:
-                            return InterfaceEvent.NEW_GAME;
+                            return EnumSet.of(InterfaceEvent.NEW_GAME);
                         case 1:
-                            return InterfaceEvent.SCORE;
+                            return EnumSet.of(InterfaceEvent.SCORE);
                         case 2:
-                            return InterfaceEvent.HOW_TO;
+                            return EnumSet.of(InterfaceEvent.HOW_TO);
                         case 3:
-                            return InterfaceEvent.CREDIT;
+                            return EnumSet.of(InterfaceEvent.CREDIT);
                         case 4:
-                            return InterfaceEvent.EXIT;
+                            return EnumSet.of(InterfaceEvent.EXIT);
                     }
                 }
             }
         }
 
-        return InterfaceEvent.OK;
+        return EnumSet.of(InterfaceEvent.OK);
     }
 
     @Override
