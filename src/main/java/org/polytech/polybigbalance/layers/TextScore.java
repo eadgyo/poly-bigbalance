@@ -21,15 +21,13 @@ public class TextScore extends Layer
 
     /**
      * @param fontSurface font to use
-     * @param x x position of the center of the text
-     * @param y y position of the center of the text
+     * @param x x position of the top left corner of the text
+     * @param y y position of the top left corner of the text
      * @param width text's width
-     * @param height text's height
      */
-    public TextScore(Surface fontSurface, int x, int y, int width, int height)
+    public TextScore(Surface fontSurface, int x, int y, int width)
     {
         super();
-        super.initialize(x, y, width, height);
 
         this.x = x;
         this.y = y;

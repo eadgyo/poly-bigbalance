@@ -44,12 +44,12 @@ public class Game extends Interface
         level.initialize();
         this.layers.put("level", level);
 
-        this.layers.put("score", new TextScore(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2, 30, 200, 40));
+        this.layers.put("score", new TextScore(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2 - 100, 15, 200));
 
         if(nbPlayers > 1)
         {
             String playerName = this.players[this.currentPlayer].getName();
-            this.layers.put("activePlayer", new ActivePlayer(playerName, Constants.TEXT_FONT_SURFACE, 75, 30, 200, 40));
+            this.layers.put("activePlayer", new ActivePlayer(playerName, Constants.TEXT_FONT_SURFACE, 30, 15, 200));
         }
     }
 

@@ -22,15 +22,13 @@ public class ActivePlayer extends Layer
     /**
      * @param playerName player's name
      * @param fontSurface font to use
-     * @param x x position of the center of the text
-     * @param y y position of the center of the text
+     * @param x x position of the top left corner of the text
+     * @param y y position of the top left corner of the text
      * @param width text's width
-     * @param height text's height
      */
-    public ActivePlayer(String playerName, Surface fontSurface, int x, int y, int width, int height)
+    public ActivePlayer(String playerName, Surface fontSurface, int x, int y, int width)
     {
         super();
-        super.initialize(x, y, width, height);
 
         this.x = x;
         this.y = y;
