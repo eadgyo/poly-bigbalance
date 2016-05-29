@@ -93,7 +93,8 @@ public abstract class Level extends Layer
 
         if(this.drawingRectangle != null)
         {
-            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()))
+            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
+                    !this.isRectangleColliding(this.drawingRectangle))
             {
                 this.drawingRectangle.updateCenter();
 
@@ -134,7 +135,8 @@ public abstract class Level extends Layer
 
         if(this.drawingRectangle != null)
         {
-            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()))
+            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
+                    !this.isRectangleColliding(this.drawingRectangle))
             {
                 g.setColor(0.0f, 1.0f, 1.0f);
             }
@@ -154,11 +156,36 @@ public abstract class Level extends Layer
         this.physEngine.update(dt);
     }
 
+    /**
+     * Tells if the rectangle is not too large
+     * @param width rectangle's width
+     * @param height rectangle's height
+     * @return true if the rectangle's size is valid
+     */
     private boolean isRectangleSizeValid(float width, float height)
     {
         if(width * height < this.BASE * this.BASE)
         {
             if(width < this.BASE * 2 && height < this.BASE * 2)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Tells if the rectangle is colliding with one of the inserted ones
+     * @param rect rectangle to check
+     * @return true if there is a collision
+     */
+    private boolean isRectangleColliding(Rectangle rect)
+    {
+        for(Rectangle r : this.rectangles.keySet())
+        {
+            if(rect.getLeftX() < r.getLeftX() + r.getWidth() && rect.getLeftX() + rect.getWidth() > r.getLeftX() &&
+                    rect.getLeftY() < r.getLeftY() + r.getHeight() && rect.getLeftY() + rect.getHeight() > r.getLeftY())
             {
                 return true;
             }
