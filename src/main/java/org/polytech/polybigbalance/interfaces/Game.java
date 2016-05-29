@@ -6,6 +6,7 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Layer;
+import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.TextScore;
 
@@ -29,6 +30,7 @@ public class Game extends Interface
         this.layers.put("level", level);
 
         this.layers.put("score", new TextScore(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2, 30, 200, 40));
+        this.layers.put("activePlayer", new ActivePlayer("Player 1", Constants.TEXT_FONT_SURFACE, 75, 30, 200, 40));
     }
 
     @Override
