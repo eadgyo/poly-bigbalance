@@ -1,5 +1,6 @@
 package org.polytech.polybigbalance.base;
 
+import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 /**
  * Interface make easier menu creation
@@ -10,7 +11,7 @@ public abstract class Interface
     private int width;
     private int height;
 
-    Interface()
+    public Interface()
     {
     }
 
@@ -28,6 +29,8 @@ public abstract class Interface
     public abstract InterfaceEvent update(float dt);
 
     public abstract InterfaceEvent handleEvent(Input input);
+
+    public abstract void render(Graphics g);
 
     public int getHeight()
     {
