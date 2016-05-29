@@ -1,6 +1,7 @@
 package org.polytech.polybigbalance.layers;
 
 import org.cora.graphics.font.Font;
+import org.cora.graphics.font.TextPosition;
 import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.Surface;
@@ -41,6 +42,7 @@ public class TextScore extends Layer
         this.text.setMaxWidth(width);
         this.text.setFontColor(myColor.WHITE());
         this.text.setBackColor(myColor.BLACK());
+        this.text.setTextPosition(TextPosition.TOP_CENTER);
 
         this.setScore(0);
     }
