@@ -21,7 +21,7 @@ public class PolyBigBalance
         Input input = new Input();
         input.initGL(g.getScreen());
 
-        Game game = new Game(new Level1());
+        Game game = new Game(3, new Level1());
 
         float timeElapsed = System.nanoTime() / 1000000000.0f;
 

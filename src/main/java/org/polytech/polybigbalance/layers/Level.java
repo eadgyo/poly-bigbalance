@@ -85,9 +85,12 @@ public abstract class Level extends Layer
 
     /**
      * Ends the drawing of the new rectangle and adds it to the list of existing rectangles
+     * @return true if the rectangle has been drawn
      */
-    public void endDrawRectangle()
+    public boolean endDrawRectangle()
     {
+        boolean done = false;
+
         if(this.drawingRectangle != null)
         {
             if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()))
@@ -104,10 +107,14 @@ public abstract class Level extends Layer
                 this.physEngine.addForce(rect, this.gravity);
 
                 this.rectangles.put(this.drawingRectangle, rect);
+
+                done = true;
             }
 
             this.drawingRectangle = null;
         }
+
+        return done;
     }
 
     @Override

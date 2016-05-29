@@ -6,6 +6,7 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Layer;
+import org.polytech.polybigbalance.base.Player;
 import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.TextScore;
@@ -21,8 +22,22 @@ public class Game extends Interface
     private Map<String, Layer> layers;
     private boolean drawing;
 
-    public Game(Level level)
+    private Player[] players;
+    private int currentPlayer;
+
+    /**
+     * @param nbPlayers number of players
+     * @param level level to display
+     */
+    public Game(int nbPlayers, Level level)
     {
+        this.players = new Player[nbPlayers];
+        for(int i = 0 ; i < nbPlayers ; i++)
+        {
+            this.players[i] = new Player("Player " + (i + 1));
+        }
+        this.currentPlayer = 0;
+
         this.layers = new HashMap<>();
         this.drawing = false;
 
@@ -30,7 +45,12 @@ public class Game extends Interface
         this.layers.put("level", level);
 
         this.layers.put("score", new TextScore(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2, 30, 200, 40));
-        this.layers.put("activePlayer", new ActivePlayer("Player 1", Constants.TEXT_FONT_SURFACE, 75, 30, 200, 40));
+
+        if(nbPlayers > 1)
+        {
+            String playerName = this.players[this.currentPlayer].getName();
+            this.layers.put("activePlayer", new ActivePlayer(playerName, Constants.TEXT_FONT_SURFACE, 75, 30, 200, 40));
+        }
     }
 
     @Override
@@ -55,7 +75,12 @@ public class Game extends Interface
         else if(this.drawing)
         {
             this.drawing = false;
-            ((Level) this.layers.get("level")).endDrawRectangle();
+            boolean added = ((Level) this.layers.get("level")).endDrawRectangle();
+
+            if(added)
+            {
+                this.nextPlayer();
+            }
         }
 
         return InterfaceEvent.OK;
@@ -68,5 +93,25 @@ public class Game extends Interface
         {
             l.render(g);
         }
+    }
+
+    /**
+     * Turn goes to next player who hasn't lost yet
+     */
+    private void nextPlayer()
+    {
+        do
+        {
+            if(this.currentPlayer < this.players.length - 1)
+            {
+                this.currentPlayer++;
+            }
+            else
+            {
+                this.currentPlayer = 0;
+            }
+        } while(this.players[this.currentPlayer].hasLost());
+
+        ((ActivePlayer) this.layers.get("activePlayer")).setPlayerName(this.players[this.currentPlayer].getName());
     }
 }
