@@ -1,6 +1,5 @@
 package org.polytech.polybigbalance.layers;
 
-import org.cora.graphics.base.Image;
 import org.cora.graphics.font.Font;
 import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
@@ -14,11 +13,9 @@ import org.polytech.polybigbalance.base.Layer;
 public class TextScore extends Layer
 {
     private int score;
-    private boolean scoreChanged;
 
     private Font font;
     private TextRenderer text;
-    private Image textImage;
 
     private int x, y;
 
@@ -56,22 +53,13 @@ public class TextScore extends Layer
      */
     public void setScore(int score)
     {
-        this.scoreChanged = true;
         this.score = score;
-        String s = "Score : " + this.score;
-
-        this.textImage = this.text.transformToImage(s, this.x, this.y);
     }
 
     @Override
     public void render(Graphics g)
     {
-        if(this.scoreChanged)
-        {
-            g.loadTextureGL(this.textImage.getSpriteData().surface);
-        }
-
-        g.render(this.textImage);
+        this.text.print(g, "Score : " + this.score, this.x, this.y);
     }
 
     @Override

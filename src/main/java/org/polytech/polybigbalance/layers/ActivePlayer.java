@@ -1,6 +1,5 @@
 package org.polytech.polybigbalance.layers;
 
-import org.cora.graphics.base.Image;
 import org.cora.graphics.font.Font;
 import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
@@ -14,11 +13,9 @@ import org.polytech.polybigbalance.base.Layer;
 public class ActivePlayer extends Layer
 {
     private String playerName;
-    private boolean playerNameChanged;
 
     private Font font;
     private TextRenderer text;
-    private Image textImage;
 
     private int x, y;
 
@@ -53,21 +50,13 @@ public class ActivePlayer extends Layer
 
     public void setPlayerName(String playerName)
     {
-        this.playerNameChanged = true;
         this.playerName = playerName;
-
-        this.textImage = this.text.transformToImage(this.playerName, this.x, this.y);
     }
 
     @Override
     public void render(Graphics g)
     {
-        if(this.playerNameChanged)
-        {
-            g.loadTextureGL(this.textImage.getSpriteData().surface);
-        }
-
-        g.render(this.textImage);
+        this.text.print(g, playerName, this.x, this.y);
     }
 
     @Override
