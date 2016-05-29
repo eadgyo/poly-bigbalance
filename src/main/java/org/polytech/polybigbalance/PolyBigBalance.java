@@ -3,8 +3,7 @@ package org.polytech.polybigbalance;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.Interface;
-import org.polytech.polybigbalance.interfaces.Game;
-import org.polytech.polybigbalance.layers.Level1;
+import org.polytech.polybigbalance.interfaces.Menu;
 
 import java.util.Stack;
 
@@ -15,9 +14,7 @@ public class PolyBigBalance
 {
     public static void main(String[] args)
     {
-        Graphics g = new Graphics();
-        g.init(Constants.WINDOW_TITLE, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        g.initGL(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        Graphics g = Constants.g;
 
         g.loadTextureGL(Constants.TEXT_FONT_SURFACE);
 
@@ -25,7 +22,8 @@ public class PolyBigBalance
         input.initGL(g.getScreen());
 
         Stack<Interface> stack = new Stack<>();
-        stack.add(new Game(3, new Level1()));
+        stack.add(new Menu());
+        //stack.add(new Game(3, new Level1()));
 
         float timeElapsed = System.nanoTime() / 1000000000.0f;
 
