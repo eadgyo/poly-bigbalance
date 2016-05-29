@@ -4,7 +4,9 @@ import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Font;
 import org.cora.graphics.graphics.Graphics;
+import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
+import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
@@ -28,6 +30,7 @@ public class Menu extends Interface
         for(int i = 0 ; i < this.buttons.length ; i++)
         {
             this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH/2 - WIDTH/2, 100 + i * 100, WIDTH, HEIGHT, font);
+            this.buttons[i].setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
         }
 
         this.buttons[0].setTxt("New game");
@@ -48,17 +51,11 @@ public class Menu extends Interface
     {
         if(input.isMouseMoving())
         {
+            Vector2D mousePos = input.getMousePosV();
+
             for(Button b : this.buttons)
             {
-                if(input.getMousePosX() > b.getLeftX() && input.getMousePosX() < b.getLeftX() + b.getWidth() &&
-                        input.getMousePosY() > b.getLeftY() && input.getMousePosY() < b.getLeftY() + b.getHeight())
-                {
-                    b.setBackColor(0.7f, 0.7f, 0.7f, 1.0f);
-                }
-                else
-                {
-                    b.setBackColor(1.0f, 1.0f, 1.0f, 1.0f);
-                }
+                b.setActive(b.isColliding(mousePos));
             }
         }
 
