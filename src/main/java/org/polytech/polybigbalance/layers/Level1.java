@@ -25,7 +25,7 @@ public class Level1 extends Level
 
         for(Rectangle rectForm : this.rectangles.keySet())
         {
-            rectForm.endForm();
+            rectForm.updateCenter();
             RigidBody rect = this.rectangles.get(rectForm);
 
             rect.setMass(100.0f);

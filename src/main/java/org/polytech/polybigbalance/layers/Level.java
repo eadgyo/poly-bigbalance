@@ -51,7 +51,7 @@ public abstract class Level extends Layer
     {
         this.groundForm = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 25),
                 new Vector2D(Constants.WINDOW_WIDTH + 1, 51), 0);
-        this.groundForm.endForm();
+        this.groundForm.updateCenter();
 
         RigidBody ground = new RigidBody();
         ground.setForm(this.groundForm);
@@ -95,7 +95,7 @@ public abstract class Level extends Layer
         {
             if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()))
             {
-                this.drawingRectangle.endForm();
+                this.drawingRectangle.updateCenter();
 
                 RigidBody rect = new RigidBody();
                 rect.setMass(100.0f);
