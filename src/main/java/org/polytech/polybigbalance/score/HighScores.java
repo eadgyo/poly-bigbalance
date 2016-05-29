@@ -66,7 +66,17 @@ public class HighScores
 
     public boolean addScore(Score score)
     {
-        if (isHighScore(score.getScore())) {
+        for (int i = 0; i < this.m_size; i++) {
+            if (score.getScore() > this.m_scores[i].getScore()) {
+                for (int j = (this.m_size < HighScores.MAX_SIZE ? this.m_size++ : (this.m_size - 1)); j > i; j--) {
+                    this.m_scores[j] = this.m_scores[j - 1];
+                }
+                this.m_scores[i] = score;
+                return true;
+            }
+        }
+        if (this.m_size < HighScores.MAX_SIZE) {
+            this.m_scores[this.m_size++] = score;
             return true;
         } else {
             return false;
