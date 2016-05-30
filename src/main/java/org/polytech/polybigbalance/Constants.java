@@ -3,6 +3,7 @@ package org.polytech.polybigbalance;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.Surface;
 import org.cora.graphics.manager.TextureManager;
+import org.polytech.polybigbalance.base.InterfaceEvent;
 
 public interface Constants
 {
@@ -11,6 +12,7 @@ public interface Constants
     int WINDOW_HEIGHT = 600;
 
     String[] MAIN_MENU_BUTTONS = { "New Game", "High scores", "How to play", "Credits", "Exit" };
+    InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.NEW_GAME, InterfaceEvent.SCORE, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
 
     String RESOURCES_PATH = "src/main/resources/";
 

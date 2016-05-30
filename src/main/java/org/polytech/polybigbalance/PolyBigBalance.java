@@ -73,6 +73,7 @@ public class PolyBigBalance
         }
 
         if (event.contains(InterfaceEvent.POP)) {
+            this.input.clear();
             stack.pop();
         }
 
