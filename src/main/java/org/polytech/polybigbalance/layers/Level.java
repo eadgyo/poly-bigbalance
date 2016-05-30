@@ -197,6 +197,27 @@ public abstract class Level extends Layer
     }
 
     /**
+     * Initializes the rectangles created when the game is started
+     * @param rectangles the rectangles to initialize
+     */
+    protected void initRectangles(Map<Rectangle, RigidBody> rectangles)
+    {
+        for(Rectangle rectForm : rectangles.keySet())
+        {
+            rectForm.updateCenter();
+            RigidBody rect = rectangles.get(rectForm);
+
+            rect.setMass(100.0f);
+            rect.setForm(rectForm);
+            rect.setPosition(rectForm.getCenter());
+            rect.initPhysics();
+
+            this.physEngine.addElement(rect);
+            this.physEngine.addForce(rect, this.gravity);
+        }
+    }
+
+    /**
      * Tells if the rectangle is not too large
      * @param width rectangle's width
      * @param height rectangle's height

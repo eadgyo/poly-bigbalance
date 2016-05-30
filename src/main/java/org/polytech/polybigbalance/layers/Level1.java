@@ -38,32 +38,7 @@ public class Level1 extends Level
         this.playerRectangles.put(new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 325),
                 new Vector2D(100, 50), 0.0f), new RigidBody());
 
-        for(Rectangle rectForm : this.baseRectangles.keySet())
-        {
-            rectForm.updateCenter();
-            RigidBody rect = this.baseRectangles.get(rectForm);
-
-            rect.setMass(100.0f);
-            rect.setForm(rectForm);
-            rect.setPosition(rectForm.getCenter());
-            rect.initPhysics();
-
-            this.physEngine.addElement(rect);
-            this.physEngine.addForce(rect, this.gravity);
-        }
-
-        for(Rectangle rectForm : this.playerRectangles.keySet())
-        {
-            rectForm.updateCenter();
-            RigidBody rect = this.playerRectangles.get(rectForm);
-
-            rect.setMass(100.0f);
-            rect.setForm(rectForm);
-            rect.setPosition(rectForm.getCenter());
-            rect.initPhysics();
-
-            this.physEngine.addElement(rect);
-            this.physEngine.addForce(rect, this.gravity);
-        }
+        this.initRectangles(this.baseRectangles);
+        this.initRectangles(this.playerRectangles);
     }
 }
