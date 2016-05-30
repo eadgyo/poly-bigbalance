@@ -54,7 +54,7 @@ public class MainMenu extends Interface
             }
         }
 
-        if (input.getMousePressed(Input.MOUSE_BUTTON_1)) {
+        if (input.isMousePressed(Input.MOUSE_BUTTON_1)) {
             for (int i = 0; i < this.buttons.length; i++) {
                 Button b = this.buttons[i];
 

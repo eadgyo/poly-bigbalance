@@ -7,6 +7,9 @@ import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.interfaces.Credit;
+import org.polytech.polybigbalance.interfaces.Help;
+import org.polytech.polybigbalance.interfaces.HighScoresInterface;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
 import org.polytech.polybigbalance.layers.Level1;
@@ -74,13 +77,20 @@ public class PolyBigBalance
         }
 
         if (event.contains(InterfaceEvent.NEW_GAME)) {
+            this.input.clearMouse();
             stack.push(new LevelSelector(2, new Level1()));
         }
 
+        if (event.contains(InterfaceEvent.SCORE)) {
+            stack.push(new HighScoresInterface());
+        }
+
         if (event.contains(InterfaceEvent.HOW_TO)) {
+            stack.push(new Help());
         }
 
         if (event.contains(InterfaceEvent.CREDIT)) {
+            stack.push(new Credit());
         }
 
         if (event.contains(InterfaceEvent.EXIT)) {

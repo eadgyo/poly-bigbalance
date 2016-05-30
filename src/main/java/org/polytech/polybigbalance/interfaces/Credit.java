@@ -8,9 +8,8 @@ import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
-public class HighScoresInterface extends Interface
+public class Credit extends Interface
 {
-    // ----- CONSTRUCTOR
 
     @Override
     public Set<InterfaceEvent> update(float dt)
@@ -35,4 +34,5 @@ public class HighScoresInterface extends Interface
         // TODO Auto-generated method stub
 
     }
+
 }
