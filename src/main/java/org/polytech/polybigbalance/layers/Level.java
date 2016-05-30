@@ -19,6 +19,7 @@ import java.util.Map;
 public abstract class Level extends Layer
 {
     private final int BASE;
+    private final Vector2D MIN_SIZE = new Vector2D(2.0f, 2.0f);
 
     protected Map<Rectangle, RigidBody> rectangles;
     private Rectangle groundForm;
@@ -164,11 +165,14 @@ public abstract class Level extends Layer
      */
     private boolean isRectangleSizeValid(float width, float height)
     {
-        if(width * height < this.BASE * this.BASE)
+        if(width > MIN_SIZE.x && height > MIN_SIZE.y)
         {
-            if(width < this.BASE * 2 && height < this.BASE * 2)
+            if(width * height < this.BASE * this.BASE)
             {
-                return true;
+                if(width < this.BASE * 2 && height < this.BASE * 2)
+                {
+                    return true;
+                }
             }
         }
 
