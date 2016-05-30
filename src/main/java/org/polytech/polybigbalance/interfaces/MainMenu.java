@@ -1,8 +1,5 @@
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Font;
@@ -13,6 +10,9 @@ import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class MainMenu extends Interface
 {
@@ -58,7 +58,7 @@ public class MainMenu extends Interface
             for (int i = 0; i < this.buttons.length; i++) {
                 Button b = this.buttons[i];
 
-                if (input.getMousePosX() > b.getLeftX() && input.getMousePosX() < b.getLeftX() + b.getWidth() && input.getMousePosY() > b.getLeftY() && input.getMousePosY() < b.getLeftY() + b.getHeight()) {
+                if (b.isColliding(input.getMousePosV())) {
                     switch (i) {
                         case 0:
                             return EnumSet.of(InterfaceEvent.NEW_GAME);
