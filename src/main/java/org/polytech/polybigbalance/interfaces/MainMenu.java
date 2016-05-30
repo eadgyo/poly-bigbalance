@@ -1,5 +1,8 @@
 package org.polytech.polybigbalance.interfaces;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Font;
@@ -11,33 +14,27 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-public class Menu extends Interface
+public class MainMenu extends Interface
 {
     private TextButton buttons[];
 
-    public Menu()
+    public MainMenu()
     {
+        this.buttons = new TextButton[Constants.MAIN_MENU_BUTTONS.length];
+
         final int WIDTH = 200, HEIGHT = 60;
-        this.buttons = new TextButton[5];
+        final int SPACING = (Constants.WINDOW_HEIGHT - HEIGHT * this.buttons.length) / (this.buttons.length + 1);
+        final int START_HEIGHT = (Constants.WINDOW_HEIGHT - (HEIGHT + SPACING) * this.buttons.length + SPACING) / 2;
 
         Font font = new Font();
         font.initialize(Constants.TEXT_FONT_SURFACE, 32);
         font.setSpaceSize(15);
 
-        for(int i = 0 ; i < this.buttons.length ; i++)
-        {
-            this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH/2 - WIDTH/2, 100 + i * 100, WIDTH, HEIGHT, font);
+        for (int i = 0; i < this.buttons.length; i++) {
+            this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH / 2 - WIDTH / 2, START_HEIGHT + (HEIGHT + SPACING) * i, WIDTH, HEIGHT, font);
             this.buttons[i].setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+            this.buttons[i].setTxt(Constants.MAIN_MENU_BUTTONS[i]);
         }
-
-        this.buttons[0].setTxt("New game");
-        this.buttons[1].setTxt("High scores");
-        this.buttons[2].setTxt("How to play");
-        this.buttons[3].setTxt("Credits");
-        this.buttons[4].setTxt("Exit");
     }
 
     @Override
@@ -47,29 +44,22 @@ public class Menu extends Interface
     }
 
     @Override
-    public Set<InterfaceEvent>  handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvent(Input input)
     {
-        if(input.isMouseMoving())
-        {
+        if (input.isMouseMoving()) {
             Vector2D mousePos = input.getMousePosV();
 
-            for(Button b : this.buttons)
-            {
+            for (Button b : this.buttons) {
                 b.setActive(b.isColliding(mousePos));
             }
         }
 
-        if(input.getMousePressed(Input.MOUSE_BUTTON_1))
-        {
-            for(int i = 0 ; i < this.buttons.length ; i++)
-            {
+        if (input.getMousePressed(Input.MOUSE_BUTTON_1)) {
+            for (int i = 0; i < this.buttons.length; i++) {
                 Button b = this.buttons[i];
 
-                if(input.getMousePosX() > b.getLeftX() && input.getMousePosX() < b.getLeftX() + b.getWidth() &&
-                   input.getMousePosY() > b.getLeftY() && input.getMousePosY() < b.getLeftY() + b.getHeight())
-                {
-                    switch(i)
-                    {
+                if (input.getMousePosX() > b.getLeftX() && input.getMousePosX() < b.getLeftX() + b.getWidth() && input.getMousePosY() > b.getLeftY() && input.getMousePosY() < b.getLeftY() + b.getHeight()) {
+                    switch (i) {
                         case 0:
                             return EnumSet.of(InterfaceEvent.NEW_GAME);
                         case 1:
@@ -91,8 +81,7 @@ public class Menu extends Interface
     @Override
     public void render(Graphics g)
     {
-        for(Button b : this.buttons)
-        {
+        for (Button b : this.buttons) {
             b.render(g);
         }
     }

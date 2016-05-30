@@ -36,7 +36,7 @@ public class HighScores
 
     public Score getScore(int n)
     {
-        if (n >= 0 || n < HighScores.MAX_SIZE) {
+        if (n >= 0 && n < HighScores.MAX_SIZE) {
             return this.m_scores[n];
         } else {
             return null;
@@ -62,6 +62,13 @@ public class HighScores
             this.m_scores[i] = null;
         }
         this.m_size = 0;
+    }
+
+    public void deleteScore(int n)
+    {
+        if (n >= 0 && n < HighScores.MAX_SIZE) {
+
+        }
     }
 
     public boolean addScore(Score score)

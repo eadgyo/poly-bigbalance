@@ -6,13 +6,15 @@ import org.cora.graphics.manager.TextureManager;
 
 public interface Constants
 {
-    String WINDOW_TITLE = "Poly Big Balance";
-    int WINDOW_WIDTH = 800;
-    int WINDOW_HEIGHT = 600;
+    final String WINDOW_TITLE = "Poly Big Balance";
+    final int WINDOW_WIDTH = 800;
+    final int WINDOW_HEIGHT = 600;
 
-    String RESOURCES_PATH = "src/main/resources/";
+    final String[] MAIN_MENU_BUTTONS = { "New Game", "High scores", "How to play", "Credits", "Exit" };
 
-    Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true);
-    
-    Surface TEXT_FONT_SURFACE = TextureManager.getInstance().loadTexture(RESOURCES_PATH + "font.bmp");
+    final String RESOURCES_PATH = "src/main/resources/";
+
+    final Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true);
+
+    final Surface TEXT_FONT_SURFACE = TextureManager.getInstance().loadTexture(RESOURCES_PATH + "font.bmp");
 }

@@ -1,34 +1,48 @@
 package org.polytech.polybigbalance;
 
+import java.util.Set;
+import java.util.Stack;
+
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.Interface;
-import org.polytech.polybigbalance.interfaces.Menu;
-
-import java.util.Stack;
-
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_FALSE;
+import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.interfaces.LevelSelector;
+import org.polytech.polybigbalance.interfaces.MainMenu;
+import org.polytech.polybigbalance.layers.Level1;
 
 public class PolyBigBalance
 {
-    public static void main(String[] args)
+    private Graphics g;
+    private Input input;
+    private float timeElapsed;
+    private Stack<Interface> stack;
+
+    // ----- CONSTRUCTOR ----- //
+
+    public PolyBigBalance()
     {
-        Graphics g = Constants.g;
+    }
 
-        g.loadTextureGL(Constants.TEXT_FONT_SURFACE);
+    public void init()
+    {
+        this.g = Constants.g;
+        this.g.loadTextureGL(Constants.TEXT_FONT_SURFACE);
 
-        Input input = new Input();
-        input.initGL(g.getScreen());
+        this.input = new Input();
+        this.input.initGL(g.getScreen());
 
-        Stack<Interface> stack = new Stack<>();
-        stack.add(new Menu());
-        //stack.add(new Game(3, new Level1()));
+        this.stack = new Stack<>();
+        this.stack.add(new MainMenu());
 
-        float timeElapsed = System.nanoTime() / 1000000000.0f;
+        this.timeElapsed = System.nanoTime() / 1000000000.0f;
+    }
 
-        while (glfwWindowShouldClose(g.getScreen()) == GL_FALSE)
-        {
+    // ----- METHODS ----- //
+
+    public void mainLoop()
+    {
+        while (g.isNotTerminated()) {
             g.clear();
 
             timeElapsed = (System.nanoTime() / 1000000000.0f) - timeElapsed;
@@ -38,9 +52,40 @@ public class PolyBigBalance
             stack.lastElement().render(g);
 
             input.update();
-            stack.lastElement().handleEvent(input);
+            handleEvent(stack.lastElement().handleEvent(input));
 
             g.swapGL();
+        }
+    }
+
+    public void exit()
+    {
+        // Nothing yet
+    }
+
+    private void handleEvent(Set<InterfaceEvent> event)
+    {
+
+        if (event.contains(InterfaceEvent.OK)) {
+        }
+
+        if (event.contains(InterfaceEvent.POP)) {
+            stack.pop();
+        }
+
+        if (event.contains(InterfaceEvent.NEW_GAME)) {
+            stack.push(new LevelSelector(2, new Level1()));
+        }
+
+        if (event.contains(InterfaceEvent.HOW_TO)) {
+        }
+
+        if (event.contains(InterfaceEvent.CREDIT)) {
+        }
+
+        if (event.contains(InterfaceEvent.EXIT)) {
+            g.terminate();
+            System.out.println("EXIT");
         }
     }
 }

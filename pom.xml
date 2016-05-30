@@ -50,7 +50,7 @@
             <artifactId>cora-physics</artifactId>
             <version>1.0</version>
         </dependency>
-    
+
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -120,7 +120,7 @@
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath/>
-                        <argument>org.polytech.polybigbalance.PolyBigBalance</argument>
+                        <argument>org.polytech.polybigbalance.MainPBB</argument>
                     </arguments>
                 </configuration>
             </plugin>
@@ -135,7 +135,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.polytech.polybigbalance.PolyBigBalance</mainClass>
+                            <mainClass>org.polytech.polybigbalance.MainPBB</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
