@@ -4,6 +4,7 @@ import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
+import org.cora.maths.collision.CollisionDetectorNoT;
 import org.cora.physics.Engine.Engine;
 import org.cora.physics.entities.RigidBody;
 import org.cora.physics.force.Gravity;
@@ -12,6 +13,8 @@ import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.score.HighScores;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +25,9 @@ public abstract class Level extends Layer
     private final int BASE;
     private final Vector2D MIN_SIZE = new Vector2D(2.0f, 2.0f);
 
-    protected Map<Rectangle, RigidBody> rectangles;
+    // baseRectangles are allowed to touch the ground
+    protected Map<Rectangle, RigidBody> baseRectangles;
+    protected Map<Rectangle, RigidBody> playerRectangles;
     private Rectangle groundForm;
 
     private Rectangle drawingRectangle;
@@ -34,13 +39,14 @@ public abstract class Level extends Layer
     private HighScores highScores;
 
     /**
-     * @param base value use to calculate the maximum and minimum sizes of drawn rectangles
+     * @param base value use to calculate the maximum and minimum sizes of drawn playerRectangles
      */
     public Level(int base)
     {
         super();
         super.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        this.rectangles = new HashMap<>();
+        this.playerRectangles = new HashMap<>();
+        this.baseRectangles = new HashMap<>();
 
         this.BASE = base;
 
@@ -88,8 +94,8 @@ public abstract class Level extends Layer
     }
 
     /**
-     * Ends the drawing of the new rectangle and adds it to the list of existing rectangles
-     * @return the drawn rectangle, or null if the rectangles has not been added
+     * Ends the drawing of the new rectangle and adds it to the list of existing playerRectangles
+     * @return the drawn rectangle, or null if the playerRectangles has not been added
      */
     public Rectangle endDrawRectangle()
     {
@@ -111,7 +117,7 @@ public abstract class Level extends Layer
                 this.physEngine.addElement(rect);
                 this.physEngine.addForce(rect, this.gravity);
 
-                this.rectangles.put(this.drawingRectangle, rect);
+                this.playerRectangles.put(this.drawingRectangle, rect);
 
                 drawnRectangle = this.drawingRectangle;
             }
@@ -130,7 +136,12 @@ public abstract class Level extends Layer
         g.fillForm(this.groundForm);
 
         g.setColor(0.2f, 0.2f, 1.0f);
-        for(Form r : this.rectangles.keySet())
+        for(Form r : this.baseRectangles.keySet())
+        {
+            g.drawForm(r);
+            g.fillForm(r);
+        }
+        for(Form r : this.playerRectangles.keySet())
         {
             g.drawForm(r);
             g.fillForm(r);
@@ -158,6 +169,31 @@ public abstract class Level extends Layer
     public void update(float dt)
     {
         this.physEngine.update(dt);
+    }
+
+    /**
+     * Looks for rectangles which are touching the ground and put them in base rectangles
+     * @return the number of rectangles that are touching the ground
+     */
+    public int checkRectangleFallen()
+    {
+        List<Rectangle> toRemove = new LinkedList<>();
+
+        for(Rectangle r : this.playerRectangles.keySet())
+        {
+            if(CollisionDetectorNoT.isColliding(this.groundForm, r))
+            {
+                this.baseRectangles.put(r, this.playerRectangles.get(r));
+                toRemove.add(r);
+            }
+        }
+
+        for(Rectangle r : toRemove)
+        {
+            this.playerRectangles.remove(r);
+        }
+
+        return toRemove.size();
     }
 
     /**
@@ -189,10 +225,17 @@ public abstract class Level extends Layer
      */
     private boolean isRectangleColliding(Rectangle rect)
     {
-        for(Rectangle r : this.rectangles.keySet())
+        for(Rectangle r : this.baseRectangles.keySet())
         {
-            if(rect.getLeftX() < r.getLeftX() + r.getWidth() && rect.getLeftX() + rect.getWidth() > r.getLeftX() &&
-                    rect.getLeftY() < r.getLeftY() + r.getHeight() && rect.getLeftY() + rect.getHeight() > r.getLeftY())
+            if(CollisionDetectorNoT.isColliding(rect, r))
+            {
+                return true;
+            }
+        }
+
+        for(Rectangle r : this.playerRectangles.keySet())
+        {
+            if(CollisionDetectorNoT.isColliding(rect, r))
             {
                 return true;
             }

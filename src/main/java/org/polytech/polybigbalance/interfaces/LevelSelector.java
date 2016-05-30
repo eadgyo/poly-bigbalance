@@ -72,6 +72,12 @@ public class LevelSelector extends Interface
                 this.updateScore();
                 this.nextPlayer();
             }
+            else if(((Level) this.layers.get("level")).checkRectangleFallen() > 0)
+            {
+                this.players[this.currentPlayer].setLost(true);
+                this.waitStartTime = 0;
+                this.nextPlayer();
+            }
         }
 
         for(Layer l : this.layers.values())

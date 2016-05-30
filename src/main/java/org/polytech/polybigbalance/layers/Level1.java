@@ -20,13 +20,13 @@ public class Level1 extends Level
     {
         super.initialize();
 
-        this.rectangles.put(new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2),
+        this.baseRectangles.put(new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2),
                 new Vector2D(200, 100), 0.0f), new RigidBody());
 
-        for(Rectangle rectForm : this.rectangles.keySet())
+        for(Rectangle rectForm : this.baseRectangles.keySet())
         {
             rectForm.updateCenter();
-            RigidBody rect = this.rectangles.get(rectForm);
+            RigidBody rect = this.baseRectangles.get(rectForm);
 
             rect.setMass(100.0f);
             rect.setForm(rectForm);
