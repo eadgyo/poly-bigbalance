@@ -241,6 +241,6 @@ public abstract class Level extends Layer
             }
         }
 
-        return false;
+        return CollisionDetectorNoT.isColliding(rect, this.groundForm);
     }
 }
