@@ -9,6 +9,7 @@ import org.cora.physics.entities.RigidBody;
 import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
+import org.polytech.polybigbalance.score.HighScores;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,8 @@ public abstract class Level extends Layer
 
     protected Engine physEngine;
     protected Gravity gravity;
+
+    private HighScores highScores;
 
     /**
      * @param base value use to calculate the maximum and minimum sizes of drawn rectangles
@@ -86,11 +89,11 @@ public abstract class Level extends Layer
 
     /**
      * Ends the drawing of the new rectangle and adds it to the list of existing rectangles
-     * @return true if the rectangle has been drawn
+     * @return the drawn rectangle, or null if the rectangles has not been added
      */
-    public boolean endDrawRectangle()
+    public Rectangle endDrawRectangle()
     {
-        boolean done = false;
+        Rectangle drawnRectangle = null;
 
         if(this.drawingRectangle != null)
         {
@@ -110,13 +113,13 @@ public abstract class Level extends Layer
 
                 this.rectangles.put(this.drawingRectangle, rect);
 
-                done = true;
+                drawnRectangle = this.drawingRectangle;
             }
 
             this.drawingRectangle = null;
         }
 
-        return done;
+        return drawnRectangle;
     }
 
     @Override
