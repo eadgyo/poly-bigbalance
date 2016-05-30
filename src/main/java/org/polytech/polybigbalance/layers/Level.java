@@ -36,7 +36,7 @@ public abstract class Level extends Layer
     protected Engine physEngine;
     protected Gravity gravity;
 
-    private HighScores highScores;
+    protected HighScores highScores;
 
     /**
      * @param base value use to calculate the maximum and minimum sizes of drawn playerRectangles
@@ -136,15 +136,15 @@ public abstract class Level extends Layer
         g.fillForm(this.groundForm);
 
         g.setColor(0.2f, 0.2f, 1.0f);
-        for(Form r : this.baseRectangles.keySet())
+        for(Form f : this.baseRectangles.keySet())
         {
-            g.drawForm(r);
-            g.fillForm(r);
+            g.drawForm(f);
+            g.fillForm(f);
         }
-        for(Form r : this.playerRectangles.keySet())
+        for(Form f : this.playerRectangles.keySet())
         {
-            g.drawForm(r);
-            g.fillForm(r);
+            g.drawForm(f);
+            g.fillForm(f);
         }
 
 
@@ -194,6 +194,11 @@ public abstract class Level extends Layer
         }
 
         return toRemove.size();
+    }
+
+    public HighScores getHighScores()
+    {
+        return highScores;
     }
 
     /**

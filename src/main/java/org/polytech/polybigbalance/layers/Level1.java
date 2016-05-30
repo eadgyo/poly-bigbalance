@@ -4,6 +4,7 @@ import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
 import org.cora.physics.entities.RigidBody;
 import org.polytech.polybigbalance.Constants;
+import org.polytech.polybigbalance.score.HighScores;
 
 /**
  * Level 1
@@ -13,6 +14,9 @@ public class Level1 extends Level
     public Level1()
     {
         super(100);
+
+        // TODO load highscores from file
+        this.highScores = new HighScores();
     }
 
     @Override

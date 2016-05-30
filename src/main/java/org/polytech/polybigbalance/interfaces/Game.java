@@ -11,6 +11,7 @@ import org.polytech.polybigbalance.base.Player;
 import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.TextScore;
+import org.polytech.polybigbalance.score.Score;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -96,6 +97,7 @@ public class Game extends Interface
     {
         if(this.gameFinished)
         {
+            this.finishGame();
             return EnumSet.of(InterfaceEvent.POP);
         }
 
@@ -172,5 +174,22 @@ public class Game extends Interface
         score += (this.drawnRectangle.getWidth() * this.drawnRectangle.getHeight()) / 10;
 
         this.players[this.currentPlayer].setScore(score);
+    }
+
+    /**
+     * Tasks to do before ending the game (highscores)
+     */
+    private void finishGame()
+    {
+        Level level = (Level) this.layers.get("level");
+
+        for(Player p : this.players)
+        {
+            if(level.getHighScores().isHighScore(p.getScore()))
+            {
+                // TODO ask player's name
+                level.getHighScores().addScore(new Score(p.getName(), p.getScore()));
+            }
+        }
     }
 }
