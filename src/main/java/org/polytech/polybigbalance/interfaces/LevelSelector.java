@@ -87,7 +87,7 @@ public class LevelSelector extends Interface
     {
         if(this.waitStartTime == 0)
         {
-            if(input.getMouseDown(Input.MOUSE_BUTTON_1))
+            if(input.isMouseDown(Input.MOUSE_BUTTON_1))
             {
                 this.drawing = true;
                 ((Level) this.layers.get("level")).drawRectangle(input.getMousePosV());
