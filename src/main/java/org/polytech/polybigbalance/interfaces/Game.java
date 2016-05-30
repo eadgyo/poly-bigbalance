@@ -31,6 +31,8 @@ public class Game extends Interface
     private long waitStartTime;
     private Rectangle drawnRectangle;
 
+    private boolean gameFinished;
+
     /**
      * @param nbPlayers number of players
      * @param level level to display
@@ -59,6 +61,7 @@ public class Game extends Interface
         }
 
         this.waitStartTime = 0;
+        this.gameFinished = false;
     }
 
     @Override
@@ -91,6 +94,11 @@ public class Game extends Interface
     @Override
     public Set<InterfaceEvent> handleEvent(Input input)
     {
+        if(this.gameFinished)
+        {
+            return EnumSet.of(InterfaceEvent.POP);
+        }
+
         if(this.waitStartTime == 0)
         {
             if(input.isMouseDown(Input.MOUSE_BUTTON_1))
@@ -127,6 +135,8 @@ public class Game extends Interface
      */
     private void nextPlayer()
     {
+        int cpt = 0;
+
         do
         {
             if(this.currentPlayer < this.players.length - 1)
@@ -136,8 +146,14 @@ public class Game extends Interface
             else
             {
                 this.currentPlayer = 0;
+                cpt++;
+
+                if(cpt > 1)
+                {
+                    this.gameFinished = true;
+                }
             }
-        } while(this.players[this.currentPlayer].hasLost());
+        } while(this.players[this.currentPlayer].hasLost() && !this.gameFinished);
 
         ((ActivePlayer) this.layers.get("activePlayer")).setPlayerName(this.players[this.currentPlayer].getName());
         ((TextScore) this.layers.get("score")).setScore(this.players[this.currentPlayer].getScore());
