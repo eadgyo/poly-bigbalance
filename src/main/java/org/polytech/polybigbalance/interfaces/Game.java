@@ -3,7 +3,6 @@ package org.polytech.polybigbalance.interfaces;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.cora.maths.Rectangle;
-import org.cora.physics.entities.RigidBody;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
@@ -117,6 +116,10 @@ public class Game extends Interface
                     this.waitStartTime = System.currentTimeMillis();
                 }
             }
+        }
+        else
+        {
+            input.clearMouse();
         }
 
         return EnumSet.of(InterfaceEvent.OK);

@@ -117,6 +117,10 @@ public class LevelSelector extends Interface
                 }
             }
         }
+        else
+        {
+            input.clearMouse();
+        }
 
         return EnumSet.of(InterfaceEvent.OK);
     }
