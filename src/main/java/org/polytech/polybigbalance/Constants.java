@@ -14,9 +14,9 @@ public interface Constants
     String[] MAIN_MENU_BUTTONS = { "New Game", "High scores", "How to play", "Credits", "Exit" };
     InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.NEW_GAME, InterfaceEvent.SCORE, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
 
-    String RESOURCES_PATH = "src/main/resources/";
+    String RESOURCES_PATH = "/";
 
-    Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true);
+    Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true, Constants.class);
 
     Surface TEXT_FONT_SURFACE = TextureManager.getInstance().loadTexture(RESOURCES_PATH + "font.bmp");
 }
