@@ -10,6 +10,7 @@ import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.base.Player;
 import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
+import org.polytech.polybigbalance.layers.ScoresSummary;
 import org.polytech.polybigbalance.layers.TextScore;
 import org.polytech.polybigbalance.score.Score;
 
@@ -97,8 +98,12 @@ public class Game extends Interface
     {
         if(this.gameFinished)
         {
-            this.finishGame();
-            return EnumSet.of(InterfaceEvent.POP);
+            if(this.finishGame(input))
+            {
+                return EnumSet.of(InterfaceEvent.POP);
+            }
+
+            return EnumSet.of(InterfaceEvent.OK);
         }
 
         if(this.waitStartTime == 0)
@@ -157,6 +162,7 @@ public class Game extends Interface
                 if(cpt > 1)
                 {
                     this.gameFinished = true;
+                    this.layers.put("scoresSummary", new ScoresSummary(this.players));
                 }
             }
         } while(this.players[this.currentPlayer].hasLost() && !this.gameFinished);
@@ -177,19 +183,27 @@ public class Game extends Interface
     }
 
     /**
-     * Tasks to do before ending the game (highscores)
+     * Tasks to do before ending the game (scores summary, highscores)
+     * @return true when the tasks are finished
      */
-    private void finishGame()
+    private boolean finishGame(Input input)
     {
-        Level level = (Level) this.layers.get("level");
-
-        for(Player p : this.players)
+        if(input.isKeyPressed(Input.KEY_ENTER))
         {
-            if(level.getHighScores().isHighScore(p.getScore()))
+            Level level = (Level) this.layers.get("level");
+
+            for(Player p : this.players)
             {
-                // TODO ask player's name
-                level.getHighScores().addScore(new Score(p.getName(), p.getScore()));
+                if(level.getHighScores().isHighScore(p.getScore()))
+                {
+                    // TODO ask player's name
+                    level.getHighScores().addScore(new Score(p.getName(), p.getScore()));
+                }
             }
+
+            return true;
         }
+
+        return false;
     }
 }
