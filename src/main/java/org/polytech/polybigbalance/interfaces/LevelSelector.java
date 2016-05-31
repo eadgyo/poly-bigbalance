@@ -1,11 +1,7 @@
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
-import org.cora.graphics.font.Font;
 import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
@@ -14,6 +10,9 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.layers.Level;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class LevelSelector extends Interface
 {
@@ -45,17 +44,13 @@ public class LevelSelector extends Interface
         this.player = 1;
         this.page = 0;
 
-        Font font = new Font();
-        font.initialize(Constants.TEXT_FONT_SURFACE, 32);
-        font.setSpaceSize(15);
-
-        this.returnButton = new TextButton(10, 10, 150, 60, font);
+        this.returnButton = new TextButton(10, 10, 150, 60, Constants.FONT);
         this.returnButton.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
         this.returnButton.setTxt("< Menu");
 
-        this.leftButton = new TextButton(10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, font);
+        this.leftButton = new TextButton(10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
         this.leftButton.setTxt("<");
-        this.rightButton = new TextButton(Constants.WINDOW_WIDTH - PAGE_BUTTON_SIZE - 10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, font);
+        this.rightButton = new TextButton(Constants.WINDOW_WIDTH - PAGE_BUTTON_SIZE - 10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
         this.rightButton.setTxt(">");
 
         this.buttons = new Button[this.levels.length];
@@ -64,7 +59,7 @@ public class LevelSelector extends Interface
             this.buttons[i] = new Button(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE);
         }
 
-        this.player_text = new TextRenderer(font);
+        this.player_text = new TextRenderer(Constants.FONT);
 
     }
 

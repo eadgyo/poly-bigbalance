@@ -29,7 +29,8 @@ public class PolyBigBalance
     public void init()
     {
         this.g = Constants.g;
-        this.g.loadTextureGL(Constants.TEXT_FONT_SURFACE);
+
+        Constants.FONT.setSpaceSize(15);
 
         this.input = new Input();
         this.input.initGL(g.getScreen());

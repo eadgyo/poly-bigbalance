@@ -1,11 +1,7 @@
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
-import org.cora.graphics.font.Font;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
@@ -13,6 +9,9 @@ import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class MainMenu extends Interface
 {
@@ -25,12 +24,8 @@ public class MainMenu extends Interface
         final int WIDTH = 200, HEIGHT = 60;
         final int SPACING = (Constants.WINDOW_HEIGHT - HEIGHT * this.buttons.length) / (this.buttons.length + 1);
 
-        Font font = new Font();
-        font.initialize(Constants.TEXT_FONT_SURFACE, 32);
-        font.setSpaceSize(15);
-
         for (int i = 0; i < this.buttons.length; i++) {
-            this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH / 2 - WIDTH / 2, SPACING + (HEIGHT + SPACING) * i, WIDTH, HEIGHT, font);
+            this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH / 2 - WIDTH / 2, SPACING + (HEIGHT + SPACING) *  i, WIDTH, HEIGHT, Constants.FONT);
             this.buttons[i].setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
             this.buttons[i].setTxt(Constants.MAIN_MENU_BUTTONS[i]);
         }

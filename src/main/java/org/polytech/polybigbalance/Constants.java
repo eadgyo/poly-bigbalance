@@ -1,8 +1,8 @@
 package org.polytech.polybigbalance;
 
+import org.cora.graphics.font.Font;
 import org.cora.graphics.graphics.Graphics;
-import org.cora.graphics.graphics.Surface;
-import org.cora.graphics.manager.TextureManager;
+import org.cora.graphics.manager.FontManager;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
 public interface Constants
@@ -18,5 +18,5 @@ public interface Constants
 
     Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true, Constants.class);
 
-    Surface TEXT_FONT_SURFACE = TextureManager.getInstance().loadTexture(RESOURCES_PATH + "font.bmp");
+    Font FONT = FontManager.getInstance().loadFont(Constants.RESOURCES_PATH + "font.bmp", 32);
 }
