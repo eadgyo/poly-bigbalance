@@ -1,6 +1,7 @@
 package org.polytech.polybigbalance.interfaces;
 
 import org.cora.graphics.elements.TextButton;
+import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
@@ -14,6 +15,7 @@ import java.util.Set;
 public class Help extends Interface
 {
     private TextButton button;
+    private TextRenderer text;
 
     public Help()
     {
@@ -21,6 +23,12 @@ public class Help extends Interface
         this.button.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
         this.button.setTxt("< Menu");
 
+
+        this.text = new TextRenderer(Constants.FONT);
+        this.text.setProportional(true);
+        this.text.setMaxWidth(Constants.WINDOW_WIDTH - 100);
+        this.text.setFontColor(myColor.WHITE());
+        this.text.setBackColor(myColor.BLACK());
     }
 
     @Override
@@ -48,6 +56,12 @@ public class Help extends Interface
     public void render(Graphics g)
     {
         this.button.render(g);
+        this.text.print(g, "Click and move the mouse while holding the left mouse button to draw a rectangle.\n" +
+                           "The rectangle is created when you release the left mouse button.\n\n" +
+                           "Then wait 5 seconds, and if the rectangle doesn't touch the ground, your score is " +
+                           "increased. A big rectangle means a big increase.\n\n" +
+                           "If the rectangle falls, you lose the game!",
+                Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 150);
     }
 
 }
