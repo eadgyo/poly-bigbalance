@@ -8,7 +8,7 @@ import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.interfaces.Credit;
-import org.polytech.polybigbalance.interfaces.Help;
+import org.polytech.polybigbalance.interfaces.Game;
 import org.polytech.polybigbalance.interfaces.HighScoresInterface;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
@@ -94,7 +94,7 @@ public class PolyBigBalance
         }
 
         if (event.contains(InterfaceEvent.HOW_TO)) {
-            stack.push(new Help());
+            stack.push(new Game(2, new Level1()));
         }
 
         if (event.contains(InterfaceEvent.CREDIT)) {
