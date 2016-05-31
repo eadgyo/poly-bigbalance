@@ -9,12 +9,16 @@ public enum InterfaceEvent
     RESET(1<<1),
     POP(1<<2),
     MENU(1<<3),
+    
     NEW_GAME(1<<4),
     LOAD_GAME(1<<5),
-    SCORE(1<<6),
-    HOW_TO(1<<7),
-    CREDIT(1<<8),
-    EXIT(1<<9);
+    
+    PLAY(1<<6),
+    SCORE(1<<7),
+    HOW_TO(1<<8),
+    CREDIT(1<<9),
+    EXIT(1<<10);
+    
     private final long statusFlagValue;
 
     InterfaceEvent(long statusFlagValue)

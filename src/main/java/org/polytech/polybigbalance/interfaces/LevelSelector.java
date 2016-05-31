@@ -1,127 +1,120 @@
 package org.polytech.polybigbalance.interfaces;
 
+import java.util.EnumSet;
+import java.util.Set;
+
+import org.cora.graphics.elements.Button;
+import org.cora.graphics.elements.TextButton;
+import org.cora.graphics.font.Font;
+import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
+import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
-import org.cora.maths.Rectangle;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.base.Layer;
-import org.polytech.polybigbalance.base.Player;
-import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
-import org.polytech.polybigbalance.layers.TextScore;
-import org.polytech.polybigbalance.score.Score;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-/**
- * Handles a game
- */
 public class LevelSelector extends Interface
 {
-    private Map<String, Layer> layers;
-    private boolean drawing;
+    private final int COLUMNS = 3;
 
-    private Player[] players;
-    private int currentPlayer;
+    private TextButton returnButton;
+    private TextButton leftButton;
+    private TextButton rightButton;
+    private TextButton addPlayer;
+    private TextButton removePlayer;
+    private TextButton play;
+    private Button[] buttons;
+    private TextRenderer player_text;
+    private Level[] levels;
+    private int selected;
+    private int player;
+    private int page;
 
-    private long waitStartTime;
-    private Rectangle drawnRectangle;
-
-    private boolean gameFinished;
-
-    /**
-     * @param nbPlayers number of players
-     * @param level level to display
-     */
-    public LevelSelector(int nbPlayers, Level level)
+    public LevelSelector(Level[] levels)
     {
-        this.players = new Player[nbPlayers];
-        for(int i = 0 ; i < nbPlayers ; i++)
-        {
-            this.players[i] = new Player("Player " + (i + 1));
+        final int PAGE_BUTTON_SIZE = 100;
+        final int PADDING = 10;
+        final int LEVEL_BUTTON_SIZE = 150;
+        final int SPACING = (Constants.WINDOW_WIDTH - 2 * (PADDING + PAGE_BUTTON_SIZE) - LEVEL_BUTTON_SIZE * this.COLUMNS) / (this.COLUMNS + 1);
+        final int START_WIDTH = PADDING + PAGE_BUTTON_SIZE + SPACING;
+
+        this.levels = levels;
+        this.selected = 1;
+        this.player = 1;
+        this.page = 0;
+
+        Font font = new Font();
+        font.initialize(Constants.TEXT_FONT_SURFACE, 32);
+        font.setSpaceSize(15);
+
+        this.returnButton = new TextButton(10, 10, 150, 60, font);
+        this.returnButton.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.returnButton.setTxt("< Menu");
+
+        this.leftButton = new TextButton(10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, font);
+        this.leftButton.setTxt("<");
+        this.rightButton = new TextButton(Constants.WINDOW_WIDTH - PAGE_BUTTON_SIZE - 10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, font);
+        this.rightButton.setTxt(">");
+
+        this.buttons = new Button[this.levels.length];
+
+        for (int i = 0; i < this.levels.length; i++) {
+            this.buttons[i] = new Button(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE);
         }
-        this.currentPlayer = 0;
 
-        this.layers = new HashMap<>();
-        this.drawing = false;
+        this.player_text = new TextRenderer(font);
 
-        level.initialize();
-        this.layers.put("level", level);
+    }
 
-        this.layers.put("score", new TextScore(Constants.TEXT_FONT_SURFACE, Constants.WINDOW_WIDTH / 2, 20, 200));
+    // ----- GETTER ----- //
 
-        if(nbPlayers > 1)
-        {
-            String playerName = this.players[this.currentPlayer].getName();
-            this.layers.put("activePlayer", new ActivePlayer(playerName, Constants.TEXT_FONT_SURFACE, 20, 20, 200));
-        }
+    public int getSelectedLevel()
+    {
+        return this.selected;
+    }
 
-        this.waitStartTime = 0;
-        this.gameFinished = false;
+    public int getPlayer()
+    {
+        return this.player;
+    }
+
+    private boolean isFirstPage()
+    {
+        return (this.page == 0);
+    }
+
+    private boolean isLastPage()
+    {
+        return (this.page == this.levels.length / this.COLUMNS);
     }
 
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
-        if(this.waitStartTime != 0)
-        {
-            if(this.waitStartTime + 5000 <= System.currentTimeMillis())
-            {
-                this.waitStartTime = 0;
-                this.updateScore();
-                this.nextPlayer();
-            }
-            else if(((Level) this.layers.get("level")).checkRectangleFallen() > 0)
-            {
-                this.players[this.currentPlayer].setLost(true);
-                this.waitStartTime = 0;
-                this.nextPlayer();
-            }
-        }
-
-        for(Layer l : this.layers.values())
-        {
-            l.update(dt);
-        }
-
-        return EnumSet.of(InterfaceEvent.OK);
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Set<InterfaceEvent> handleEvent(Input input)
     {
-        if(this.gameFinished)
-        {
-            this.finishGame();
+        boolean colliding = this.returnButton.isColliding(input.getMousePosV());
+
+        this.returnButton.setHighlighted(colliding);
+
+        if (input.isKeyDown(Input.KEY_ESC) || (input.isMousePressed(Input.MOUSE_BUTTON_1) && colliding)) {
             return EnumSet.of(InterfaceEvent.POP);
         }
 
-        if(this.waitStartTime == 0)
-        {
-            if(input.isMouseDown(Input.MOUSE_BUTTON_1))
-            {
-                this.drawing = true;
-                ((Level) this.layers.get("level")).drawRectangle(input.getMousePosV());
+        if (input.isMousePressed(Input.MOUSE_BUTTON_1)) {
+            if (!isFirstPage() && this.leftButton.isColliding(input.getMousePosV())) {
+                page--;
             }
-            else if(this.drawing)
-            {
-                this.drawing = false;
-                this.drawnRectangle = ((Level) this.layers.get("level")).endDrawRectangle();
-
-                if(this.drawnRectangle != null)
-                {
-                    this.waitStartTime = System.currentTimeMillis();
-                }
+            if (!isLastPage() && this.rightButton.isColliding(input.getMousePosV())) {
+                page++;
             }
-        }
-        else
-        {
-            input.clearMouse();
         }
 
         return EnumSet.of(InterfaceEvent.OK);
@@ -130,66 +123,20 @@ public class LevelSelector extends Interface
     @Override
     public void render(Graphics g)
     {
-        for(Layer l : this.layers.values())
-        {
-            l.render(g);
+        this.returnButton.render(g);
+
+        if (!isFirstPage()) {
+            this.leftButton.render(g);
         }
-    }
-
-    /**
-     * Turn goes to next player who hasn't lost yet
-     */
-    private void nextPlayer()
-    {
-        int cpt = 0;
-
-        do
-        {
-            if(this.currentPlayer < this.players.length - 1)
-            {
-                this.currentPlayer++;
-            }
-            else
-            {
-                this.currentPlayer = 0;
-                cpt++;
-
-                if(cpt > 1)
-                {
-                    this.gameFinished = true;
-                }
-            }
-        } while(this.players[this.currentPlayer].hasLost() && !this.gameFinished);
-
-        ((ActivePlayer) this.layers.get("activePlayer")).setPlayerName(this.players[this.currentPlayer].getName());
-        ((TextScore) this.layers.get("score")).setScore(this.players[this.currentPlayer].getScore());
-    }
-
-    /**
-     * Updates the score of the current player with the drawn rectangle
-     */
-    private void updateScore()
-    {
-        int score = this.players[this.currentPlayer].getScore();
-        score += (this.drawnRectangle.getWidth() * this.drawnRectangle.getHeight()) / 10;
-
-        this.players[this.currentPlayer].setScore(score);
-    }
-
-    /**
-     * Tasks to do before ending the game (highscores)
-     */
-    private void finishGame()
-    {
-        Level level = (Level) this.layers.get("level");
-
-        for(Player p : this.players)
-        {
-            if(level.getHighScores().isHighScore(p.getScore()))
-            {
-                // TODO ask player's name
-                level.getHighScores().addScore(new Score(p.getName(), p.getScore()));
-            }
+        if (!isLastPage()) {
+            this.rightButton.render(g);
         }
+
+        for (int i = 0; i < (isLastPage() ? this.levels.length % this.COLUMNS : 3); i++) {
+            this.buttons[this.page * this.COLUMNS + i].render(g);
+        }
+
+        this.player_text.print(g, "AAA", 500, 500);
+        this.player_text.print(g, Integer.toString(this.player), 600, 500);
     }
 }
