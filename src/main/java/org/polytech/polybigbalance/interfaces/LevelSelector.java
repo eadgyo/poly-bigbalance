@@ -8,7 +8,6 @@ import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextPosition;
 import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
-import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
@@ -49,15 +48,15 @@ public class LevelSelector extends Interface
         this.page = 0;
 
         this.returnButton = new TextButton(10, 10, 150, 60, Constants.FONT);
-        this.returnButton.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.returnButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.returnButton.setTxt("< Menu");
 
         this.leftButton = new TextButton(10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
-        this.leftButton.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.leftButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.leftButton.setTxt("<");
         this.leftButton.setActive(false);
         this.rightButton = new TextButton(Constants.WINDOW_WIDTH - PAGE_BUTTON_SIZE - 10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
-        this.rightButton.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.rightButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.rightButton.setTxt(">");
 
         this.buttons = new TextButton[this.levels.length];
@@ -65,7 +64,7 @@ public class LevelSelector extends Interface
         for (int i = 0; i < this.levels.length; i++) {
             this.buttons[i] = new TextButton(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE, Constants.FONT);
             this.buttons[i].setBackColor(Constants.SELECTOR_NOT_SELECTED_COLOR);
-            this.buttons[i].setAddColor(new myColor(-0.3f, -0.3f, -0.3f, 1.0f));
+            this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
             this.buttons[i].setActive(false);
             this.buttons[i].setTxt(Integer.toString(i));
         }
@@ -84,16 +83,16 @@ public class LevelSelector extends Interface
         this.playerText[1].setAlignement(Alignement.TOP_CENTER);
 
         this.removePlayer = new TextButton(POS_X + this.playerText[0].getWidth("Players :") + 10, POS_Y, PLAYER_BOUTON_SIZE, PLAYER_BOUTON_SIZE, Constants.FONT);
-        this.removePlayer.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.removePlayer.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.removePlayer.setTxt("-");
         this.removePlayer.setActive(false);
         this.addPlayer = new TextButton(POS_X + this.playerText[0].getWidth("Players :") + 2 * PLAYER_BOUTON_SIZE + 10, POS_Y, PLAYER_BOUTON_SIZE, PLAYER_BOUTON_SIZE, Constants.FONT);
-        this.addPlayer.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.addPlayer.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.addPlayer.setTxt("+");
         this.addPlayer.setActive(!isMaxPlayer());
 
         this.play = new TextButton(640, 10, 150, 60, Constants.FONT);
-        this.play.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.play.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.play.setTxt(Constants.MAIN_MENU_BUTTONS[0]);
     }
 

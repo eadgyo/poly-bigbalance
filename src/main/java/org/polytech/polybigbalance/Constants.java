@@ -14,8 +14,9 @@ public interface Constants
     int WINDOW_HEIGHT = 600;
 
     // ----- MAIN MENU ----- //
-    String[] MAIN_MENU_BUTTONS = { "Play", "High scores", "How to play", "Credits", "Exit" };
-    InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.PLAY, InterfaceEvent.SCORE, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
+    String[] MAIN_MENU_BUTTONS = { "Play", "How to play", "Credits", "Exit" };
+    InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.PLAY, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
+    myColor MAIN_MENU_HIGHLIGHT_COLOR = new myColor(-0.3f, -0.3f, -0.3f, 1.0f);
 
     // ----- LEVEL SELECTOR ----- //
     myColor SELECTOR_SELECTED_COLOR = myColor.RED(1.0f);

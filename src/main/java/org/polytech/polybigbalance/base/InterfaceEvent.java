@@ -14,10 +14,9 @@ public enum InterfaceEvent
     LOAD_GAME(1<<5),
     
     PLAY(1<<6),
-    SCORE(1<<7),
-    HOW_TO(1<<8),
-    CREDIT(1<<9),
-    EXIT(1<<10);
+    HOW_TO(1<<7),
+    CREDIT(1<<8),
+    EXIT(1<<9);
     
     private final long statusFlagValue;
 

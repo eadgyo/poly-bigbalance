@@ -10,7 +10,6 @@ import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.interfaces.Credit;
 import org.polytech.polybigbalance.interfaces.Game;
 import org.polytech.polybigbalance.interfaces.Help;
-import org.polytech.polybigbalance.interfaces.HighScoresInterface;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
 import org.polytech.polybigbalance.layers.Level;
@@ -95,10 +94,6 @@ public class PolyBigBalance
 
         if (event.contains(InterfaceEvent.PLAY)) {
             stack.push(new LevelSelector(this.levels));
-        }
-
-        if (event.contains(InterfaceEvent.SCORE)) {
-            stack.push(new HighScoresInterface());
         }
 
         if (event.contains(InterfaceEvent.HOW_TO)) {
