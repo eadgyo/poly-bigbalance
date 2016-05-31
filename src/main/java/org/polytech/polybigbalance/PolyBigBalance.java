@@ -15,6 +15,7 @@ import org.polytech.polybigbalance.interfaces.MainMenu;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.Level1;
 import org.polytech.polybigbalance.layers.Level2;
+import org.polytech.polybigbalance.score.HighScoresManager;
 
 public class PolyBigBalance
 {
@@ -24,6 +25,8 @@ public class PolyBigBalance
     private Level[] levels;
     private float timeElapsed;
 
+    private HighScoresManager hsm;
+
     // ----- CONSTRUCTOR ----- //
 
     public PolyBigBalance()
@@ -32,6 +35,8 @@ public class PolyBigBalance
 
     public void init()
     {
+        this.hsm = HighScoresManager.load();
+
         this.g = Constants.g;
 
         Constants.FONT.setSpaceSize(15);
@@ -72,7 +77,7 @@ public class PolyBigBalance
 
     public void exit()
     {
-        // Nothing yet
+        this.hsm.save();
     }
 
     private void handleEvent(Set<InterfaceEvent> event)

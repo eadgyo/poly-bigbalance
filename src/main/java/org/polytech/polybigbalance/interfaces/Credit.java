@@ -1,5 +1,8 @@
 package org.polytech.polybigbalance.interfaces;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextRenderer;
@@ -10,9 +13,6 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 public class Credit extends Interface
 {
     private TextButton button;
@@ -21,7 +21,7 @@ public class Credit extends Interface
     public Credit()
     {
         this.button = new TextButton(10, 10, 150, 60, Constants.FONT);
-        this.button.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.button.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.button.setTxt("< Menu");
 
         this.text = new TextRenderer(Constants.FONT);
@@ -58,12 +58,7 @@ public class Credit extends Interface
     {
         this.button.render(g);
 
-        this.text.print(g, "Developers:\n\n" +
-                           "Ronan JAMET\n" +
-                           "Tudal LE BOT\n" +
-                           "Pierre PÉTILLON\n" +
-                           "Hugo PIGEON",
-                Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 200);
+        this.text.print(g, "Developers:\n\n" + "Ronan JAMET\n" + "Tudal LE BOT\n" + "Pierre PÉTILLON\n" + "Hugo PIGEON", Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 200);
     }
 
 }

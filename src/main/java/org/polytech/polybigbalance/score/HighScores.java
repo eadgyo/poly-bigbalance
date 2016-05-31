@@ -1,8 +1,9 @@
 package org.polytech.polybigbalance.score;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class HighScores
+public class HighScores implements Serializable
 {
     private static final int MAX_SIZE = 5;
     private int m_size;

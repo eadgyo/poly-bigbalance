@@ -1,5 +1,10 @@
 package org.polytech.polybigbalance.layers;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
@@ -12,11 +17,6 @@ import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.score.HighScores;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * General definition of a level
@@ -42,12 +42,15 @@ public abstract class Level extends Layer
     protected HighScores highScores;
 
     /**
-     * @param base value use to calculate the maximum and minimum sizes of drawn playerRectangles
+     * @param base
+     *            value use to calculate the maximum and minimum sizes of drawn
+     *            playerRectangles
      */
     public Level(int base)
     {
         super();
         super.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+
         this.playerRectangles = new HashMap<>();
         this.baseRectangles = new HashMap<>();
 
@@ -64,8 +67,7 @@ public abstract class Level extends Layer
      */
     public void initialize()
     {
-        this.groundForm = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 25),
-                new Vector2D(Constants.WINDOW_WIDTH + 1, 51), 0);
+        this.groundForm = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 25), new Vector2D(Constants.WINDOW_WIDTH + 1, 51), 0);
         this.groundForm.updateCenter();
 
         RigidBody ground = new RigidBody();
@@ -77,40 +79,37 @@ public abstract class Level extends Layer
 
     /**
      * Allows the user to draw a rectangle
-     * @param position mouse cursor's position
+     * 
+     * @param position
+     *            mouse cursor's position
      */
     public void drawRectangle(Vector2D position)
     {
-        if(this.drawingRectangle != null)
-        {
-            Vector2D center = new Vector2D((this.drawingFirstPoint.x + position.x) / 2,
-                    (this.drawingFirstPoint.y + position.y) / 2);
+        if (this.drawingRectangle != null) {
+            Vector2D center = new Vector2D((this.drawingFirstPoint.x + position.x) / 2, (this.drawingFirstPoint.y + position.y) / 2);
 
-            Vector2D length = new Vector2D(Math.abs(this.drawingFirstPoint.x - position.x),
-                    Math.abs(this.drawingFirstPoint.y - position.y));
+            Vector2D length = new Vector2D(Math.abs(this.drawingFirstPoint.x - position.x), Math.abs(this.drawingFirstPoint.y - position.y));
 
             this.drawingRectangle.set(center, length, 0.0f);
-        }
-        else
-        {
+        } else {
             this.drawingRectangle = new Rectangle(position, new Vector2D(0.0f, 0.0f), 0.0f);
             this.drawingFirstPoint = position;
         }
     }
 
     /**
-     * Ends the drawing of the new rectangle and adds it to the list of existing playerRectangles
-     * @return the drawn rectangle, or null if the playerRectangles has not been added
+     * Ends the drawing of the new rectangle and adds it to the list of existing
+     * playerRectangles
+     * 
+     * @return the drawn rectangle, or null if the playerRectangles has not been
+     *         added
      */
     public Rectangle endDrawRectangle()
     {
         Rectangle drawnRectangle = null;
 
-        if(this.drawingRectangle != null)
-        {
-            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
-                    !this.isRectangleColliding(this.drawingRectangle))
-            {
+        if (this.drawingRectangle != null) {
+            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle)) {
                 this.drawingRectangle.updateCenter();
 
                 RigidBody rect = new RigidBody();
@@ -142,27 +141,19 @@ public abstract class Level extends Layer
         g.fillForm(this.groundForm);
 
         g.setColor(0.2f, 0.2f, 1.0f);
-        for(Form f : this.baseRectangles.keySet())
-        {
+        for (Form f : this.baseRectangles.keySet()) {
             g.drawForm(f);
             g.fillForm(f);
         }
-        for(Form f : this.playerRectangles.keySet())
-        {
+        for (Form f : this.playerRectangles.keySet()) {
             g.drawForm(f);
             g.fillForm(f);
         }
 
-
-        if(this.drawingRectangle != null)
-        {
-            if(this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
-                    !this.isRectangleColliding(this.drawingRectangle))
-            {
+        if (this.drawingRectangle != null) {
+            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle)) {
                 g.setColor(0.0f, 1.0f, 1.0f);
-            }
-            else
-            {
+            } else {
                 g.setColor(1.0f, 0.2f, 0.2f);
             }
 
@@ -178,24 +169,23 @@ public abstract class Level extends Layer
     }
 
     /**
-     * Looks for rectangles which are touching the ground and put them in base rectangles
+     * Looks for rectangles which are touching the ground and put them in base
+     * rectangles
+     * 
      * @return the number of rectangles that are touching the ground
      */
     public int checkRectangleFallen()
     {
         List<Rectangle> toRemove = new LinkedList<>();
 
-        for(Rectangle r : this.playerRectangles.keySet())
-        {
-            if(CollisionDetectorNoT.isColliding(this.groundForm, r))
-            {
+        for (Rectangle r : this.playerRectangles.keySet()) {
+            if (CollisionDetectorNoT.isColliding(this.groundForm, r)) {
                 this.baseRectangles.put(r, this.playerRectangles.get(r));
                 toRemove.add(r);
             }
         }
 
-        for(Rectangle r : toRemove)
-        {
+        for (Rectangle r : toRemove) {
             this.playerRectangles.remove(r);
         }
 
@@ -207,14 +197,20 @@ public abstract class Level extends Layer
         return highScores;
     }
 
+    public void setHighScores(HighScores hs)
+    {
+        this.highScores = hs;
+    }
+
     /**
      * Initializes the rectangles created when the game is started
-     * @param rectangles the rectangles to initialize
+     * 
+     * @param rectangles
+     *            the rectangles to initialize
      */
     protected void initRectangles(Map<Rectangle, RigidBody> rectangles)
     {
-        for(Rectangle rectForm : rectangles.keySet())
-        {
+        for (Rectangle rectForm : rectangles.keySet()) {
             rectForm.updateCenter();
             RigidBody rect = rectangles.get(rectForm);
 
@@ -231,18 +227,18 @@ public abstract class Level extends Layer
 
     /**
      * Tells if the rectangle is not too large
-     * @param width rectangle's width
-     * @param height rectangle's height
+     * 
+     * @param width
+     *            rectangle's width
+     * @param height
+     *            rectangle's height
      * @return true if the rectangle's size is valid
      */
     private boolean isRectangleSizeValid(float width, float height)
     {
-        if(width > MIN_SIZE.x && height > MIN_SIZE.y)
-        {
-            if(width * height < this.BASE * this.BASE)
-            {
-                if(width < this.BASE * 2 && height < this.BASE * 2)
-                {
+        if (width > MIN_SIZE.x && height > MIN_SIZE.y) {
+            if (width * height < this.BASE * this.BASE) {
+                if (width < this.BASE * 2 && height < this.BASE * 2) {
                     return true;
                 }
             }
@@ -253,23 +249,21 @@ public abstract class Level extends Layer
 
     /**
      * Tells if the rectangle is colliding with one of the inserted ones
-     * @param rect rectangle to check
+     * 
+     * @param rect
+     *            rectangle to check
      * @return true if there is a collision
      */
     private boolean isRectangleColliding(Rectangle rect)
     {
-        for(Rectangle r : this.baseRectangles.keySet())
-        {
-            if(CollisionDetectorNoT.isColliding(rect, r))
-            {
+        for (Rectangle r : this.baseRectangles.keySet()) {
+            if (CollisionDetectorNoT.isColliding(rect, r)) {
                 return true;
             }
         }
 
-        for(Rectangle r : this.playerRectangles.keySet())
-        {
-            if(CollisionDetectorNoT.isColliding(rect, r))
-            {
+        for (Rectangle r : this.playerRectangles.keySet()) {
+            if (CollisionDetectorNoT.isColliding(rect, r)) {
                 return true;
             }
         }

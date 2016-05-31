@@ -14,9 +14,6 @@ public class Level2 extends Level
     public Level2()
     {
         super(100);
-
-        // TODO load highscores from file
-        this.highScores = new HighScores();
     }
 
     @Override

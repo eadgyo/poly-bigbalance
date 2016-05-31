@@ -1,6 +1,8 @@
 package org.polytech.polybigbalance.score;
 
-public class Score
+import java.io.Serializable;
+
+public class Score implements Serializable
 {
     private final String m_player;
     private final int m_score;

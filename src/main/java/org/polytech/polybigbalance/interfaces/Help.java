@@ -1,5 +1,8 @@
 package org.polytech.polybigbalance.interfaces;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextRenderer;
@@ -10,9 +13,6 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 public class Help extends Interface
 {
     private TextButton button;
@@ -21,7 +21,7 @@ public class Help extends Interface
     public Help()
     {
         this.button = new TextButton(10, 10, 150, 60, Constants.FONT);
-        this.button.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
+        this.button.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.button.setTxt("< Menu");
 
         this.text = new TextRenderer(Constants.FONT);
@@ -57,12 +57,8 @@ public class Help extends Interface
     public void render(Graphics g)
     {
         this.button.render(g);
-        this.text.print(g, "Click and move the mouse while holding the left mouse button to draw a rectangle." +
-                           "The rectangle is created when you release the left mouse button.\n\n" +
-                           "Then wait 5 seconds, and if the rectangle doesn't touch the ground, your score is " +
-                           "increased. A big rectangle means a big increase.\n\n" +
-                           "If the rectangle falls, you lose the game!",
-                Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 150);
+        this.text.print(g, "Click and move the mouse while holding the left mouse button to draw a rectangle." + "The rectangle is created when you release the left mouse button.\n\n" + "Then wait 5 seconds, and if the rectangle doesn't touch the ground, your score is "
+                + "increased. A big rectangle means a big increase.\n\n" + "If the rectangle falls, you lose the game!", Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 150);
     }
 
 }
