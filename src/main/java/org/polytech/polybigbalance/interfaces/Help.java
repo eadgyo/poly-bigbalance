@@ -23,7 +23,6 @@ public class Help extends Interface
         this.button.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
         this.button.setTxt("< Menu");
 
-
         this.text = new TextRenderer(Constants.FONT);
         this.text.setProportional(true);
         this.text.setMaxWidth(Constants.WINDOW_WIDTH - 100);

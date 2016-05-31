@@ -1,6 +1,8 @@
 package org.polytech.polybigbalance.interfaces;
 
 import org.cora.graphics.elements.TextButton;
+import org.cora.graphics.font.Alignement;
+import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
@@ -14,6 +16,7 @@ import java.util.Set;
 public class Credit extends Interface
 {
     private TextButton button;
+    private TextRenderer text;
 
     public Credit()
     {
@@ -21,6 +24,12 @@ public class Credit extends Interface
         this.button.setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
         this.button.setTxt("< Menu");
 
+        this.text = new TextRenderer(Constants.FONT);
+        this.text.setProportional(true);
+        this.text.setMaxWidth(Constants.WINDOW_WIDTH - 100);
+        this.text.setFontColor(myColor.WHITE());
+        this.text.setBackColor(myColor.BLACK());
+        this.text.setAlignement(Alignement.TOP_CENTER);
     }
 
     @Override
@@ -48,6 +57,13 @@ public class Credit extends Interface
     public void render(Graphics g)
     {
         this.button.render(g);
+
+        this.text.print(g, "Developers:\n\n" +
+                           "Ronan JAMET\n" +
+                           "Tudal LE BOT\n" +
+                           "Pierre PÉTILLON\n" +
+                           "Hugo PIGEON",
+                Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 200);
     }
 
 }
