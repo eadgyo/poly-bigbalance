@@ -7,6 +7,7 @@ import org.cora.maths.Vector2D;
 import org.cora.maths.collision.CollisionDetectorNoT;
 import org.cora.physics.Engine.Engine;
 import org.cora.physics.entities.RigidBody;
+import org.cora.physics.entities.material.MaterialType;
 import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
@@ -36,6 +37,8 @@ public abstract class Level extends Layer
     protected Engine physEngine;
     protected Gravity gravity;
 
+    protected MaterialType sticking;
+
     protected HighScores highScores;
 
     /**
@@ -52,6 +55,8 @@ public abstract class Level extends Layer
 
         this.physEngine = new Engine();
         this.gravity = new Gravity(new Vector2D(0, 100.0f));
+        sticking = new MaterialType();
+        sticking.addMaterialInformation(sticking, 0.0f, 0.5f, 1.0f);
     }
 
     /**
@@ -112,6 +117,7 @@ public abstract class Level extends Layer
                 rect.setMass(100.0f);
                 rect.setForm(this.drawingRectangle);
                 rect.setPosition(this.drawingRectangle.getCenter());
+                rect.setMaterialType(sticking);
                 rect.initPhysics();
 
                 this.physEngine.addElement(rect);
@@ -215,6 +221,7 @@ public abstract class Level extends Layer
             rect.setMass(100.0f);
             rect.setForm(rectForm);
             rect.setPosition(rectForm.getCenter());
+            rect.setMaterialType(sticking);
             rect.initPhysics();
 
             this.physEngine.addElement(rect);
