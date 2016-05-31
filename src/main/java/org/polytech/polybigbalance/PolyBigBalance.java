@@ -1,19 +1,16 @@
 package org.polytech.polybigbalance;
 
-import java.util.Set;
-import java.util.Stack;
-
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.interfaces.Credit;
-import org.polytech.polybigbalance.interfaces.Game;
-import org.polytech.polybigbalance.interfaces.HighScoresInterface;
-import org.polytech.polybigbalance.interfaces.LevelSelector;
-import org.polytech.polybigbalance.interfaces.MainMenu;
+import org.polytech.polybigbalance.interfaces.*;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.Level1;
+import org.polytech.polybigbalance.layers.Level2;
+
+import java.util.Set;
+import java.util.Stack;
 
 public class PolyBigBalance
 {
@@ -94,7 +91,7 @@ public class PolyBigBalance
         }
 
         if (event.contains(InterfaceEvent.HOW_TO)) {
-            stack.push(new Game(2, new Level1()));
+            stack.push(new Game(2, new Level2()));
         }
 
         if (event.contains(InterfaceEvent.CREDIT)) {
