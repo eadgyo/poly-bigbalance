@@ -22,7 +22,7 @@ public interface Constants
     myColor SELECTOR_NOT_SELECTED_COLOR = myColor.WHITE(1.0f);
 
     // ----- GAME ----- //
-    int MAX_PLAYER = 3;
+    int MAX_PLAYER = 4;
 
     // ----- RESOURCES ----- //
 
