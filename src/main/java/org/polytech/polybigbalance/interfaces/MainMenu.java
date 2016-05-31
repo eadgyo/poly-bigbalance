@@ -24,14 +24,13 @@ public class MainMenu extends Interface
 
         final int WIDTH = 200, HEIGHT = 60;
         final int SPACING = (Constants.WINDOW_HEIGHT - HEIGHT * this.buttons.length) / (this.buttons.length + 1);
-        final int START_HEIGHT = (Constants.WINDOW_HEIGHT - (HEIGHT + SPACING) * this.buttons.length + SPACING) / 2;
 
         Font font = new Font();
         font.initialize(Constants.TEXT_FONT_SURFACE, 32);
         font.setSpaceSize(15);
 
         for (int i = 0; i < this.buttons.length; i++) {
-            this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH / 2 - WIDTH / 2, START_HEIGHT + (HEIGHT + SPACING) * i, WIDTH, HEIGHT, font);
+            this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH / 2 - WIDTH / 2, SPACING + (HEIGHT + SPACING) * i, WIDTH, HEIGHT, font);
             this.buttons[i].setAddColor(new myColor(-0.3f, -0.3f, -0.3f, -0.3f));
             this.buttons[i].setTxt(Constants.MAIN_MENU_BUTTONS[i]);
         }
@@ -50,14 +49,14 @@ public class MainMenu extends Interface
             Vector2D mousePos = input.getMousePosV();
 
             for (Button b : this.buttons) {
-                b.setActive(b.isColliding(mousePos));
+                b.setHighlighted(b.isColliding(mousePos));
             }
         }
 
         if (input.isMousePressed(Input.MOUSE_BUTTON_1)) {
             for (int i = 0; i < this.buttons.length; i++) {
                 if (this.buttons[i].isColliding(input.getMousePosV())) {
-                    this.buttons[i].setActive(false);
+                    this.buttons[i].setHighlighted(false);
                     return EnumSet.of(Constants.MAIN_MENU_EVENT[i]);
                 }
             }

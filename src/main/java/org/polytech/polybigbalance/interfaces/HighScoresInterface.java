@@ -40,7 +40,7 @@ public class HighScoresInterface extends Interface
     {
         boolean colliding = this.button.isColliding(input.getMousePosV());
 
-        this.button.setActive(colliding);
+        this.button.setHighlighted(colliding);
 
         if (input.isKeyDown(Input.KEY_ESC) || (input.isMousePressed(Input.MOUSE_BUTTON_1) && colliding)) {
             return EnumSet.of(InterfaceEvent.POP);

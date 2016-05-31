@@ -12,14 +12,16 @@ import org.polytech.polybigbalance.interfaces.Help;
 import org.polytech.polybigbalance.interfaces.HighScoresInterface;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
+import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.Level1;
 
 public class PolyBigBalance
 {
     private Graphics g;
     private Input input;
-    private float timeElapsed;
     private Stack<Interface> stack;
+    private Level[] levels;
+    private float timeElapsed;
 
     // ----- CONSTRUCTOR ----- //
 
@@ -37,6 +39,11 @@ public class PolyBigBalance
 
         this.stack = new Stack<>();
         this.stack.add(new MainMenu());
+
+        this.levels = new Level[5];
+        for (int i = 0; i < 5; i++) {
+            this.levels[i] = new Level1();
+        }
 
         this.timeElapsed = System.nanoTime() / 1000000000.0f;
     }
@@ -77,9 +84,9 @@ public class PolyBigBalance
             stack.pop();
         }
 
-        if (event.contains(InterfaceEvent.NEW_GAME)) {
-            this.input.clearMouse();
-            stack.push(new LevelSelector(2, new Level1()));
+        if (event.contains(InterfaceEvent.PLAY)) {
+            this.input.clear();
+            stack.push(new LevelSelector(this.levels));
         }
 
         if (event.contains(InterfaceEvent.SCORE)) {
@@ -96,7 +103,6 @@ public class PolyBigBalance
 
         if (event.contains(InterfaceEvent.EXIT)) {
             g.terminate();
-            System.out.println("EXIT");
         }
     }
 }

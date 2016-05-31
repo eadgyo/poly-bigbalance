@@ -11,8 +11,8 @@ public interface Constants
     int WINDOW_WIDTH = 800;
     int WINDOW_HEIGHT = 600;
 
-    String[] MAIN_MENU_BUTTONS = { "New Game", "High scores", "How to play", "Credits", "Exit" };
-    InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.NEW_GAME, InterfaceEvent.SCORE, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
+    String[] MAIN_MENU_BUTTONS = { "Play", "High scores", "How to play", "Credits", "Exit" };
+    InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.PLAY, InterfaceEvent.SCORE, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
 
     String RESOURCES_PATH = "/";
 
