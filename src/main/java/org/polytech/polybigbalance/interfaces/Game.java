@@ -207,41 +207,47 @@ public class Game extends Interface
      */
     private Set<InterfaceEvent> enteringName(Input input)
     {
+        String name;
+
         if (!namefield.getActive())
         {
             input.clearTemp();
             namefield.setActive(true);
         }
 
-        if (input.getTemp() == "")
+        if (input.getTemp().equals(""))
         {
-            namefield.setTxt(players[enteringName].getName());
+            name = players[enteringName].getName();
             namefield.getTextRenderer().setFontColor(myColor.BLACK(0.4f));
         }
         else
         {
-            namefield.setTxt(input.getTemp());
+            name = input.getTemp();
             namefield.getTextRenderer().setFontColor(myColor.BLACK());
+        }
 
-            if (input.isKeyDown(Input.KEY_ENTER))
+        if (input.isKeyDown(Input.KEY_ENTER))
+        {
+            players[enteringName].setName(name);
+
+            if(this.enteringName < this.players.length - 1)
             {
-                players[enteringName].setName(input.getTemp());
-
-                if(this.enteringName < this.players.length - 1)
-                {
-                    this.enteringName++;
-                    input.clearTemp();
-                }
-                else
-                {
-                    this.enteringName = -1;
-                    this.namefield.setActive(false);
-                    this.layers.put("scoresSummary", new ScoresSummary(this.players));
-                    this.gameFinished = true;
-                }
-
-                input.clearKeys();
+                this.enteringName++;
+                input.clearTemp();
             }
+            else
+            {
+                this.enteringName = -1;
+                this.namefield.setActive(false);
+                this.layers.put("scoresSummary", new ScoresSummary(this.players));
+                this.gameFinished = true;
+            }
+
+            input.clearKeys();
+        }
+        else
+        {
+            namefield.setTxt(name);
         }
 
         return EnumSet.of(InterfaceEvent.OK);
