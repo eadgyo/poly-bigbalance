@@ -56,7 +56,7 @@ public class Game extends Interface
 
         this.layers.put("score", new TextScore(Constants.WINDOW_WIDTH / 2, 20, 200));
 
-        if(nbPlayers > 1)
+        //if(nbPlayers > 1)
         {
             String playerName = this.players[this.currentPlayer].getName();
             this.layers.put("activePlayer", new ActivePlayer(playerName, 20, 20, 200));

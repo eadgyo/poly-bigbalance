@@ -11,12 +11,11 @@ public enum InterfaceEvent
     MENU(1<<3),
     
     NEW_GAME(1<<4),
-    LOAD_GAME(1<<5),
     
-    PLAY(1<<6),
-    HOW_TO(1<<7),
-    CREDIT(1<<8),
-    EXIT(1<<9);
+    PLAY(1<<5),
+    HOW_TO(1<<6),
+    CREDIT(1<<7),
+    EXIT(1<<8);
     
     private final long statusFlagValue;
 

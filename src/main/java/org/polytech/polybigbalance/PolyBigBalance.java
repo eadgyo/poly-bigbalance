@@ -14,7 +14,6 @@ import org.polytech.polybigbalance.interfaces.Help;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
 import org.polytech.polybigbalance.layers.Level;
-import org.polytech.polybigbalance.layers.Level1;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
 
@@ -23,7 +22,6 @@ public class PolyBigBalance
     private Graphics g;
     private Input input;
     private Stack<Interface> stack;
-    private Level[] levels;
     private float timeElapsed;
 
     private HighScoresManager hsm;
@@ -49,11 +47,6 @@ public class PolyBigBalance
         this.stack = new Stack<>();
         this.stack.add(new MainMenu());
 
-        this.levels = new Level[5];
-        for (int i = 0; i < 5; i++) {
-            this.levels[i] = new Level1();
-        }
-
         this.gameData = new GameData();
 
         this.timeElapsed = System.nanoTime() / 1000000000.0f;
@@ -64,18 +57,18 @@ public class PolyBigBalance
     public void mainLoop()
     {
         while (g.isNotTerminated()) {
-            g.clear();
+            this.g.clear();
 
-            timeElapsed = (System.nanoTime() / 1000000000.0f) - timeElapsed;
-            stack.lastElement().update(timeElapsed);
-            timeElapsed = System.nanoTime() / 1000000000.0f;
+            this.timeElapsed = (System.nanoTime() / 1000000000.0f) - this.timeElapsed;
+            this.stack.lastElement().update(this.timeElapsed);
+            this.timeElapsed = System.nanoTime() / 1000000000.0f;
 
-            stack.lastElement().render(g);
+            this.stack.lastElement().render(g);
 
-            input.update();
+            this.input.update();
             handleEvent(stack.lastElement().handleEvent(input));
 
-            g.swapGL();
+            this.g.swapGL();
         }
     }
 
