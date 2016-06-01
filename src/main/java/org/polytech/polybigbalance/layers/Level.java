@@ -1,10 +1,5 @@
 package org.polytech.polybigbalance.layers;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
@@ -17,6 +12,11 @@ import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.score.HighScores;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * General definition of a level

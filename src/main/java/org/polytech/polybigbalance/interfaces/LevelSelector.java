@@ -70,7 +70,7 @@ public class LevelSelector extends Interface
                     (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2,
                     LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE,
                     Constants.FONT,
-                    LevelFactory.getNewLevel(i));
+                    LevelFactory.getNewLevel(i), i);
             this.buttons[i].setBackColor(Constants.SELECTOR_NOT_SELECTED_COLOR);
             this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
             this.buttons[i].setActive(false);
