@@ -15,7 +15,9 @@ public enum InterfaceEvent
     PLAY(1<<5),
     HOW_TO(1<<6),
     CREDIT(1<<7),
-    EXIT(1<<8);
+    EXIT(1<<8),
+    
+    PAUSE(1<<9);
     
     private final long statusFlagValue;
 

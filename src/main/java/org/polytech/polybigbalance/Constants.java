@@ -21,6 +21,10 @@ public interface Constants
     InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.PLAY, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
     myColor MAIN_MENU_HIGHLIGHT_COLOR = new myColor(-0.3f, -0.3f, -0.3f, 1.0f);
 
+    // ----- OPTION MENU ----- //
+    String[] OPTION_MENU_BUTTONS = { "Resume", "Menu", "Exit" };
+    InterfaceEvent[] OPTION_MENU_EVENT = { InterfaceEvent.POP, InterfaceEvent.MENU, InterfaceEvent.EXIT };
+
     // ----- GAME FINISHED MENU ----- //
     String[] GAME_FINISHED_BUTTONS = { "Play again", "Main menu", "Exit" };
     InterfaceEvent[] GAME_FINISHED_EVENT = { InterfaceEvent.NEW_GAME, InterfaceEvent.POP, InterfaceEvent.EXIT };
@@ -40,6 +44,5 @@ public interface Constants
 
     Font FONT = FontManager.getInstance().loadFont(Constants.RESOURCES_PATH + "font.bmp", 32);
 
-    Image MAIN_MENU_BACKGROUND  = new Image(TextureManager.getInstance().loadTexture(Constants.RESOURCES_PATH +
-                                                                                     "mainMenu.png"));
+    Image MAIN_MENU_BACKGROUND = new Image(TextureManager.getInstance().loadTexture(Constants.RESOURCES_PATH + "mainMenu.png"));
 }

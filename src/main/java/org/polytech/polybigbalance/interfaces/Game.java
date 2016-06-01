@@ -124,6 +124,10 @@ public class Game extends Interface
     @Override
     public Set<InterfaceEvent> handleEvent(Input input)
     {
+        if (input.isKeyPressed(Input.KEY_ESC)) {
+            return EnumSet.of(InterfaceEvent.PAUSE);
+        }
+        
         if(this.enteringName != -1)
         {
             return this.enteringName(input);

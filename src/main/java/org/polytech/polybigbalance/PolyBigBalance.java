@@ -13,6 +13,7 @@ import org.polytech.polybigbalance.interfaces.Game;
 import org.polytech.polybigbalance.interfaces.Help;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
+import org.polytech.polybigbalance.interfaces.Options;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
@@ -86,6 +87,15 @@ public class PolyBigBalance
         if (event.contains(InterfaceEvent.POP)) {
             this.input.clear();
             this.stack.pop();
+        }
+
+        if (event.contains(InterfaceEvent.PAUSE)) {
+            this.stack.push(new Options());
+        }
+
+        if (event.contains(InterfaceEvent.MENU)) {
+            this.stack.clear();
+            this.stack.push(new MainMenu());
         }
 
         if (event.contains(InterfaceEvent.NEW_GAME)) {
