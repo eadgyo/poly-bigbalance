@@ -24,6 +24,7 @@ public interface Constants
     // ----- OPTION MENU ----- //
     String[] OPTION_MENU_BUTTONS = { "Resume", "Menu", "Exit" };
     InterfaceEvent[] OPTION_MENU_EVENT = { InterfaceEvent.POP, InterfaceEvent.MENU, InterfaceEvent.EXIT };
+    String OPTION_MENU_TITLE = "Pause";
 
     // ----- GAME FINISHED MENU ----- //
     String[] GAME_FINISHED_BUTTONS = { "Play again", "Main menu", "Exit" };

@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
+import org.cora.graphics.font.TextPosition;
+import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.cora.maths.Vector2D;
@@ -15,9 +17,14 @@ import org.polytech.polybigbalance.base.InterfaceEvent;
 public class Options extends Interface
 {
     private TextButton buttons[];
+    private TextRenderer title;
 
     public Options()
     {
+        this.title = new TextRenderer(Constants.FONT);
+        this.title.setTextPosition(TextPosition.TOP_CENTER);
+        this.title.setPos((Constants.WINDOW_WIDTH - this.title.getWidth(Constants.OPTION_MENU_TITLE)) / 2, 50);
+
         this.buttons = new TextButton[Constants.OPTION_MENU_BUTTONS.length];
 
         final int WIDTH = 200, HEIGHT = 60;
@@ -65,7 +72,7 @@ public class Options extends Interface
     public void render(Graphics g)
     {
         super.render(g);
-        g.render(Constants.MAIN_MENU_BACKGROUND);
+        this.title.print(g, Constants.OPTION_MENU_TITLE);
 
         for (Button b : this.buttons) {
             b.render(g);
