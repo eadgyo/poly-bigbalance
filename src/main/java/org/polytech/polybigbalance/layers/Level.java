@@ -202,7 +202,6 @@ public abstract class Level extends Layer
             this.playerRectangles.remove(r);
         }
 
-        System.out.println(toRemove.size());
         return toRemove.size();
     }
 

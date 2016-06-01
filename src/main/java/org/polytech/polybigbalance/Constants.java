@@ -18,6 +18,10 @@ public interface Constants
     InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.PLAY, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
     myColor MAIN_MENU_HIGHLIGHT_COLOR = new myColor(-0.3f, -0.3f, -0.3f, 1.0f);
 
+    // ----- GAME FINISHED MENU ----- //
+    String[] GAME_FINISHED_BUTTONS = { "Play again", "Main menu", "Exit" };
+    InterfaceEvent[] GAME_FINISHED_EVENT = { InterfaceEvent.NEW_GAME, InterfaceEvent.POP, InterfaceEvent.EXIT };
+
     // ----- LEVEL SELECTOR ----- //
     myColor SELECTOR_SELECTED_COLOR = myColor.RED(1.0f);
     myColor SELECTOR_NOT_SELECTED_COLOR = myColor.WHITE(1.0f);

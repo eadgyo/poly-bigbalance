@@ -34,6 +34,7 @@ public class Game extends Interface
     private Rectangle drawnRectangle;
 
     private boolean gameFinished;
+    private boolean highScoresRecorded;
 
     /**
      * @param nbPlayers number of players
@@ -61,6 +62,7 @@ public class Game extends Interface
 
         this.waitStartTime = 0;
         this.gameFinished = false;
+        this.highScoresRecorded = false;
     }
 
     @Override
@@ -95,12 +97,7 @@ public class Game extends Interface
     {
         if(this.gameFinished)
         {
-            if(this.finishGame(input))
-            {
-                return EnumSet.of(InterfaceEvent.POP);
-            }
-
-            return EnumSet.of(InterfaceEvent.OK);
+            return this.finishGame(input);
         }
 
         if(this.waitStartTime == 0)
@@ -183,9 +180,9 @@ public class Game extends Interface
      * Tasks to do before ending the game (scores summary, highscores)
      * @return true when the tasks are finished
      */
-    private boolean finishGame(Input input)
+    private Set<InterfaceEvent> finishGame(Input input)
     {
-        if(input.isKeyPressed(Input.KEY_ENTER))
+        if(!this.highScoresRecorded)
         {
             Level level = (Level) this.layers.get("level");
 
@@ -198,9 +195,9 @@ public class Game extends Interface
                 }
             }
 
-            return true;
+            this.highScoresRecorded = true;
         }
 
-        return false;
+        return ((ScoresSummary) this.layers.get("scoresSummary")).handleButtons(input);
     }
 }
