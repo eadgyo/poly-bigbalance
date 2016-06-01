@@ -6,11 +6,13 @@ package org.polytech.polybigbalance.base;
 public class Player
 {
     private int score;
+    private String defaultName;
     private String name;
     private boolean lost;
 
     public Player(String name)
     {
+        this.defaultName = name;
         this.name = name;
         this.score = 0;
         this.lost = false;
@@ -25,6 +27,10 @@ public class Player
     {
         return name;
     }
+
+    public void setName(String name) { this.name = name; }
+
+    public void resetName() { this.name = defaultName; }
 
     public boolean hasLost()
     {

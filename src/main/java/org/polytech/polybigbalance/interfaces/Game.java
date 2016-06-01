@@ -1,6 +1,11 @@
 package org.polytech.polybigbalance.interfaces;
 
+import org.cora.graphics.elements.TextButton;
+import org.cora.graphics.font.Alignement;
+import org.cora.graphics.font.TextPosition;
+import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
+import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
 import org.cora.maths.Rectangle;
 import org.polytech.polybigbalance.Constants;
@@ -33,6 +38,11 @@ public class Game extends Interface
     private long waitStartTime;
     private Rectangle drawnRectangle;
 
+    private TextButton namefield;
+    private TextRenderer playerNameRenderer;
+
+    private int enteringName;
+
     private boolean gameFinished;
     private boolean highScoresRecorded;
 
@@ -59,6 +69,25 @@ public class Game extends Interface
 
         String playerName = this.players[this.currentPlayer].getName();
         this.layers.put("activePlayer", new ActivePlayer(playerName, 20, 20, 200));
+
+        namefield = new TextButton(Constants.WINDOW_WIDTH/2 - Constants.WINDOW_WIDTH/8,
+                Constants.WINDOW_HEIGHT/2 - Constants.WINDOW_HEIGHT/32,
+                Constants.WINDOW_WIDTH/4,
+                Constants.WINDOW_HEIGHT/16,
+                Constants.FONT);
+        namefield.setTextMiddleLeft();
+        namefield.setTxt("");
+        namefield.setPreRendering(false);
+
+        namefield.setBackColor(myColor.WHITE(0.7f));
+        namefield.setRecColor(myColor.BLACK());
+        namefield.setActive(false);
+
+        playerNameRenderer = new TextRenderer(Constants.FONT);
+        playerNameRenderer.setAlignement(Alignement.TOP_CENTER);
+        playerNameRenderer.setTextPosition(TextPosition.LEFT);
+
+        enteringName = -1;
 
         this.waitStartTime = 0;
         this.gameFinished = false;
@@ -95,6 +124,11 @@ public class Game extends Interface
     @Override
     public Set<InterfaceEvent> handleEvent(Input input)
     {
+        if(this.enteringName != -1)
+        {
+            return this.enteringName(input);
+        }
+
         if(this.gameFinished)
         {
             return this.finishGame(input);
@@ -134,6 +168,8 @@ public class Game extends Interface
         {
             l.render(g);
         }
+
+        namefield.render(g);
     }
 
     /**
@@ -156,14 +192,56 @@ public class Game extends Interface
 
                 if(cpt > 1)
                 {
-                    this.gameFinished = true;
-                    this.layers.put("scoresSummary", new ScoresSummary(this.players));
+                    this.enteringName = 0;
+                    //this.layers.put("scoresSummary", new ScoresSummary(this.players));
                 }
             }
-        } while(this.players[this.currentPlayer].hasLost() && !this.gameFinished);
+        } while(this.players[this.currentPlayer].hasLost() && this.enteringName == -1);
 
         ((ActivePlayer) this.layers.get("activePlayer")).setPlayerName(this.players[this.currentPlayer].getName());
         ((TextScore) this.layers.get("score")).setScore(this.players[this.currentPlayer].getScore());
+    }
+
+    /**
+     *
+     */
+    private Set<InterfaceEvent> enteringName(Input input)
+    {
+        if (!namefield.getActive())
+        {
+            input.clearTemp();
+            namefield.setActive(true);
+        }
+
+        if (input.getTemp() == "")
+        {
+            namefield.setTxt(players[0].getName());
+            namefield.getTextRenderer().setFontColor(myColor.BLACK(0.4f));
+        }
+        else
+        {
+            namefield.setTxt(input.getTemp());
+            namefield.getTextRenderer().setFontColor(myColor.BLACK());
+
+            if (input.isKeyDown(Input.KEY_ENTER))
+            {
+                players[enteringName].setName(input.getTemp());
+
+                if(this.enteringName < this.players.length - 1)
+                {
+                    this.enteringName++;
+                }
+                else
+                {
+                    this.enteringName = -1;
+                    this.namefield.setActive(false);
+                    this.layers.put("scoresSummary", new ScoresSummary(this.players));
+                    this.gameFinished = true;
+                }
+            }
+        }
+
+        return EnumSet.of(InterfaceEvent.OK);
     }
 
     /**
