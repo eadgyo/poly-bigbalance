@@ -38,6 +38,11 @@ public class PolyBigBalance
     public void init()
     {
         this.hsm = HighScoresManager.load();
+        this.hsm.test();
+        System.out.println(this.hsm.getHighScores(0).toString());
+        System.out.println(this.hsm.getHighScores(1).toString());
+        // this.hsm.addHighScores(0);
+        // this.hsm.test();
 
         this.g = Constants.g;
 
@@ -98,7 +103,13 @@ public class PolyBigBalance
         if (event.contains(InterfaceEvent.NEW_GAME)) {
             this.input.clear();
             this.stack.pop();
-            this.stack.push(new Game(this.gameData.getPlayer(), LevelFactory.getNewLevel(this.gameData.getLevel())));
+
+            System.out.println(this.gameData.getPlayer() + " " + this.gameData.getLevel());
+
+            Level level = LevelFactory.getNewLevel(this.gameData.getLevel());
+            this.hsm.setHighScores(this.gameData.getLevel(), level);
+
+            this.stack.push(new Game(this.gameData.getPlayer(), level));
         }
 
         if (event.contains(InterfaceEvent.PLAY)) {
