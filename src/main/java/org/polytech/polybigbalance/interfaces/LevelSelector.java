@@ -224,6 +224,7 @@ public class LevelSelector extends Interface
             }
         }
 
+
         if (input.isMouseMoving()) {
             this.returnButton.setHighlighted(this.returnButton.isColliding(input.getMousePosV()));
             this.play.setHighlighted(this.play.isColliding(input.getMousePosV()));

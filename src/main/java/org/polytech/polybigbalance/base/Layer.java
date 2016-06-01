@@ -70,6 +70,7 @@ public abstract class Layer
         bounds.set(x, y, width, height);
     }
 
+
     /**
      * Change layer's bounds
      * @param x top left coordinate

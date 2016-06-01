@@ -55,7 +55,6 @@ public class LevelPreview extends TextButton
         level.render(g);
         g.resetOuput();
 
-
         if (isHighlighted())
         {
             //Score[] scores = level.getHighScores().getScore();
