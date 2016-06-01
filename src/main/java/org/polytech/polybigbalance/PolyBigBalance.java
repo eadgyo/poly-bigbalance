@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
+import org.polytech.polybigbalance.base.GameData;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.interfaces.Credit;
@@ -26,6 +27,7 @@ public class PolyBigBalance
     private float timeElapsed;
 
     private HighScoresManager hsm;
+    private GameData gameData;
 
     // ----- CONSTRUCTOR ----- //
 
@@ -51,6 +53,8 @@ public class PolyBigBalance
         for (int i = 0; i < 5; i++) {
             this.levels[i] = new Level1();
         }
+
+        this.gameData = new GameData();
 
         this.timeElapsed = System.nanoTime() / 1000000000.0f;
     }
@@ -88,29 +92,29 @@ public class PolyBigBalance
 
         if (event.contains(InterfaceEvent.POP)) {
             this.input.clear();
-            stack.pop();
+            this.stack.pop();
         }
 
         if (event.contains(InterfaceEvent.NEW_GAME)) {
             this.input.clear();
-            stack.pop();
-            stack.push(new Game(2, new Level2()));
+            this.stack.pop();
+            this.stack.push(new Game(2, new Level2()));
         }
 
         if (event.contains(InterfaceEvent.PLAY)) {
-            stack.push(new LevelSelector(this.levels));
+            this.stack.push(new LevelSelector(this.gameData));
         }
 
         if (event.contains(InterfaceEvent.HOW_TO)) {
-            stack.push(new Help());
+            this.stack.push(new Help());
         }
 
         if (event.contains(InterfaceEvent.CREDIT)) {
-            stack.push(new Credit());
+            this.stack.push(new Credit());
         }
 
         if (event.contains(InterfaceEvent.EXIT)) {
-            g.terminate();
+            this.g.terminate();
         }
     }
 }

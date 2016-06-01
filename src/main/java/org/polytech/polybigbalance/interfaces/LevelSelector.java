@@ -10,9 +10,10 @@ import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
+import org.polytech.polybigbalance.base.GameData;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.layers.Level;
+import org.polytech.polybigbalance.level.LevelFactory;
 
 public class LevelSelector extends Interface
 {
@@ -26,12 +27,12 @@ public class LevelSelector extends Interface
     private TextButton play;
     private TextButton[] buttons;
     private TextRenderer[] playerText;
-    private Level[] levels;
     private int selected;
     private int player;
     private int page;
+    private GameData gameData;
 
-    public LevelSelector(Level[] levels)
+    public LevelSelector(GameData gameData)
     {
         final int PAGE_BUTTON_SIZE = 100;
         final int PADDING = 10;
@@ -42,7 +43,8 @@ public class LevelSelector extends Interface
         final int POS_X = 300;
         final int POS_Y = 50;
 
-        this.levels = levels;
+        this.gameData = gameData;
+
         this.selected = 0;
         this.player = 1;
         this.page = 0;
@@ -58,10 +60,11 @@ public class LevelSelector extends Interface
         this.rightButton = new TextButton(Constants.WINDOW_WIDTH - PAGE_BUTTON_SIZE - 10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
         this.rightButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
         this.rightButton.setTxt(">");
+        this.rightButton.setActive(!isLastPage());
 
-        this.buttons = new TextButton[this.levels.length];
+        this.buttons = new TextButton[LevelFactory.getNumberOfLevel()];
 
-        for (int i = 0; i < this.levels.length; i++) {
+        for (int i = 0; i < LevelFactory.getNumberOfLevel(); i++) {
             this.buttons[i] = new TextButton(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE, Constants.FONT);
             this.buttons[i].setBackColor(Constants.SELECTOR_NOT_SELECTED_COLOR);
             this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
@@ -115,7 +118,7 @@ public class LevelSelector extends Interface
 
     private boolean isLastPage()
     {
-        return (this.page == this.levels.length / this.COLUMNS);
+        return (this.page == LevelFactory.getNumberOfLevel() / this.COLUMNS);
     }
 
     private boolean isMinPlayer()
@@ -137,7 +140,7 @@ public class LevelSelector extends Interface
 
     private int getPageSize()
     {
-        return (isLastPage() ? this.levels.length % this.COLUMNS : 3);
+        return (isLastPage() ? LevelFactory.getNumberOfLevel() % this.COLUMNS : 3);
     }
 
     private int getButtonIndex(int n)
@@ -153,6 +156,12 @@ public class LevelSelector extends Interface
         this.selected = n;
     }
 
+    private void setGameData()
+    {
+        this.gameData.setPlayer(this.player);
+        this.gameData.setLevel(this.selected);
+    }
+
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
@@ -164,11 +173,13 @@ public class LevelSelector extends Interface
     public Set<InterfaceEvent> handleEvent(Input input)
     {
         if (input.isKeyDown(Input.KEY_ESC)) {
+            setGameData();
             return EnumSet.of(InterfaceEvent.POP);
         }
 
         if (input.isMousePressed(Input.MOUSE_BUTTON_1)) {
             if (this.returnButton.isHighlighted()) {
+                setGameData();
                 return EnumSet.of(InterfaceEvent.POP);
             }
             if (this.play.isHighlighted()) {

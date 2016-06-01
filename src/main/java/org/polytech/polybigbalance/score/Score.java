@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Tugdwal
+ * 
+ */
+
 package org.polytech.polybigbalance.score;
 
 import java.io.Serializable;

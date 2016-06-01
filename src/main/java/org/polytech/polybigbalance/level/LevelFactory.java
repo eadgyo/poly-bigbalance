@@ -38,7 +38,7 @@ public abstract class LevelFactory
         return new Level2();
     }
 
-    private static int getNumberOfLevel()
+    public static int getNumberOfLevel()
     {
         return LevelFactory.LEVELS;
     }
