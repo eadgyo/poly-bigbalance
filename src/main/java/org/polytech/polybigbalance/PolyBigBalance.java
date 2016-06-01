@@ -15,7 +15,7 @@ import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.MainMenu;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.Level1;
-import org.polytech.polybigbalance.layers.Level2;
+import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
 
 public class PolyBigBalance
@@ -98,7 +98,7 @@ public class PolyBigBalance
         if (event.contains(InterfaceEvent.NEW_GAME)) {
             this.input.clear();
             this.stack.pop();
-            this.stack.push(new Game(2, new Level2()));
+            this.stack.push(new Game(this.gameData.getPlayer(), LevelFactory.getNewLevel(this.gameData.getLevel())));
         }
 
         if (event.contains(InterfaceEvent.PLAY)) {

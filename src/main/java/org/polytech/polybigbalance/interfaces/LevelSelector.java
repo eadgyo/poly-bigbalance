@@ -173,16 +173,15 @@ public class LevelSelector extends Interface
     public Set<InterfaceEvent> handleEvent(Input input)
     {
         if (input.isKeyDown(Input.KEY_ESC)) {
-            setGameData();
             return EnumSet.of(InterfaceEvent.POP);
         }
 
         if (input.isMousePressed(Input.MOUSE_BUTTON_1)) {
             if (this.returnButton.isHighlighted()) {
-                setGameData();
                 return EnumSet.of(InterfaceEvent.POP);
             }
             if (this.play.isHighlighted()) {
+                setGameData();
                 return EnumSet.of(InterfaceEvent.NEW_GAME);
             }
             if (this.leftButton.isHighlighted()) {
