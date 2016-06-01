@@ -57,7 +57,7 @@ public abstract class Level extends Layer
         this.BASE = base;
 
         this.physEngine = new Engine();
-        this.gravity = new Gravity(new Vector2D(0, 100.0f));
+        this.gravity = new Gravity(new Vector2D(0, 200.0f));
         sticking = new MaterialType();
         sticking.addMaterialInformation(sticking, 0.0f, 0.5f, 1.0f);
     }
@@ -108,8 +108,13 @@ public abstract class Level extends Layer
     {
         Rectangle drawnRectangle = null;
 
-        if (this.drawingRectangle != null) {
-            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle)) {
+        if (this.drawingRectangle != null)
+        {
+            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
+                !this.isRectangleColliding(this.drawingRectangle))
+            {
+                this.checkRectangleFallen();
+
                 this.drawingRectangle.updateCenter();
 
                 RigidBody rect = new RigidBody();
@@ -151,7 +156,9 @@ public abstract class Level extends Layer
         }
 
         if (this.drawingRectangle != null) {
-            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle)) {
+            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
+                !this.isRectangleColliding(this.drawingRectangle))
+            {
                 g.setColor(0.0f, 1.0f, 1.0f);
             } else {
                 g.setColor(1.0f, 0.2f, 0.2f);
@@ -178,17 +185,24 @@ public abstract class Level extends Layer
     {
         List<Rectangle> toRemove = new LinkedList<>();
 
-        for (Rectangle r : this.playerRectangles.keySet()) {
-            if (CollisionDetectorNoT.isColliding(this.groundForm, r)) {
+        for (Rectangle r : this.playerRectangles.keySet())
+        {
+            Form f = r.clone();
+            f.scale(1.01f);
+
+            if (CollisionDetectorNoT.isColliding(this.groundForm, f))
+            {
                 this.baseRectangles.put(r, this.playerRectangles.get(r));
                 toRemove.add(r);
             }
         }
 
-        for (Rectangle r : toRemove) {
+        for (Rectangle r : toRemove)
+        {
             this.playerRectangles.remove(r);
         }
 
+        System.out.println(toRemove.size());
         return toRemove.size();
     }
 
@@ -249,7 +263,7 @@ public abstract class Level extends Layer
 
     /**
      * Tells if the rectangle is colliding with one of the inserted ones
-     * 
+     *
      * @param rect
      *            rectangle to check
      * @return true if there is a collision
