@@ -1,5 +1,8 @@
 package org.polytech.polybigbalance.interfaces;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextPosition;
@@ -12,9 +15,7 @@ import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.game.LevelPreview;
 import org.polytech.polybigbalance.level.LevelFactory;
-
-import java.util.EnumSet;
-import java.util.Set;
+import org.polytech.polybigbalance.score.HighScoresManager;
 
 public class LevelSelector extends Interface
 {
@@ -33,7 +34,7 @@ public class LevelSelector extends Interface
     private int page;
     private GameData gameData;
 
-    public LevelSelector(GameData gameData)
+    public LevelSelector(GameData gameData, HighScoresManager hsm)
     {
         final int PAGE_BUTTON_SIZE = 100;
         final int PADDING = 10;
@@ -66,11 +67,7 @@ public class LevelSelector extends Interface
         this.buttons = new TextButton[LevelFactory.getNumberOfLevel()];
 
         for (int i = 0; i < LevelFactory.getNumberOfLevel(); i++) {
-            this.buttons[i] = new LevelPreview(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3),
-                    (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2,
-                    LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE,
-                    Constants.FONT,
-                    LevelFactory.getNewLevel(i), i);
+            this.buttons[i] = new LevelPreview(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE, Constants.FONT, LevelFactory.getNewLevel(i), i, hsm);
             this.buttons[i].setBackColor(Constants.SELECTOR_NOT_SELECTED_COLOR);
             this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
             this.buttons[i].setActive(false);
@@ -224,7 +221,6 @@ public class LevelSelector extends Interface
                 }
             }
         }
-
 
         if (input.isMouseMoving()) {
             this.returnButton.setHighlighted(this.returnButton.isColliding(input.getMousePosV()));

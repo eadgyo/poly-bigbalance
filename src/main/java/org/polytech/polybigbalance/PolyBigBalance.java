@@ -1,17 +1,21 @@
 package org.polytech.polybigbalance;
 
+import java.util.Set;
+import java.util.Stack;
+
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.GameData;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.interfaces.*;
+import org.polytech.polybigbalance.interfaces.Credit;
+import org.polytech.polybigbalance.interfaces.Game;
+import org.polytech.polybigbalance.interfaces.Help;
+import org.polytech.polybigbalance.interfaces.LevelSelector;
+import org.polytech.polybigbalance.interfaces.MainMenu;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
-
-import java.util.Set;
-import java.util.Stack;
 
 public class PolyBigBalance
 {
@@ -57,11 +61,11 @@ public class PolyBigBalance
 
             this.timeElapsed = (System.nanoTime() / 1000000000.0f) - this.timeElapsed;
             this.stack.lastElement().update(this.timeElapsed);
+            this.input.update(this.timeElapsed);
             this.timeElapsed = System.nanoTime() / 1000000000.0f;
 
             this.stack.lastElement().render(g);
 
-            this.input.update();
             handleEvent(stack.lastElement().handleEvent(input));
 
             this.g.swapGL();
@@ -95,7 +99,7 @@ public class PolyBigBalance
         }
 
         if (event.contains(InterfaceEvent.PLAY)) {
-            this.stack.push(new LevelSelector(this.gameData));
+            this.stack.push(new LevelSelector(this.gameData, this.hsm));
         }
 
         if (event.contains(InterfaceEvent.HOW_TO)) {
