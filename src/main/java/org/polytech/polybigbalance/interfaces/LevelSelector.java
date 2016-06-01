@@ -220,6 +220,7 @@ public class LevelSelector extends Interface
             for (int i = 0; i < getPageSize(); i++) {
                 if (getButtonIndex(i) != this.selected && this.buttons[getButtonIndex(i)].isHighlighted()) {
                     selectButton(getButtonIndex(i));
+                    this.buttons[getButtonIndex(i)].setHighlighted(this.buttons[getButtonIndex(i)].isColliding(input.getMousePosV()));
                 }
             }
         }
@@ -234,9 +235,7 @@ public class LevelSelector extends Interface
             this.removePlayer.setHighlighted(this.removePlayer.isColliding(input.getMousePosV()));
 
             for (int i = 0; i < getPageSize(); i++) {
-
-                    this.buttons[getButtonIndex(i)].setHighlighted(this.buttons[getButtonIndex(i)].isColliding(input.getMousePosV()));
-
+                this.buttons[getButtonIndex(i)].setHighlighted(this.buttons[getButtonIndex(i)].isColliding(input.getMousePosV()));
             }
         }
 
