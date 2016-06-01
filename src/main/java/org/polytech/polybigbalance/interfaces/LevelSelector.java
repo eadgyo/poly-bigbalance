@@ -1,8 +1,5 @@
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextPosition;
@@ -13,7 +10,11 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.GameData;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.game.LevelPreview;
 import org.polytech.polybigbalance.level.LevelFactory;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class LevelSelector extends Interface
 {
@@ -65,7 +66,11 @@ public class LevelSelector extends Interface
         this.buttons = new TextButton[LevelFactory.getNumberOfLevel()];
 
         for (int i = 0; i < LevelFactory.getNumberOfLevel(); i++) {
-            this.buttons[i] = new TextButton(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE, Constants.FONT);
+            this.buttons[i] = new LevelPreview(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3),
+                    (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2,
+                    LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE,
+                    Constants.FONT,
+                    LevelFactory.getNewLevel(i));
             this.buttons[i].setBackColor(Constants.SELECTOR_NOT_SELECTED_COLOR);
             this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
             this.buttons[i].setActive(false);
@@ -165,7 +170,11 @@ public class LevelSelector extends Interface
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
-        // TODO Auto-generated method stub
+        for (int i = 0; i < getPageSize(); i++) {
+            if (this.selected != getButtonIndex(i)) {
+                this.buttons[getButtonIndex(i)].update(dt);
+            }
+        }
         return null;
     }
 
@@ -224,9 +233,9 @@ public class LevelSelector extends Interface
             this.removePlayer.setHighlighted(this.removePlayer.isColliding(input.getMousePosV()));
 
             for (int i = 0; i < getPageSize(); i++) {
-                if (this.selected != getButtonIndex(i)) {
+
                     this.buttons[getButtonIndex(i)].setHighlighted(this.buttons[getButtonIndex(i)].isColliding(input.getMousePosV()));
-                }
+
             }
         }
 

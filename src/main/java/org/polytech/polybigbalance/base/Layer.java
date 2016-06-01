@@ -98,4 +98,18 @@ public abstract class Layer
      * @return events
      */
     public Set<LayerEvent> handleEvent(Input input) {return EnumSet.of(LayerEvent.NO_COLLISION); }
+
+    /**
+     *
+     * @return layer's bounds
+     */
+    public sRectangle getBounds() { return bounds; }
+
+    public float getWidth() { return bounds.getWidth(); }
+
+    public float getHeight() { return bounds.getHeight(); }
+
+    public float getLeftX() { return bounds.getLeftX(); }
+
+    public float getLeftY() { return bounds.getLeftY(); }
 }
