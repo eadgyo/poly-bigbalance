@@ -215,7 +215,7 @@ public class Game extends Interface
 
         if (input.getTemp() == "")
         {
-            namefield.setTxt(players[0].getName());
+            namefield.setTxt(players[enteringName].getName());
             namefield.getTextRenderer().setFontColor(myColor.BLACK(0.4f));
         }
         else
@@ -230,6 +230,7 @@ public class Game extends Interface
                 if(this.enteringName < this.players.length - 1)
                 {
                     this.enteringName++;
+                    input.clearTemp();
                 }
                 else
                 {
@@ -238,6 +239,8 @@ public class Game extends Interface
                     this.layers.put("scoresSummary", new ScoresSummary(this.players));
                     this.gameFinished = true;
                 }
+
+                input.clearKeys();
             }
         }
 
