@@ -141,18 +141,28 @@ public abstract class Level extends Layer
     @Override
     public void render(Graphics g)
     {
-        g.setColor(0.2f, 0.8f, 0.2f);
-        g.drawForm(this.groundForm);
-        g.fillForm(this.groundForm);
+        g.setLineSize(1);
 
-        g.setColor(0.2f, 0.2f, 1.0f);
+        g.setColor(0.2f, 0.5f, 0.2f);
+        g.fillForm(this.groundForm);
+        g.setColor(0.0f, 0.0f, 0.0f);
+        g.drawForm(this.groundForm);
+
+
+
         for (Form f : this.baseRectangles.keySet()) {
-            g.drawForm(f);
+            g.setColor(0.2f, 0.2f, 1.0f);
             g.fillForm(f);
+            g.setColor(0.0f, 0.0f, 0.0f);
+            g.drawForm(f);
         }
+
         for (Form f : this.playerRectangles.keySet()) {
-            g.drawForm(f);
+            g.setColor(0.2f, 0.2f, 1.0f);
             g.fillForm(f);
+            g.setColor(0.0f, 0.0f, 0.0f);
+            g.drawForm(f);
+
         }
 
         if (this.drawingRectangle != null) {
@@ -164,9 +174,13 @@ public abstract class Level extends Layer
                 g.setColor(1.0f, 0.2f, 0.2f);
             }
 
-            g.drawForm(this.drawingRectangle);
             g.fillForm(this.drawingRectangle);
+            g.setColor(0.0f, 0.0f, 0.0f);
+            g.drawForm(this.drawingRectangle);
+
         }
+
+        g.setLineSize(1);
     }
 
     @Override
