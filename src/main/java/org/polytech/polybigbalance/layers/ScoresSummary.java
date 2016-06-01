@@ -43,7 +43,6 @@ public class ScoresSummary extends Layer
         this.text.setProportional(true);
         this.text.setMaxWidth(WIDTH);
         this.text.setFontColor(myColor.WHITE());
-        this.text.setBackColor(myColor.BLACK());
         this.text.setAlignement(Alignement.TOP_CENTER);
 
         final int BUTTONS_WIDTH = 200;

@@ -2,6 +2,9 @@ package org.polytech.polybigbalance.base;
 
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
+import org.cora.maths.Rectangle;
+import org.cora.maths.Vector2D;
+import org.polytech.polybigbalance.Constants;
 
 import java.util.Set;
 
@@ -13,9 +16,12 @@ public abstract class Interface
 {
     private int width;
     private int height;
+    private Rectangle background;
 
     public Interface()
     {
+        this.background = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT / 2),
+                new Vector2D(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), 0.0f);
     }
 
     /**
@@ -33,7 +39,11 @@ public abstract class Interface
 
     public abstract Set<InterfaceEvent> handleEvent(Input input);
 
-    public abstract void render(Graphics g);
+    public void render(Graphics g)
+    {
+        g.setColor(Constants.BACKGROUND_COLOR);
+        g.fillForm(this.background);
+    }
 
     public int getHeight()
     {

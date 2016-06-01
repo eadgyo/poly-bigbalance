@@ -1,9 +1,11 @@
 package org.polytech.polybigbalance;
 
+import org.cora.graphics.base.Image;
 import org.cora.graphics.font.Font;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.manager.FontManager;
+import org.cora.graphics.manager.TextureManager;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 
 public interface Constants
@@ -12,6 +14,7 @@ public interface Constants
     String WINDOW_TITLE = "Poly Big Balance";
     int WINDOW_WIDTH = 800;
     int WINDOW_HEIGHT = 600;
+    myColor BACKGROUND_COLOR = new myColor(0.47f, 0.71f, 1.0f);
 
     // ----- MAIN MENU ----- //
     String[] MAIN_MENU_BUTTONS = { "Play", "How to play", "Credits", "Exit" };
@@ -36,4 +39,7 @@ public interface Constants
     Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true, Constants.class);
 
     Font FONT = FontManager.getInstance().loadFont(Constants.RESOURCES_PATH + "font.bmp", 32);
+
+    Image MAIN_MENU_BACKGROUND  = new Image(TextureManager.getInstance().loadTexture(Constants.RESOURCES_PATH +
+                                                                                     "mainMenu.png"));
 }

@@ -245,6 +245,7 @@ public class LevelSelector extends Interface
     @Override
     public void render(Graphics g)
     {
+        super.render(g);
         this.returnButton.render(g);
 
         this.leftButton.render(g);

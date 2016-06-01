@@ -129,6 +129,7 @@ public class Game extends Interface
     @Override
     public void render(Graphics g)
     {
+        super.render(g);
         for(Layer l : this.layers.values())
         {
             l.render(g);

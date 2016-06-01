@@ -1,8 +1,5 @@
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextRenderer;
@@ -12,6 +9,9 @@ import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class Credit extends Interface
 {
@@ -28,7 +28,6 @@ public class Credit extends Interface
         this.text.setProportional(true);
         this.text.setMaxWidth(Constants.WINDOW_WIDTH - 100);
         this.text.setFontColor(myColor.WHITE());
-        this.text.setBackColor(myColor.BLACK());
         this.text.setAlignement(Alignement.TOP_CENTER);
     }
 
@@ -56,6 +55,7 @@ public class Credit extends Interface
     @Override
     public void render(Graphics g)
     {
+        super.render(g);
         this.button.render(g);
 
         this.text.print(g, "Developers:\n\n" + "Ronan JAMET\n" + "Tudal LE BOT\n" + "Pierre PÉTILLON\n" + "Hugo PIGEON", Constants.WINDOW_WIDTH / 2 - this.text.getMaxWidth() / 2, 200);

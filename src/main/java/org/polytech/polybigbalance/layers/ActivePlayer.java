@@ -34,7 +34,6 @@ public class ActivePlayer extends Layer
         this.text.setProportional(true);
         this.text.setMaxWidth(width);
         this.text.setFontColor(myColor.WHITE());
-        this.text.setBackColor(myColor.BLACK());
 
         this.setPlayerName(playerName);
     }

@@ -34,7 +34,6 @@ public class TextScore extends Layer
         this.text.setProportional(true);
         this.text.setMaxWidth(width);
         this.text.setFontColor(myColor.WHITE());
-        this.text.setBackColor(myColor.BLACK());
         this.text.setTextPosition(TextPosition.TOP_CENTER);
 
         this.setScore(0);

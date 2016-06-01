@@ -47,6 +47,7 @@ public class HighScoresInterface extends Interface
     @Override
     public void render(Graphics g)
     {
+        super.render(g);
         this.button.render(g);
     }
 
