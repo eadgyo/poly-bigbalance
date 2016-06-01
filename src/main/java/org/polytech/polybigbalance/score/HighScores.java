@@ -52,7 +52,7 @@ public class HighScores implements Serializable
 
     public boolean isHighScore(int score)
     {
-        return this.m_size < HighScores.MAX_SIZE || (score > this.m_scores[HighScores.MAX_SIZE].getScore());
+        return this.m_size < HighScores.MAX_SIZE || (score > this.m_scores[HighScores.MAX_SIZE - 1].getScore());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class HighScores implements Serializable
     public void deleteScore(int n)
     {
         if (n >= 0 && n < HighScores.MAX_SIZE) {
-
+            this.m_scores[this.m_size] = null;
         }
     }
 

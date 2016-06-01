@@ -58,16 +58,12 @@ public class HighScoresManager implements Serializable
 
     public HighScores addHighScores(int id)
     {
-        return this.m_scores.put(new Integer(id), new HighScores());
+        this.m_scores.put(new Integer(id), new HighScores());
+        return this.m_scores.get(new Integer(id));
     }
 
     public void setHighScores(int id, Level level)
     {
         level.setHighScores(getHighScores(id));
-    }
-
-    public void test()
-    {
-        System.out.println(this.m_scores.keySet());
     }
 }
