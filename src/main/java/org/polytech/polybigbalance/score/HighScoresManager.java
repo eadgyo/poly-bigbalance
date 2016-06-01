@@ -29,7 +29,7 @@ public class HighScoresManager implements Serializable
 
     public HighScores getHighScores(int id)
     {
-        HighScores hs = this.m_scores.get(id);
+        HighScores hs = this.m_scores.get(new Integer(id));
         if (hs == null) {
             hs = addHighScores(id);
         }
@@ -40,7 +40,7 @@ public class HighScoresManager implements Serializable
 
     public static HighScoresManager load()
     {
-        if (FileManager.isFileExisting(HighScoresManager.FILE_PATH + HighScoresManager.FILE_PATH)) {
+        if (FileManager.isFileExisting(HighScoresManager.FILE_PATH + HighScoresManager.FILE_NAME)) {
             return (HighScoresManager) FileManager.loadObject(HighScoresManager.FILE_PATH + HighScoresManager.FILE_NAME);
         } else {
             return new HighScoresManager();
@@ -64,5 +64,10 @@ public class HighScoresManager implements Serializable
     public void setHighScores(int id, Level level)
     {
         level.setHighScores(getHighScores(id));
+    }
+
+    public void test()
+    {
+        System.out.println(this.m_scores.keySet());
     }
 }
