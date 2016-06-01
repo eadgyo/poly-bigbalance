@@ -44,7 +44,7 @@ public class LevelPreview extends TextButton
         this.id = id;
         this.hsm = hsm;
 
-        this.scoreFieldHeight = this.hsm.getHighScores(this.id).getSize() * this.scoreText.getFontHeight();
+        this.scoreFieldHeight = (this.hsm.getHighScores(this.id).getSize() + 1) * (this.scoreText.getHeight() + this.scoreText.getVerticalSpacing());
     }
 
     @Override
