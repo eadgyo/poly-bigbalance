@@ -52,24 +52,25 @@ public class LevelSelector extends Interface
         this.page = 0;
 
         this.returnButton = new TextButton(10, 10, 150, 60, Constants.FONT);
-        this.returnButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
+        this.returnButton.setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
         this.returnButton.setTxt("< Menu");
 
         this.leftButton = new TextButton(10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
-        this.leftButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
+        this.leftButton.setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
         this.leftButton.setTxt("<");
         this.leftButton.setActive(false);
         this.rightButton = new TextButton(Constants.WINDOW_WIDTH - PAGE_BUTTON_SIZE - 10, (Constants.WINDOW_HEIGHT - PAGE_BUTTON_SIZE) / 2, PAGE_BUTTON_SIZE, PAGE_BUTTON_SIZE, Constants.FONT);
-        this.rightButton.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
+        this.rightButton.setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
         this.rightButton.setTxt(">");
         this.rightButton.setActive(!isLastPage());
 
         this.buttons = new TextButton[LevelFactory.getNumberOfLevel()];
 
-        for (int i = 0; i < LevelFactory.getNumberOfLevel(); i++) {
+        for (int i = 0; i < LevelFactory.getNumberOfLevel(); i++)
+        {
             this.buttons[i] = new LevelPreview(START_WIDTH + (LEVEL_BUTTON_SIZE + SPACING) * (i % 3), (Constants.WINDOW_HEIGHT - LEVEL_BUTTON_SIZE) / 2, LEVEL_BUTTON_SIZE, LEVEL_BUTTON_SIZE, Constants.FONT, LevelFactory.getNewLevel(i), i, hsm);
             this.buttons[i].setBackColor(Constants.SELECTOR_NOT_SELECTED_COLOR);
-            this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
+            this.buttons[i].setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
             this.buttons[i].setActive(false);
             this.buttons[i].setTxt(Integer.toString(i));
         }
@@ -88,17 +89,17 @@ public class LevelSelector extends Interface
         this.playerText[1].setAlignement(Alignement.TOP_CENTER);
 
         this.removePlayer = new TextButton(POS_X + this.playerText[0].getWidth("Players :") + 10, POS_Y, PLAYER_BOUTON_SIZE, PLAYER_BOUTON_SIZE, Constants.FONT);
-        this.removePlayer.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
+        this.removePlayer.setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
         this.removePlayer.setTxt("-");
         this.removePlayer.setActive(false);
         this.addPlayer = new TextButton(POS_X + this.playerText[0].getWidth("Players :") + 2 * PLAYER_BOUTON_SIZE + 10, POS_Y, PLAYER_BOUTON_SIZE, PLAYER_BOUTON_SIZE, Constants.FONT);
-        this.addPlayer.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
+        this.addPlayer.setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
         this.addPlayer.setTxt("+");
         this.addPlayer.setActive(!isMaxPlayer());
 
         this.play = new TextButton(640, 10, 150, 60, Constants.FONT);
-        this.play.setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
-        this.play.setTxt(Constants.MAIN_MENU_BUTTONS[0]);
+        this.play.setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
+        this.play.setTxt(Constants.MENU_MAIN_BUTTON[0]);
     }
 
     // ----- GETTER ----- //
@@ -135,7 +136,8 @@ public class LevelSelector extends Interface
 
     private void setActiveBouttons(boolean value)
     {
-        for (int i = 0; i < getPageSize(); i++) {
+        for (int i = 0; i < getPageSize(); i++)
+        {
             this.buttons[this.page * this.COLUMNS + i].setActive(value);
         }
     }
@@ -167,8 +169,10 @@ public class LevelSelector extends Interface
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
-        for (int i = 0; i < getPageSize(); i++) {
-            if (this.selected != getButtonIndex(i)) {
+        for (int i = 0; i < getPageSize(); i++)
+        {
+            if (this.selected != getButtonIndex(i))
+            {
                 this.buttons[getButtonIndex(i)].update(dt);
             }
         }
@@ -178,51 +182,62 @@ public class LevelSelector extends Interface
     @Override
     public Set<InterfaceEvent> handleEvent(Input input)
     {
-        if (input.isKeyDown(Input.KEY_ESC)) {
+        if (input.isKeyDown(Input.KEY_ESC))
+        {
             return EnumSet.of(InterfaceEvent.POP);
         }
 
-        if (input.isMousePressed(Input.MOUSE_BUTTON_1)) {
-            if (this.returnButton.isHighlighted()) {
+        if (input.isMousePressed(Input.MOUSE_BUTTON_1))
+        {
+            if (this.returnButton.isHighlighted())
+            {
                 return EnumSet.of(InterfaceEvent.POP);
             }
-            if (this.play.isHighlighted()) {
+            if (this.play.isHighlighted())
+            {
                 setGameData();
                 return EnumSet.of(InterfaceEvent.NEW_GAME);
             }
-            if (this.leftButton.isHighlighted()) {
+            if (this.leftButton.isHighlighted())
+            {
                 setActiveBouttons(false);
                 page--;
                 setActiveBouttons(true);
                 this.leftButton.setActive(!isFirstPage());
                 this.rightButton.setActive(true);
             }
-            if (this.rightButton.isHighlighted()) {
+            if (this.rightButton.isHighlighted())
+            {
                 setActiveBouttons(false);
                 page++;
                 setActiveBouttons(true);
                 this.leftButton.setActive(true);
                 this.rightButton.setActive(!isLastPage());
             }
-            if (this.removePlayer.isHighlighted()) {
+            if (this.removePlayer.isHighlighted())
+            {
                 this.player--;
                 this.addPlayer.setActive(true);
                 this.removePlayer.setActive(!isMinPlayer());
             }
-            if (this.addPlayer.isHighlighted()) {
+            if (this.addPlayer.isHighlighted())
+            {
                 this.player++;
                 this.addPlayer.setActive(!isMaxPlayer());
                 this.removePlayer.setActive(true);
             }
-            for (int i = 0; i < getPageSize(); i++) {
-                if (getButtonIndex(i) != this.selected && this.buttons[getButtonIndex(i)].isHighlighted()) {
+            for (int i = 0; i < getPageSize(); i++)
+            {
+                if (getButtonIndex(i) != this.selected && this.buttons[getButtonIndex(i)].isHighlighted())
+                {
                     selectButton(getButtonIndex(i));
                     this.buttons[getButtonIndex(i)].setHighlighted(this.buttons[getButtonIndex(i)].isColliding(input.getMousePosV()));
                 }
             }
         }
 
-        if (input.isMouseMoving()) {
+        if (input.isMouseMoving())
+        {
             this.returnButton.setHighlighted(this.returnButton.isColliding(input.getMousePosV()));
             this.play.setHighlighted(this.play.isColliding(input.getMousePosV()));
             this.leftButton.setHighlighted(this.leftButton.isColliding(input.getMousePosV()));
@@ -230,7 +245,8 @@ public class LevelSelector extends Interface
             this.addPlayer.setHighlighted(this.addPlayer.isColliding(input.getMousePosV()));
             this.removePlayer.setHighlighted(this.removePlayer.isColliding(input.getMousePosV()));
 
-            for (int i = 0; i < getPageSize(); i++) {
+            for (int i = 0; i < getPageSize(); i++)
+            {
                 this.buttons[getButtonIndex(i)].setHighlighted(this.buttons[getButtonIndex(i)].isColliding(input.getMousePosV()));
             }
         }
@@ -247,7 +263,8 @@ public class LevelSelector extends Interface
         this.leftButton.render(g);
         this.rightButton.render(g);
 
-        for (int i = 0; i < getPageSize(); i++) {
+        for (int i = 0; i < getPageSize(); i++)
+        {
             this.buttons[getButtonIndex(i)].render(g);
         }
 

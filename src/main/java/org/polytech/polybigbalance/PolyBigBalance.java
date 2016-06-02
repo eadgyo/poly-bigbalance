@@ -10,17 +10,16 @@ package org.polytech.polybigbalance;
 import java.util.Set;
 import java.util.Stack;
 
+import org.cora.graphics.font.Alignement;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.GameData;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.interfaces.Credit;
 import org.polytech.polybigbalance.interfaces.Game;
-import org.polytech.polybigbalance.interfaces.Help;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.Menu;
-import org.polytech.polybigbalance.interfaces.Options;
+import org.polytech.polybigbalance.interfaces.SomeText;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
@@ -33,6 +32,9 @@ public class PolyBigBalance
     private HighScoresManager highScoresManager;
 
     private Interface menu;
+    private Interface pause;
+    private Interface help;
+    private Interface credits;
     private Stack<Interface> stack;
 
     private GameData gameData;
@@ -57,7 +59,10 @@ public class PolyBigBalance
         this.input = new Input();
         this.input.initGL(this.g.getScreen());
 
-        this.menu = new Menu(200, 60, Constants.MAIN_MENU_BUTTONS, Constants.MAIN_MENU_EVENT, Constants.WINDOW_TITLE);
+        this.menu = new Menu(200, 60, Constants.MENU_MAIN_BUTTON, Constants.MENU_MAIN_EVENT, Constants.WINDOW_TITLE);
+        this.pause = new Menu(200, 60, Constants.MENU_PAUSE_BUTTON, Constants.MENU_PAUSE_EVENT, Constants.MENU_PAUSE_TITLE);
+        this.help = new SomeText(Constants.MENU_HELP_TEXT);
+        this.credits = new SomeText(Constants.MENU_CREDITS_TEXT, Alignement.TOP_CENTER);
 
         this.stack = new Stack<>();
         this.stack.add(this.menu);
@@ -105,7 +110,7 @@ public class PolyBigBalance
 
         if (event.contains(InterfaceEvent.PAUSE))
         {
-            this.stack.push(new Options());
+            this.stack.push(this.pause);
         }
 
         if (event.contains(InterfaceEvent.MENU))
@@ -132,12 +137,12 @@ public class PolyBigBalance
 
         if (event.contains(InterfaceEvent.HOW_TO))
         {
-            this.stack.push(new Help());
+            this.stack.push(this.help);
         }
 
         if (event.contains(InterfaceEvent.CREDIT))
         {
-            this.stack.push(new Credit());
+            this.stack.push(this.credits);
         }
 
         if (event.contains(InterfaceEvent.EXIT))

@@ -4,6 +4,9 @@
 
 package org.polytech.polybigbalance.layers;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
@@ -17,9 +20,6 @@ import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.base.Player;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 /**
  * Displays a summary of all the players' score
  */
@@ -31,7 +31,8 @@ public class ScoresSummary extends Layer
     private TextButton buttons[];
 
     /**
-     * @param players players to get the scores from
+     * @param players
+     *            players to get the scores from
      */
     public ScoresSummary(Player[] players)
     {
@@ -54,13 +55,13 @@ public class ScoresSummary extends Layer
         final int BUTTONS_POS_Y = Constants.WINDOW_HEIGHT / 2 + 150;
         this.buttons = new TextButton[3];
 
-        for (int i = 0 ; i < this.buttons.length ; i++)
+        for (int i = 0; i < this.buttons.length; i++)
         {
             final int POS_X = Constants.WINDOW_WIDTH / 2 - BUTTONS_WIDTH / 2 + (i * BUTTONS_SPACING) - BUTTONS_SPACING;
 
             this.buttons[i] = new TextButton(POS_X, BUTTONS_POS_Y, BUTTONS_WIDTH, 50, Constants.FONT);
-            this.buttons[i].setAddColor(Constants.MAIN_MENU_HIGHLIGHT_COLOR);
-            this.buttons[i].setTxt(Constants.GAME_FINISHED_BUTTONS[i]);
+            this.buttons[i].setAddColor(Constants.BUTTON_HIGHLIGHT_COLOR);
+            this.buttons[i].setTxt(Constants.GAME_FINISHED_BUTTON[i]);
         }
     }
 
@@ -69,14 +70,14 @@ public class ScoresSummary extends Layer
     {
         StringBuilder sb = new StringBuilder("Scores :\n\n");
 
-        for(Player p : this.players)
+        for (Player p : this.players)
         {
             sb.append(p.getName()).append(".......................").append(p.getScore()).append("\n");
         }
 
         this.text.print(g, sb.toString(), this.x, this.y);
 
-        for(Button b : this.buttons)
+        for (Button b : this.buttons)
         {
             b.render(g);
         }
@@ -96,7 +97,7 @@ public class ScoresSummary extends Layer
 
         if (input.isMousePressed(Input.MOUSE_BUTTON_1))
         {
-            for (int i = 0 ; i < this.buttons.length ; i++)
+            for (int i = 0; i < this.buttons.length; i++)
             {
                 if (this.buttons[i].isColliding(input.getMousePosV()))
                 {

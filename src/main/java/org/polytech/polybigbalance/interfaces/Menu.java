@@ -20,6 +20,13 @@ import org.polytech.polybigbalance.base.InterfaceEvent;
  * 
  */
 
+/**
+ * 
+ * Displays a list of buttons and optionally, a title Return an event given in
+ * the event list when the corresponding button is clicked
+ * 
+ */
+
 public class Menu extends Interface
 {
     private TextButton buttons[];
@@ -54,8 +61,6 @@ public class Menu extends Interface
 
             SPACING = (Constants.WINDOW_HEIGHT - HEIGHT * this.buttons.length - this.title.getHeight()) / (this.buttons.length + 2);
             START_Y = SPACING + this.title.getHeight();
-            System.out.println(this.title.getHeight());
-            System.out.println(this.title.getFontHeight());
 
             this.title.setPos(Constants.WINDOW_WIDTH / 2, SPACING);
         }
@@ -63,8 +68,8 @@ public class Menu extends Interface
         for (int i = 0; i < this.buttons.length; i++)
         {
             this.buttons[i] = new TextButton(Constants.WINDOW_WIDTH / 2 - WIDTH / 2, START_Y + SPACING + (HEIGHT + SPACING) * i, WIDTH, HEIGHT, Constants.FONT);
-            this.buttons[i].setHighLightColor(Constants.MENU_HIGHLIGHT_COLOR);
-            this.buttons[i].setTxt(Constants.MAIN_MENU_BUTTONS[i]);
+            this.buttons[i].setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
+            this.buttons[i].setTxt(text[i]);
         }
     }
 
