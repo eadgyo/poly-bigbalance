@@ -64,7 +64,7 @@ public abstract class Level extends Layer
         physEngine.setThresholdSideDetection(0.1f);
         this.gravity = new Gravity(new Vector2D(0, 200.0f));
         sticking = new MaterialType();
-        sticking.addMaterialInformation(sticking, 0.0f, 1.0f, 1.0f);
+        sticking.addMaterialInformation(sticking, 0.0f, 0.5f, 1.0f);
     }
 
     /**
@@ -79,6 +79,7 @@ public abstract class Level extends Layer
         ground.setForm(this.groundForm);
         ground.setPosition(this.groundForm.getCenter());
         ground.initPhysics();
+        ground.setMaterialType(sticking);
         this.physEngine.addElement(ground);
     }
 

@@ -5,9 +5,6 @@
 package org.polytech.polybigbalance.interfaces;
 
 import org.cora.graphics.elements.TextButton;
-import org.cora.graphics.font.Alignement;
-import org.cora.graphics.font.TextPosition;
-import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
@@ -43,7 +40,6 @@ public class Game extends Interface
     private Rectangle drawnRectangle;
 
     private TextButton namefield;
-    private TextRenderer playerNameRenderer;
 
     private int enteringName;
 
@@ -86,10 +82,6 @@ public class Game extends Interface
         namefield.setBackColor(myColor.WHITE(0.7f));
         namefield.setRecColor(myColor.BLACK());
         namefield.setActive(false);
-
-        playerNameRenderer = new TextRenderer(Constants.FONT);
-        playerNameRenderer.setAlignement(Alignement.TOP_CENTER);
-        playerNameRenderer.setTextPosition(TextPosition.LEFT);
 
         enteringName = -1;
 

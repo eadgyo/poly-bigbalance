@@ -1,6 +1,7 @@
 package org.polytech.polybigbalance.base;
 
 /**
+ * Created by ronan-j
  * Flags used for Layer event response
  */
 public enum LayerEvent
