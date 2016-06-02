@@ -1,41 +1,51 @@
-/**
- * 
- * @author Tugdwal
- * 
- */
-
 package org.polytech.polybigbalance.score;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * 
+ * @author Tudal
+ * 
+ */
+
+/**
+ * 
+ * Contains an ordered list of scores
+ *
+ */
+
 public class HighScores implements Serializable
 {
+    private static final long serialVersionUID = 1L;
+
     private static final int MAX_SIZE = 5;
-    private int m_size;
-    private Score[] m_scores;
+
+    private Score[] scores;
+    private int size;
 
     // ----- CONSTRUCTOR ----- //
 
     public HighScores()
     {
-        this.m_size = 0;
-        this.m_scores = new Score[HighScores.MAX_SIZE];
+        this.scores = new Score[HighScores.MAX_SIZE];
+        this.size = 0;
     }
 
     // ----- GETTER ----- //
 
     public int getSize()
     {
-        return this.m_size;
+        return this.size;
     }
 
     public Score[] getScore()
     {
-        Score[] scores = new Score[this.m_size];
+        Score[] scores = new Score[this.size];
 
-        for (int i = 0; i < this.m_size; i++) {
-            scores[i] = this.m_scores[i];
+        for (int i = 0; i < this.size; i++)
+        {
+            scores[i] = this.scores[i];
         }
 
         return scores;
@@ -43,57 +53,70 @@ public class HighScores implements Serializable
 
     public Score getScore(int n)
     {
-        if (n >= 0 && n < HighScores.MAX_SIZE) {
-            return this.m_scores[n];
-        } else {
+        if (n >= 0 && n < HighScores.MAX_SIZE)
+        {
+            return this.scores[n];
+        }
+        else
+        {
             return null;
         }
     }
 
     public boolean isHighScore(int score)
     {
-        return this.m_size < HighScores.MAX_SIZE || (score > this.m_scores[HighScores.MAX_SIZE - 1].getScore());
+        return (score > 0) && (this.size < HighScores.MAX_SIZE || (score > this.scores[HighScores.MAX_SIZE - 1].getScore()));
     }
 
     @Override
     public String toString()
     {
-        return "HighScores [m_scores=" + Arrays.toString(m_scores) + "]";
+        return "HighScores [m_scores=" + Arrays.toString(scores) + "]";
     }
 
     // ----- SETTER ----- //
 
     public void reset()
     {
-        for (int i = 0; i < this.m_size; i++) {
-            this.m_scores[i] = null;
+        for (int i = 0; i < this.size; i++)
+        {
+            this.scores[i] = null;
         }
-        this.m_size = 0;
+        this.size = 0;
     }
 
     public void deleteScore(int n)
     {
-        if (n >= 0 && n < HighScores.MAX_SIZE) {
-            this.m_scores[this.m_size] = null;
+        if (n >= 0 && n < HighScores.MAX_SIZE)
+        {
+            this.scores[this.size] = null;
         }
     }
 
     public boolean addScore(Score score)
     {
-        for (int i = 0; i < this.m_size; i++) {
-            if (score.getScore() > this.m_scores[i].getScore()) {
-                for (int j = (this.m_size < HighScores.MAX_SIZE ? this.m_size++ : (this.m_size - 1)); j > i; j--) {
-                    this.m_scores[j] = this.m_scores[j - 1];
+        if (score.getScore() > 0)
+        {
+            for (int i = 0; i < this.size; i++)
+            {
+                if (score.getScore() > this.scores[i].getScore())
+                {
+                    for (int j = (this.size < HighScores.MAX_SIZE ? this.size++ : (this.size - 1)); j > i; j--)
+                    {
+                        this.scores[j] = this.scores[j - 1];
+                    }
+                    this.scores[i] = score;
+                    return true;
                 }
-                this.m_scores[i] = score;
+            }
+
+            if (this.size < HighScores.MAX_SIZE)
+            {
+                this.scores[this.size++] = score;
                 return true;
             }
         }
-        if (this.m_size < HighScores.MAX_SIZE) {
-            this.m_scores[this.m_size++] = score;
-            return true;
-        } else {
-            return false;
-        }
+
+        return false;
     }
 }

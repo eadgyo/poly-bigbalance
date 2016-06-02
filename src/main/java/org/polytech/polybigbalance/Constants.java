@@ -16,7 +16,9 @@ public interface Constants
     int WINDOW_HEIGHT = 600;
     myColor BACKGROUND_COLOR = new myColor(0.47f, 0.71f, 1.0f);
 
-    // ----- MAIN MENU ----- //
+    myColor MENU_HIGHLIGHT_COLOR = new myColor(1.0f, 0.0f, 0.0f);
+     
+     // ----- MAIN MENU ----- //
     String[] MAIN_MENU_BUTTONS = { "Play", "How to play", "Credits", "Exit" };
     InterfaceEvent[] MAIN_MENU_EVENT = { InterfaceEvent.PLAY, InterfaceEvent.HOW_TO, InterfaceEvent.CREDIT, InterfaceEvent.EXIT };
     myColor MAIN_MENU_HIGHLIGHT_COLOR = new myColor(-0.3f, -0.3f, -0.3f, 1.0f);
@@ -44,6 +46,7 @@ public interface Constants
     Graphics g = new Graphics(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, true, true, Constants.class);
 
     Font FONT = FontManager.getInstance().loadFont(Constants.RESOURCES_PATH + "font.bmp", 32);
+    Font FONT48 = FontManager.getInstance().loadFont(Constants.RESOURCES_PATH + "font48b.bmp", 48);
 
     Image MAIN_MENU_BACKGROUND = new Image(TextureManager.getInstance().loadTexture(Constants.RESOURCES_PATH + "mainMenu.png"));
 }
