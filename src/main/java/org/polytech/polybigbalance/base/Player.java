@@ -1,3 +1,7 @@
+/**
+ * @author Hugo PIGEON
+ */
+
 package org.polytech.polybigbalance.base;
 
 /**

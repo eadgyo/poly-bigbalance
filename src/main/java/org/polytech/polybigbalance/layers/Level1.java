@@ -1,10 +1,13 @@
+/**
+ * @author Hugo PIGEON
+ */
+
 package org.polytech.polybigbalance.layers;
 
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
 import org.cora.physics.entities.RigidBody;
 import org.polytech.polybigbalance.Constants;
-import org.polytech.polybigbalance.score.HighScores;
 
 /**
  * Level 1
