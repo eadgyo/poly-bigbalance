@@ -32,9 +32,9 @@ public interface Constants
 
     // ----- PAUSE MENU ----- //
     String[] MENU_PAUSE_BUTTON =
-    { "Resume", "Menu", "Exit" };
+    { "Resume", "Restart", "Menu", "Exit" };
     InterfaceEvent[] MENU_PAUSE_EVENT =
-    { InterfaceEvent.POP, InterfaceEvent.MENU, InterfaceEvent.EXIT };
+    { InterfaceEvent.POP, InterfaceEvent.REPLAY, InterfaceEvent.MENU, InterfaceEvent.EXIT };
     String MENU_PAUSE_TITLE = "Pause";
 
     // ----- GAME FINISHED MENU ----- //
