@@ -1,8 +1,12 @@
 package org.polytech.polybigbalance;
 
+import java.util.Set;
+import java.util.Stack;
+
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
+import org.polytech.polybigbalance.base.GameData;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.interfaces.Game;
@@ -12,9 +16,6 @@ import org.polytech.polybigbalance.interfaces.SomeText;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
-
-import java.util.Set;
-import java.util.Stack;
 
 /**
  * 
@@ -35,6 +36,8 @@ public class PolyBigBalance
     private Interface help;
     private Interface credits;
     private Stack<Interface> stack;
+
+    private GameData data;
 
     private double timeElapsed;
 
@@ -65,6 +68,8 @@ public class PolyBigBalance
 
         this.stack = new Stack<>();
         this.stack.add(this.menu);
+
+        this.data = new GameData();
 
         this.timeElapsed = System.nanoTime() / 1000000000.0f;
     }
@@ -98,6 +103,18 @@ public class PolyBigBalance
         this.highScoresManager.save();
     }
 
+    private void startGame()
+    {
+        Level level = LevelFactory.getNewLevel(this.data.getLevel());
+
+        this.highScoresManager.setHighScores(this.data.getLevel(), level);
+
+        this.input.clear();
+
+        this.stack.pop();
+        this.stack.push(new Game(this.data.getPlayer(), level));
+    }
+
     private void handleEvent(Set<InterfaceEvent> event)
     {
         // if (event.contains(InterfaceEvent.OK)) { }
@@ -125,13 +142,16 @@ public class PolyBigBalance
         if (event.contains(InterfaceEvent.NEW_GAME))
         {
             LevelSelector selector = (LevelSelector) this.stack.lastElement();
-            int player = selector.getPlayer();
-            Level level = LevelFactory.getNewLevel(selector.getSelectedLevel());
 
-            this.highScoresManager.setHighScores(selector.getSelectedLevel(), level);
+            this.data.setPlayer(selector.getPlayer());
+            this.data.setLevel(selector.getSelectedLevel());
 
-            this.stack.pop();
-            this.stack.push(new Game(player, level));
+            startGame();
+        }
+
+        if (event.contains(InterfaceEvent.REPLAY))
+        {
+            startGame();
         }
 
         if (event.contains(InterfaceEvent.PLAY))

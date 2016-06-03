@@ -41,7 +41,7 @@ public interface Constants
     String[] GAME_FINISHED_BUTTON =
     { "Play again", "Main menu", "Exit" };
     InterfaceEvent[] GAME_FINISHED_EVENT =
-    { InterfaceEvent.NEW_GAME, InterfaceEvent.POP, InterfaceEvent.EXIT };
+    { InterfaceEvent.REPLAY, InterfaceEvent.POP, InterfaceEvent.EXIT };
 
     // ----- LEVEL SELECTOR ----- //
     myColor SELECTOR_SELECTED_COLOR = myColor.RED(1.0f);
