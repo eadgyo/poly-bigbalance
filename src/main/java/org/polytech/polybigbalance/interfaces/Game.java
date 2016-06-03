@@ -1,5 +1,7 @@
 /**
  * @author Hugo PIGEON
+ * @author Ronan JAMET
+ * (Enter name feature)
  */
 
 package org.polytech.polybigbalance.interfaces;
@@ -151,10 +153,6 @@ public class Game extends Interface
                 }
             }
         }
-        else
-        {
-            input.clearMouse();
-        }
 
         return EnumSet.of(InterfaceEvent.OK);
     }
@@ -201,7 +199,9 @@ public class Game extends Interface
     }
 
     /**
-     *
+     * Enter name
+     * Created by Ronan-j
+     * Modified by Tudal-L
      */
     private Set<InterfaceEvent> enteringName(Input input)
     {
