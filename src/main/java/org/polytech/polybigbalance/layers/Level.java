@@ -4,6 +4,11 @@
 
 package org.polytech.polybigbalance.layers;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
@@ -16,11 +21,6 @@ import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.score.HighScores;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * General definition of a level
@@ -92,13 +92,16 @@ public abstract class Level extends Layer
      */
     public void drawRectangle(Vector2D position)
     {
-        if (this.drawingRectangle != null) {
+        if (this.drawingRectangle != null)
+        {
             Vector2D center = new Vector2D((this.drawingFirstPoint.x + position.x) / 2, (this.drawingFirstPoint.y + position.y) / 2);
 
             Vector2D length = new Vector2D(Math.abs(this.drawingFirstPoint.x - position.x), Math.abs(this.drawingFirstPoint.y - position.y));
 
             this.drawingRectangle.set(center, length, 0.0f);
-        } else {
+        }
+        else
+        {
             this.drawingRectangle = new Rectangle(position, new Vector2D(0.0f, 0.0f), 0.0f);
             this.drawingFirstPoint = position;
         }
@@ -117,8 +120,7 @@ public abstract class Level extends Layer
 
         if (this.drawingRectangle != null)
         {
-            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
-                !this.isRectangleColliding(this.drawingRectangle))
+            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle))
             {
                 this.checkRectangleFallen();
 
@@ -154,26 +156,30 @@ public abstract class Level extends Layer
         g.setColor(0.0f, 0.0f, 0.0f);
         g.drawForm(this.groundForm);
 
-        for (Form f : this.baseRectangles.keySet()) {
+        for (Form f : this.baseRectangles.keySet())
+        {
             g.setColor(0.2f, 0.2f, 1.0f);
             g.fillForm(f);
             g.setColor(0.0f, 0.0f, 0.0f);
             g.drawForm(f);
         }
 
-        for (Form f : this.playerRectangles.keySet()) {
+        for (Form f : this.playerRectangles.keySet())
+        {
             g.setColor(0.2f, 0.2f, 1.0f);
             g.fillForm(f);
             g.setColor(0.0f, 0.0f, 0.0f);
             g.drawForm(f);
         }
 
-        if (this.drawingRectangle != null) {
-            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) &&
-                !this.isRectangleColliding(this.drawingRectangle))
+        if (this.drawingRectangle != null)
+        {
+            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle))
             {
                 g.setColor(0.0f, 1.0f, 1.0f);
-            } else {
+            }
+            else
+            {
                 g.setColor(1.0f, 0.2f, 0.2f);
             }
 
@@ -238,7 +244,8 @@ public abstract class Level extends Layer
      */
     protected void initRectangles(Map<Rectangle, RigidBody> rectangles)
     {
-        for (Rectangle rectForm : rectangles.keySet()) {
+        for (Rectangle rectForm : rectangles.keySet())
+        {
             rectForm.updateCenter();
             RigidBody rect = rectangles.get(rectForm);
 
@@ -246,7 +253,7 @@ public abstract class Level extends Layer
             rect.setPosition(rectForm.getCenter());
             rect.setMaterialType(sticking);
             rect.initPhysics(100);
-            float mass = rect.getMass();
+            // float mass = rect.getMass();
 
             this.physEngine.addElement(rect);
             this.physEngine.addForce(rect, this.gravity);
@@ -264,9 +271,12 @@ public abstract class Level extends Layer
      */
     private boolean isRectangleSizeValid(float width, float height)
     {
-        if (width > MIN_SIZE.x && height > MIN_SIZE.y) {
-            if (width * height < this.BASE * this.BASE) {
-                if (width < this.BASE * 2 && height < this.BASE * 2) {
+        if (width > MIN_SIZE.x && height > MIN_SIZE.y)
+        {
+            if (width * height < this.BASE * this.BASE)
+            {
+                if (width < this.BASE * 2 && height < this.BASE * 2)
+                {
                     return true;
                 }
             }
@@ -284,14 +294,18 @@ public abstract class Level extends Layer
      */
     private boolean isRectangleColliding(Rectangle rect)
     {
-        for (Rectangle r : this.baseRectangles.keySet()) {
-            if (CollisionDetectorNoT.isColliding(rect, r)) {
+        for (Rectangle r : this.baseRectangles.keySet())
+        {
+            if (CollisionDetectorNoT.isColliding(rect, r))
+            {
                 return true;
             }
         }
 
-        for (Rectangle r : this.playerRectangles.keySet()) {
-            if (CollisionDetectorNoT.isColliding(rect, r)) {
+        for (Rectangle r : this.playerRectangles.keySet())
+        {
+            if (CollisionDetectorNoT.isColliding(rect, r))
+            {
                 return true;
             }
         }
