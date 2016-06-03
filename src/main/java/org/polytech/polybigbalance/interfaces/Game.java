@@ -4,6 +4,11 @@
 
 package org.polytech.polybigbalance.interfaces;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
@@ -19,11 +24,6 @@ import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.ScoresSummary;
 import org.polytech.polybigbalance.layers.TextScore;
 import org.polytech.polybigbalance.score.Score;
-
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Handles a game
@@ -47,13 +47,15 @@ public class Game extends Interface
     private boolean highScoresRecorded;
 
     /**
-     * @param nbPlayers number of players
-     * @param level level to display
+     * @param nbPlayers
+     *            number of players
+     * @param level
+     *            level to display
      */
     public Game(int nbPlayers, Level level)
     {
         this.players = new Player[nbPlayers];
-        for(int i = 0 ; i < nbPlayers ; i++)
+        for (int i = 0; i < nbPlayers; i++)
         {
             this.players[i] = new Player("Player " + (i + 1));
         }
@@ -70,11 +72,7 @@ public class Game extends Interface
         String playerName = this.players[this.currentPlayer].getName();
         this.layers.put("activePlayer", new ActivePlayer(playerName, 20, 20, 200));
 
-        namefield = new TextButton(Constants.WINDOW_WIDTH/2 - Constants.WINDOW_WIDTH/8,
-                Constants.WINDOW_HEIGHT/2 - Constants.WINDOW_HEIGHT/32,
-                Constants.WINDOW_WIDTH/4,
-                Constants.WINDOW_HEIGHT/16,
-                Constants.FONT);
+        namefield = new TextButton(Constants.WINDOW_WIDTH / 2 - Constants.WINDOW_WIDTH / 8, Constants.WINDOW_HEIGHT / 2 - Constants.WINDOW_HEIGHT / 32, Constants.WINDOW_WIDTH / 4, Constants.WINDOW_HEIGHT / 16, Constants.FONT);
         namefield.setTextMiddleLeft();
         namefield.setTxt("");
         namefield.setPreRendering(false);
@@ -83,7 +81,7 @@ public class Game extends Interface
         namefield.setRecColor(myColor.BLACK());
         namefield.setActive(false);
 
-        enteringName = -1;
+        enteringName = 0;
 
         this.waitStartTime = 0;
         this.gameFinished = false;
@@ -93,15 +91,15 @@ public class Game extends Interface
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
-        if(this.waitStartTime != 0)
+        if (this.waitStartTime != 0)
         {
-            if(this.waitStartTime + 5000 <= System.currentTimeMillis())
+            if (this.waitStartTime + 5000 <= System.currentTimeMillis())
             {
                 this.waitStartTime = 0;
                 this.updateScore();
                 this.nextPlayer();
             }
-            else if(((Level) this.layers.get("level")).checkRectangleFallen() > 0)
+            else if (((Level) this.layers.get("level")).checkRectangleFallen() > 0)
             {
                 this.players[this.currentPlayer].setLost(true);
                 this.waitStartTime = 0;
@@ -109,7 +107,7 @@ public class Game extends Interface
             }
         }
 
-        for(Layer l : this.layers.values())
+        for (Layer l : this.layers.values())
         {
             l.update(dt);
         }
@@ -120,33 +118,34 @@ public class Game extends Interface
     @Override
     public Set<InterfaceEvent> handleEvent(Input input)
     {
-        if (input.isKeyPressed(Input.KEY_ESC)) {
+        if (input.isKeyPressed(Input.KEY_ESC))
+        {
             return EnumSet.of(InterfaceEvent.PAUSE);
         }
-        
-        if(this.enteringName != -1)
+
+        if (this.enteringName > 0)
         {
-            return this.enteringName(input);
+            return enteringName(input);
         }
 
-        if(this.gameFinished)
+        if (this.gameFinished)
         {
-            return this.finishGame(input);
+            return finishGame(input);
         }
 
-        if(this.waitStartTime == 0)
+        if (this.waitStartTime == 0)
         {
-            if(input.isMouseDown(Input.MOUSE_BUTTON_1))
+            if (input.isMouseDown(Input.MOUSE_BUTTON_1))
             {
                 this.drawing = true;
                 ((Level) this.layers.get("level")).drawRectangle(input.getMousePosV());
             }
-            else if(this.drawing)
+            else if (this.drawing)
             {
                 this.drawing = false;
                 this.drawnRectangle = ((Level) this.layers.get("level")).endDrawRectangle();
 
-                if(this.drawnRectangle != null)
+                if (this.drawnRectangle != null)
                 {
                     this.waitStartTime = System.currentTimeMillis();
                 }
@@ -164,7 +163,7 @@ public class Game extends Interface
     public void render(Graphics g)
     {
         super.render(g);
-        for(Layer l : this.layers.values())
+        for (Layer l : this.layers.values())
         {
             l.render(g);
         }
@@ -181,7 +180,7 @@ public class Game extends Interface
 
         do
         {
-            if(this.currentPlayer < this.players.length - 1)
+            if (this.currentPlayer < this.players.length - 1)
             {
                 this.currentPlayer++;
             }
@@ -190,13 +189,12 @@ public class Game extends Interface
                 this.currentPlayer = 0;
                 cpt++;
 
-                if(cpt > 1)
+                if (cpt > 1)
                 {
-                    this.enteringName = 0;
-                    //this.layers.put("scoresSummary", new ScoresSummary(this.players));
+                    this.gameFinished = true;
                 }
             }
-        } while(this.players[this.currentPlayer].hasLost() && this.enteringName == -1);
+        } while (this.players[this.currentPlayer].hasLost() && !this.gameFinished);
 
         ((ActivePlayer) this.layers.get("activePlayer")).setPlayerName(this.players[this.currentPlayer].getName());
         ((TextScore) this.layers.get("score")).setScore(this.players[this.currentPlayer].getScore());
@@ -217,7 +215,7 @@ public class Game extends Interface
 
         if (input.getTemp().equals(""))
         {
-            name = players[enteringName].getName();
+            name = players[enteringName - 1].getName();
             namefield.getTextRenderer().setFontColor(myColor.BLACK(0.4f));
         }
         else
@@ -226,22 +224,13 @@ public class Game extends Interface
             namefield.getTextRenderer().setFontColor(myColor.BLACK());
         }
 
-        if (input.isKeyDown(Input.KEY_ENTER))
+        if (input.isKeyDown(Input.KEY_ENTER) && !input.getTemp().equals(""))
         {
-            players[enteringName].setName(name);
+            players[enteringName - 1].setName(name);
 
-            if(this.enteringName < this.players.length - 1)
-            {
-                this.enteringName++;
-                input.clearTemp();
-            }
-            else
-            {
-                this.enteringName = -1;
-                this.namefield.setActive(false);
-                this.layers.put("scoresSummary", new ScoresSummary(this.players));
-                this.gameFinished = true;
-            }
+            this.namefield.setActive(false);
+
+            this.enteringName = -this.enteringName;
 
             input.clearKeys();
         }
@@ -266,26 +255,43 @@ public class Game extends Interface
 
     /**
      * Tasks to do before ending the game (scores summary, highscores)
+     * 
      * @return true when the tasks are finished
      */
     private Set<InterfaceEvent> finishGame(Input input)
     {
-        if(!this.highScoresRecorded)
+        if (!this.highScoresRecorded)
         {
             Level level = (Level) this.layers.get("level");
 
-            for(Player p : this.players)
+            if (this.enteringName < 0)
             {
-                if(level.getHighScores().isHighScore(p.getScore()))
-                {
-                    // TODO ask player's name
-                    level.getHighScores().addScore(new Score(p.getName(), p.getScore()));
-                }
+                this.enteringName = -this.enteringName - 1;
+
+                level.getHighScores().addScore(new Score(this.players[this.enteringName].getName(), this.players[this.enteringName].getScore()));
+
+                this.enteringName++;
             }
 
-            this.highScoresRecorded = true;
-        }
+            while (this.enteringName < this.players.length && !level.getHighScores().isHighScore(this.players[this.enteringName].getScore()))
+            {
+                this.enteringName++;
+            }
 
-        return ((ScoresSummary) this.layers.get("scoresSummary")).handleButtons(input);
+            this.enteringName++;
+
+            if (this.enteringName > this.players.length)
+            {
+                this.enteringName = -1;
+                this.highScoresRecorded = true;
+                this.layers.put("scoresSummary", new ScoresSummary(this.players));
+            }
+
+            return EnumSet.of(InterfaceEvent.OK);
+        }
+        else
+        {
+            return ((ScoresSummary) this.layers.get("scoresSummary")).handleButtons(input);
+        }
     }
 }
