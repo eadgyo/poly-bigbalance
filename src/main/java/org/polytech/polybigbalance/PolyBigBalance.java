@@ -1,18 +1,10 @@
-/**
- * 
- * @author Tudal
- * @author Ronan
- * 
- */
-
 package org.polytech.polybigbalance;
 
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
-import org.polytech.polybigbalance.base.GameData;
-import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Interface;
+import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.interfaces.Game;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.Menu;
@@ -24,6 +16,13 @@ import org.polytech.polybigbalance.score.HighScoresManager;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ * 
+ * @author Tudal
+ * @author Ronan
+ * 
+ */
+
 public class PolyBigBalance
 {
     private Input input;
@@ -31,13 +30,11 @@ public class PolyBigBalance
 
     private HighScoresManager highScoresManager;
 
-    private Interface menu;
-    private Interface pause;
+    private Menu menu;
+    private Menu pause;
     private Interface help;
     private Interface credits;
     private Stack<Interface> stack;
-
-    private GameData gameData;
 
     private double timeElapsed;
 
@@ -64,10 +61,10 @@ public class PolyBigBalance
         this.help = new SomeText(Constants.MENU_HELP_TEXT);
         this.credits = new SomeText(Constants.MENU_CREDITS_TEXT, Alignement.TOP_CENTER);
 
+        this.pause.setMustClearOnPop(true);
+
         this.stack = new Stack<>();
         this.stack.add(this.menu);
-
-        this.gameData = new GameData();
 
         this.timeElapsed = System.nanoTime() / 1000000000.0f;
     }
@@ -87,7 +84,6 @@ public class PolyBigBalance
             this.stack.lastElement().update((float) this.timeElapsed);
             this.input.update((float) this.timeElapsed);
 
-
             this.stack.lastElement().render(this.g);
 
             handleEvent(stack.lastElement().handleEvents(this.input));
@@ -106,9 +102,13 @@ public class PolyBigBalance
     {
         // if (event.contains(InterfaceEvent.OK)) { }
 
-        if (event.contains(InterfaceEvent.POP))
+        if (event.contains(InterfaceEvent.CLEAR))
         {
             this.input.clear();
+        }
+
+        if (event.contains(InterfaceEvent.POP))
+        {
             this.stack.pop();
         }
 
@@ -119,24 +119,24 @@ public class PolyBigBalance
 
         if (event.contains(InterfaceEvent.MENU))
         {
-            this.stack.clear();
             this.stack.push(this.menu);
         }
 
         if (event.contains(InterfaceEvent.NEW_GAME))
         {
-            this.input.clear();
+            LevelSelector selector = (LevelSelector) this.stack.lastElement();
+            int player = selector.getPlayer();
+            Level level = LevelFactory.getNewLevel(selector.getSelectedLevel());
+
+            this.highScoresManager.setHighScores(selector.getSelectedLevel(), level);
+
             this.stack.pop();
-
-            Level level = LevelFactory.getNewLevel(this.gameData.getLevel());
-            this.highScoresManager.setHighScores(this.gameData.getLevel(), level);
-
-            this.stack.push(new Game(this.gameData.getPlayer(), level));
+            this.stack.push(new Game(player, level));
         }
 
         if (event.contains(InterfaceEvent.PLAY))
         {
-            this.stack.push(new LevelSelector(this.gameData, this.highScoresManager));
+            this.stack.push(new LevelSelector(this.highScoresManager));
         }
 
         if (event.contains(InterfaceEvent.HOW_TO))

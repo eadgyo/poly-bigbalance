@@ -1,16 +1,13 @@
 package org.polytech.polybigbalance.base;
 
 /**
- * @autor ronan-j
- */
-
-/**
+ * Created by ronan-j
  * Flags used for Interface event response
  */
 public enum InterfaceEvent
 {
     OK(1),
-    RESET(1<<1),
+    CLEAR(1<<1),
     POP(1<<2),
     MENU(1<<3),
     

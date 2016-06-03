@@ -26,6 +26,11 @@ public class Back extends Interface
 {
     private TextButton button;
 
+    public Back()
+    {
+        this("< Back");
+    }
+
     public Back(String text)
     {
         this.button = new TextButton(10, 10, 150, 60, Constants.FONT);

@@ -11,8 +11,8 @@ import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
-import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Interface;
+import org.polytech.polybigbalance.base.InterfaceEvent;
 
 /**
  * 
@@ -33,6 +33,7 @@ public class Menu extends Interface
     private InterfaceEvent events[];
     private TextRenderer title;
     private String text;
+    private boolean clear;
 
     public Menu(final int WIDTH, final int HEIGHT, String[] text, InterfaceEvent[] event)
     {
@@ -43,6 +44,7 @@ public class Menu extends Interface
     {
         this.buttons = new TextButton[text.length];
         this.events = event;
+        this.clear = false;
 
         final int SPACING;
         final int START_Y;
@@ -73,6 +75,13 @@ public class Menu extends Interface
         }
     }
 
+    // ----- SETTER ----- //
+
+    public void setMustClearOnPop(boolean clear)
+    {
+        this.clear = clear;
+    }
+
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
@@ -82,12 +91,10 @@ public class Menu extends Interface
     @Override
     public Set<InterfaceEvent> handleEvents(Input input)
     {
-        if (input.isMouseMoving())
+
+        for (Button b : this.buttons)
         {
-            for (Button b : this.buttons)
-            {
-                b.setHighlighted(b.isColliding(input.getMousePosV()));
-            }
+            b.setHighlighted(b.isColliding(input.getMousePosV()));
         }
 
         if (input.isMousePressed(Input.MOUSE_BUTTON_1))
@@ -96,8 +103,14 @@ public class Menu extends Interface
             {
                 if (this.buttons[i].isColliding(input.getMousePosV()))
                 {
-                    this.buttons[i].setHighlighted(false);
-                    return EnumSet.of(this.events[i]);
+                    Set<InterfaceEvent> set = EnumSet.of(this.events[i]);
+
+                    if (this.events[i] == InterfaceEvent.POP && this.clear)
+                    {
+                        set.add(InterfaceEvent.CLEAR);
+                    }
+
+                    return set;
                 }
             }
         }
