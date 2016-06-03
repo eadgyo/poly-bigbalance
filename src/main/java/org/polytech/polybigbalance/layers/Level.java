@@ -63,9 +63,10 @@ public abstract class Level extends Layer
         this.physEngine = new Engine();
         this.physEngine.setMinDt(0.2f);
         this.physEngine.setThresholdSideDetection(0.06411002f);
+        this.physEngine.setDefaultFriction(0.24001002f);
         this.gravity = new Gravity(new Vector2D(0, 200.0f));
         this.sticking = new MaterialType();
-        this.sticking.addMaterialInformation(sticking, 0.0f, 0.5f, 1.0f);
+        this.sticking.addMaterialInformation(sticking, 0.0f, 0.24001002f, 1.0f);
     }
 
     /**
