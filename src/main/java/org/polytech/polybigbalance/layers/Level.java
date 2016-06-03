@@ -192,7 +192,7 @@ public abstract class Level extends Layer
     @Override
     public void update(float dt)
     {
-        this.physEngine.update(0.016f);
+        this.physEngine.update(dt);
     }
 
     /**

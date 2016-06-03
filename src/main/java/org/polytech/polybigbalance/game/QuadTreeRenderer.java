@@ -10,6 +10,9 @@ public class QuadTreeRenderer
 {
     public static void drawQuadTree(Graphics g, QuadTree quadTree)
     {
+        if (quadTree.getRect() == null)
+            return;
+
         g.drawForm(quadTree.getRect());
 
         QuadTree nodes[] = quadTree.getNodes();
