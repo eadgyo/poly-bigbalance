@@ -65,7 +65,7 @@ public abstract class Level extends Layer
         this.physEngine.setThresholdSideDetection(0.06411002f);
         this.physEngine.setDefaultFriction(0.24001002f);
         this.gravity = new Gravity(new Vector2D(0, 200.0f));
-        this.sticking = new MaterialType();
+        this.sticking = new MaterialType(0.01f);
         this.sticking.addMaterialInformation(sticking, 0.0f, 0.24001002f, 1.0f);
     }
 
@@ -80,7 +80,6 @@ public abstract class Level extends Layer
         RigidBody ground = new RigidBody();
         ground.setForm(this.groundForm);
         ground.setPosition(this.groundForm.getCenter());
-        ground.initPhysics();
         ground.setMaterialType(sticking);
         this.physEngine.addElement(ground);
     }
@@ -126,7 +125,6 @@ public abstract class Level extends Layer
                 this.drawingRectangle.updateCenter();
 
                 RigidBody rect = new RigidBody();
-                rect.setMass(100.0f);
                 rect.setForm(this.drawingRectangle);
                 rect.setPosition(this.drawingRectangle.getCenter());
                 rect.setMaterialType(sticking);
@@ -156,8 +154,6 @@ public abstract class Level extends Layer
         g.setColor(0.0f, 0.0f, 0.0f);
         g.drawForm(this.groundForm);
 
-
-
         for (Form f : this.baseRectangles.keySet()) {
             g.setColor(0.2f, 0.2f, 1.0f);
             g.fillForm(f);
@@ -170,7 +166,6 @@ public abstract class Level extends Layer
             g.fillForm(f);
             g.setColor(0.0f, 0.0f, 0.0f);
             g.drawForm(f);
-
         }
 
         if (this.drawingRectangle != null) {
@@ -185,23 +180,14 @@ public abstract class Level extends Layer
             g.fillForm(this.drawingRectangle);
             g.setColor(0.0f, 0.0f, 0.0f);
             g.drawForm(this.drawingRectangle);
-
         }
-
         g.setLineSize(1);
     }
 
     @Override
     public void update(float dt)
     {
-        float time = (System.nanoTime() / 1000000000.0f);
         this.physEngine.update(dt);
-        float newTime = (System.nanoTime() / 1000000000.0f);
-
-        if ((newTime - time) > 0.02f)
-        {
-            System.out.println("Time: (" + (newTime - time) + ", " + dt + " )");
-        }
     }
 
     /**
@@ -256,11 +242,11 @@ public abstract class Level extends Layer
             rectForm.updateCenter();
             RigidBody rect = rectangles.get(rectForm);
 
-            rect.setMass(100.0f);
             rect.setForm(rectForm);
             rect.setPosition(rectForm.getCenter());
             rect.setMaterialType(sticking);
-            rect.initPhysics();
+            rect.initPhysics(100);
+            float mass = rect.getMass();
 
             this.physEngine.addElement(rect);
             this.physEngine.addForce(rect, this.gravity);

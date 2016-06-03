@@ -4,7 +4,14 @@ import org.cora.graphics.graphics.Graphics;
 import org.cora.physics.Engine.QuadTree;
 
 /**
- * Created by ronan-h on 02/06/16.
+ * @autor ronan-h
+ * @date 02/06/16
+ */
+
+/**
+ * Used to render QuadTree collision bounds
+ * QuadTree are used to divide space to speed up collision detection process
+ * But they can be used when drawing scene
  */
 public class QuadTreeRenderer
 {

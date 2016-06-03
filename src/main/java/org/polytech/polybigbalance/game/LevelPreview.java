@@ -13,8 +13,13 @@ import org.polytech.polybigbalance.score.HighScoresManager;
 import org.polytech.polybigbalance.score.Score;
 
 /**
- * Created by ronan-j on 01/06/16.
- * Create
+ * @autor ronan-j
+ * @autor Tudal-L
+ * @date 01/06/16
+ */
+
+/**
+ * Level preview and high scores
  */
 public class LevelPreview extends TextButton
 {
@@ -48,6 +53,10 @@ public class LevelPreview extends TextButton
         this.scoreFieldHeight = (this.hsm.getHighScores(this.id).getSize() + 1) * (this.scoreText.getHeight() + this.scoreText.getVerticalSpacing());
     }
 
+    /**
+     * Render on screen a level preview and associated high scores
+     * @param g render tool
+     */
     @Override
     public void render(Graphics g)
     {
@@ -57,6 +66,7 @@ public class LevelPreview extends TextButton
 
         int scoresHeight = (isHighlighted()) ? this.scoreFieldHeight : 0;
 
+        // Compute x, y, width, height for rendering
         int y = (int) (getTextRenderer().getHeight() * 1.7f);
         int levelHeight = (int) (getHeight() - y - scoresHeight);
 
@@ -70,17 +80,19 @@ public class LevelPreview extends TextButton
         level.render(g);
         g.resetOuput();
 
-        if (isHighlighted()) {
-            // Score[] scores = new Score[] {new Score("HugoPo", 500), new
-            // Score("Ronan", 10000)};
-
+        // Render high scores
+        if (isHighlighted())
+        {
             Score[] scores = this.hsm.getHighScores(id).getScore();
 
             y += levelHeight;
             scoreText.setMaxWidth(levelWidth);
             StringBuilder scorestxt = new StringBuilder();
             scorestxt.append("Scores:\n");
-            for (int i = 0; i < scores.length; i++) {
+
+            // Create one string with all high scores
+            for (int i = 0; i < scores.length; i++)
+            {
                 scorestxt.append(scores[i].getPlayer() + ": " + scores[i].getScore());
                 scorestxt.append("\n");
             }

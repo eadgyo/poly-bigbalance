@@ -1,7 +1,10 @@
 package org.polytech.polybigbalance.base;
 
 /**
- * Created by ronan-j
+ * @autor ronan-j
+ */
+
+/**
  * Flags used for Interface event response
  */
 public enum InterfaceEvent

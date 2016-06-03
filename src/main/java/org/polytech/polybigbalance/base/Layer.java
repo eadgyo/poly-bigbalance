@@ -9,7 +9,10 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * Created by ronan-j
+ * @author ronan-j
+ */
+
+/**
  * Used in interface to display group of objects
  * Coordinates are stored using float instead of int.
  * Float are used to make fluid motion
