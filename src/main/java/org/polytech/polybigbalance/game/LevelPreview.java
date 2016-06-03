@@ -24,7 +24,6 @@ import org.polytech.polybigbalance.score.Score;
 public class LevelPreview extends TextButton
 {
     private Level level;
-    private TextButton button;
     private TextRenderer scoreText;
 
     private int defaultwidth, defaultHeight;
@@ -55,7 +54,9 @@ public class LevelPreview extends TextButton
 
     /**
      * Render on screen a level preview and associated high scores
-     * @param g render tool
+     * 
+     * @param g
+     *            render tool
      */
     @Override
     public void render(Graphics g)
@@ -112,9 +113,12 @@ public class LevelPreview extends TextButton
     {
         super.setHighlighted(isHighlighted);
 
-        if (isHighlighted) {
+        if (isHighlighted)
+        {
             super.setHeight(defaultHeight + this.scoreFieldHeight);
-        } else {
+        }
+        else
+        {
             super.setHeight(defaultHeight);
         }
     }
