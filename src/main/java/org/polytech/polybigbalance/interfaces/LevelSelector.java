@@ -11,8 +11,8 @@ import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.GameData;
-import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.game.LevelPreview;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
@@ -180,7 +180,7 @@ public class LevelSelector extends Interface
     }
 
     @Override
-    public Set<InterfaceEvent> handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvents(Input input)
     {
         if (input.isKeyDown(Input.KEY_ESC))
         {

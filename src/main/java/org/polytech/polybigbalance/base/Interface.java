@@ -1,12 +1,12 @@
 package org.polytech.polybigbalance.base;
 
-import java.util.Set;
-
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
+
+import java.util.Set;
 
 /**
  * Created by ronan-j Interface make easier menu creation Interface starts at
@@ -39,7 +39,7 @@ public abstract class Interface
 
     public abstract Set<InterfaceEvent> update(float dt);
 
-    public abstract Set<InterfaceEvent> handleEvent(Input input);
+    public abstract Set<InterfaceEvent> handleEvents(Input input);
 
     public void render(Graphics g)
     {

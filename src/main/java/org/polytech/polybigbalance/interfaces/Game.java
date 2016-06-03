@@ -4,19 +4,14 @@
 
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
 import org.cora.maths.Rectangle;
 import org.polytech.polybigbalance.Constants;
-import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.base.Player;
 import org.polytech.polybigbalance.layers.ActivePlayer;
@@ -24,6 +19,11 @@ import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.layers.ScoresSummary;
 import org.polytech.polybigbalance.layers.TextScore;
 import org.polytech.polybigbalance.score.Score;
+
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Handles a game
@@ -116,7 +116,7 @@ public class Game extends Interface
     }
 
     @Override
-    public Set<InterfaceEvent> handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvents(Input input)
     {
         if (input.isKeyPressed(Input.KEY_ESC))
         {
@@ -291,7 +291,7 @@ public class Game extends Interface
         }
         else
         {
-            return ((ScoresSummary) this.layers.get("scoresSummary")).handleButtons(input);
+            return ((ScoresSummary) this.layers.get("scoresSummary")).handleEvents(input);
         }
     }
 }

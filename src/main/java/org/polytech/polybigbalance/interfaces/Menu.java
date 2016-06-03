@@ -11,8 +11,8 @@ import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
-import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.base.Interface;
 
 /**
  * 
@@ -80,7 +80,7 @@ public class Menu extends Interface
     }
 
     @Override
-    public Set<InterfaceEvent> handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvents(Input input)
     {
         if (input.isMouseMoving())
         {

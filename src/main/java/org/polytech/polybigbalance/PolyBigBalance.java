@@ -7,15 +7,12 @@
 
 package org.polytech.polybigbalance;
 
-import java.util.Set;
-import java.util.Stack;
-
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.base.GameData;
-import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
+import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.interfaces.Game;
 import org.polytech.polybigbalance.interfaces.LevelSelector;
 import org.polytech.polybigbalance.interfaces.Menu;
@@ -23,6 +20,9 @@ import org.polytech.polybigbalance.interfaces.SomeText;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
+
+import java.util.Set;
+import java.util.Stack;
 
 public class PolyBigBalance
 {
@@ -39,7 +39,7 @@ public class PolyBigBalance
 
     private GameData gameData;
 
-    private float timeElapsed;
+    private double timeElapsed;
 
     // ----- CONSTRUCTOR ----- //
 
@@ -76,20 +76,24 @@ public class PolyBigBalance
 
     public void mainLoop()
     {
+        float tmp;
         while (this.g.isNotTerminated())
         {
             this.g.clear();
 
-            this.timeElapsed = (System.nanoTime() / 1000000000.0f) - this.timeElapsed;
-            this.stack.lastElement().update(this.timeElapsed);
-            this.input.update(this.timeElapsed);
-            this.timeElapsed = System.nanoTime() / 1000000000.0f;
+            tmp = (System.nanoTime() / 1000000000.0f);
+            this.timeElapsed = tmp - this.timeElapsed;
+
+            this.stack.lastElement().update((float) this.timeElapsed);
+            this.input.update((float) this.timeElapsed);
+
 
             this.stack.lastElement().render(this.g);
 
-            handleEvent(stack.lastElement().handleEvent(this.input));
+            handleEvent(stack.lastElement().handleEvents(this.input));
 
             this.g.swapGL();
+            this.timeElapsed = tmp;
         }
     }
 

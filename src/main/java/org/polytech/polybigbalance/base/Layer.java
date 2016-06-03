@@ -99,7 +99,7 @@ public abstract class Layer
      * @param input inputs manager
      * @return events
      */
-    public Set<LayerEvent> handleEvent(Input input) {return EnumSet.of(LayerEvent.NO_COLLISION); }
+    public Set<InterfaceEvent> handleEvents(Input input) {return EnumSet.of(InterfaceEvent.OK); }
 
     /**
      *

@@ -61,7 +61,7 @@ public abstract class Level extends Layer
         this.BASE = base;
 
         this.physEngine = new Engine();
-        this.physEngine.setMinDt(0.2f);
+        this.physEngine.setMinDt(0.02f);
         this.physEngine.setThresholdSideDetection(0.06411002f);
         this.physEngine.setDefaultFriction(0.24001002f);
         this.gravity = new Gravity(new Vector2D(0, 200.0f));
@@ -194,7 +194,14 @@ public abstract class Level extends Layer
     @Override
     public void update(float dt)
     {
+        float time = (System.nanoTime() / 1000000000.0f);
         this.physEngine.update(dt);
+        float newTime = (System.nanoTime() / 1000000000.0f);
+
+        if ((newTime - time) > 0.02f)
+        {
+            System.out.println("Time: (" + (newTime - time) + ", " + dt + " )");
+        }
     }
 
     /**

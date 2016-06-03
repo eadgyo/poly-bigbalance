@@ -77,9 +77,9 @@ public class SomeText extends Back
     }
 
     @Override
-    public Set<InterfaceEvent> handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvents(Input input)
     {
-        return super.handleEvent(input);
+        return super.handleEvents(input);
     }
 
     @Override

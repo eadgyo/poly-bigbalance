@@ -40,7 +40,7 @@ public class Back extends Interface
     }
 
     @Override
-    public Set<InterfaceEvent> handleEvent(Input input)
+    public Set<InterfaceEvent> handleEvents(Input input)
     {
         if (input.isMouseMoving())
         {

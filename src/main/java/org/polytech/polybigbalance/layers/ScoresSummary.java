@@ -4,9 +4,6 @@
 
 package org.polytech.polybigbalance.layers;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.Button;
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
@@ -19,6 +16,9 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.base.Player;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Displays a summary of all the players' score
@@ -62,6 +62,7 @@ public class ScoresSummary extends Layer
             this.buttons[i] = new TextButton(POS_X, BUTTONS_POS_Y, BUTTONS_WIDTH, 50, Constants.FONT);
             this.buttons[i].setAddColor(Constants.BUTTON_HIGHLIGHT_COLOR);
             this.buttons[i].setTxt(Constants.GAME_FINISHED_BUTTON[i]);
+            this.buttons[i].setAddColor(new myColor(-0.3f, -0.3f, -0.3f));
         }
     }
 
@@ -83,7 +84,7 @@ public class ScoresSummary extends Layer
         }
     }
 
-    public Set<InterfaceEvent> handleButtons(Input input)
+    public Set<InterfaceEvent> handleEvents(Input input)
     {
         if (input.isMouseMoving())
         {
