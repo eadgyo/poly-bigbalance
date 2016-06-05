@@ -10,10 +10,12 @@ import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
 import org.cora.graphics.input.Input;
+import org.cora.maths.Circle;
 import org.cora.maths.Rectangle;
+import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
-import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Interface;
+import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.base.Player;
 import org.polytech.polybigbalance.layers.ActivePlayer;
@@ -32,6 +34,8 @@ import java.util.Set;
  */
 public class Game extends Interface
 {
+    private final static int WAITING_TIME = 5000;
+
     private Map<String, Layer> layers;
     private boolean drawing;
 
@@ -47,6 +51,7 @@ public class Game extends Interface
 
     private boolean gameFinished;
     private boolean highScoresRecorded;
+    private Circle waitingCircle;
 
     /**
      * @param nbPlayers
@@ -85,6 +90,8 @@ public class Game extends Interface
 
         enteringName = 0;
 
+        waitingCircle = new Circle(new Vector2D(Constants.WINDOW_WIDTH - Constants.WINDOW_HEIGHT / 16, Constants.WINDOW_HEIGHT / 20), Constants.WINDOW_HEIGHT/24);
+
         this.waitStartTime = 0;
         this.gameFinished = false;
         this.highScoresRecorded = false;
@@ -95,7 +102,7 @@ public class Game extends Interface
     {
         if (this.waitStartTime != 0)
         {
-            if (this.waitStartTime + 5000 <= System.currentTimeMillis())
+            if (this.waitStartTime + WAITING_TIME <= System.currentTimeMillis())
             {
                 this.waitStartTime = 0;
                 this.updateScore();
@@ -167,6 +174,13 @@ public class Game extends Interface
         }
 
         namefield.render(g);
+
+        if (waitStartTime > 0)
+        {
+            g.setColor(myColor.BLACK());
+            float rad = (float) (Math.PI/2 + 2*Math.PI * (WAITING_TIME - (System.currentTimeMillis() - waitStartTime)) /WAITING_TIME);
+            g.fillCircleFixed(waitingCircle, 30, (float) -Math.PI/2, -rad);
+        }
     }
 
     /**
