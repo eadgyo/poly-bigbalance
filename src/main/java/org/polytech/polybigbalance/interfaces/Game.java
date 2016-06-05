@@ -179,7 +179,7 @@ public class Game extends Interface
         {
             g.setColor(myColor.BLACK());
             float rad = (float) (Math.PI/2 + 2*Math.PI * (WAITING_TIME - (System.currentTimeMillis() - waitStartTime)) /WAITING_TIME);
-            g.fillCircleFixed(waitingCircle, 30, (float) -Math.PI/2, -rad);
+            g.fillCircleFixed(waitingCircle, 60, (float) -Math.PI/2, -rad);
         }
     }
 
