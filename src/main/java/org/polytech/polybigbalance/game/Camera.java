@@ -34,17 +34,17 @@ public class Camera
         public KeyType type;
     }
 
-    public class ScalingKey extends Key
+    public class ScaleKey extends Key
     {
         public float value;
     }
 
-    public class ScalingKey1 extends ScalingKey
+    public class ScaleKey1 extends ScaleKey
     {
         public float f1;
     }
 
-    public class ScalingKey2 extends ScalingKey1
+    public class ScaleKey2 extends ScaleKey1
     {
         public float f2;
     }
@@ -66,8 +66,11 @@ public class Camera
 
     private sRectangle rec;
 
-    private NavigableMap<Double, ScalingKey> scalingKeys;
+    private NavigableMap<Double, ScaleKey> scaleKeys;
     private NavigableMap<Double, PosKey> posKeys;
+
+    private Map.Entry<Double, PosKey> currentPos;
+    private Map.Entry<Double, ScaleKey> currentScale;
 
     private double tScale;
     private double tPos;
@@ -75,8 +78,11 @@ public class Camera
     public Camera()
     {
         rec = new sRectangle();
-        scalingKeys = new TreeMap<Double, ScalingKey>();
+        scaleKeys = new TreeMap<Double, ScaleKey>();
         posKeys = new TreeMap<Double, PosKey>();
+
+        currentPos = null;
+        currentScale = null;
     }
 
     public void initialize(float x, float y, float width, float height)
@@ -142,7 +148,10 @@ public class Camera
      */
     public void clearScale()
     {
-        scalingKeys.clear();
+        tScale = 0;
+        scaleKeys.clear();
+
+        currentScale = null;
     }
 
     /**
@@ -152,6 +161,8 @@ public class Camera
     {
         tScale = 0;
         this.updateScale(0);
+
+        currentScale = null;
     }
 
     /**
@@ -176,12 +187,12 @@ public class Camera
      *
      * @return creation success
      */
-    public boolean addScalingKey(double t, ScalingKey s)
+    public boolean addScaleKey(double t, ScaleKey s)
     {
-        if (scalingKeys.containsKey(t))
+        if (scaleKeys.containsKey(t))
             return false;
 
-        scalingKeys.put(t, s);
+        scaleKeys.put(t, s);
         return true;
     }
 
@@ -192,9 +203,9 @@ public class Camera
      *
      * @return removed key or null if not exists
      */
-    public ScalingKey removePos(double t)
+    public ScaleKey removeScaleKey(double t)
     {
-        return scalingKeys.remove(t);
+        return scaleKeys.remove(t);
     }
 
     /**
@@ -207,8 +218,8 @@ public class Camera
     public float getScaleValue(double t)
     {
         // Get start and end scale
-        Map.Entry<Double, ScalingKey> startE = scalingKeys.floorEntry(tScale);
-        Map.Entry<Double, ScalingKey> endE = scalingKeys.higherEntry(tScale);
+        Map.Entry<Double, ScaleKey> startE = scaleKeys.floorEntry(tScale);
+        Map.Entry<Double, ScaleKey> endE = scaleKeys.higherEntry(tScale);
 
         if (startE == null)
             return rec.getScale();
@@ -230,14 +241,14 @@ public class Camera
             case LINEAR:
                 return linearInterpolation(start, end, duration, time);
             case EXP:
-                f1 = ((ScalingKey1) startE.getValue()).f1;
+                f1 = ((ScaleKey1) startE.getValue()).f1;
                 return expInterpolation(start, end, duration, time, f1);
             case LOG:
-                f1 = ((ScalingKey1) startE.getValue()).f1;
+                f1 = ((ScaleKey1) startE.getValue()).f1;
                 return logInterpolation(start, end, duration, time, f1);
             case POW:
-                f1 = ((ScalingKey1) startE.getValue()).f1;
-                f2 = ((ScalingKey2) startE.getValue()).f2;
+                f1 = ((ScaleKey1) startE.getValue()).f1;
+                f2 = ((ScaleKey2) startE.getValue()).f2;
                 return powInterpolation(start, end, duration, time, f1, f2);
             default:
                 return startE.getValue().value;
@@ -250,7 +261,10 @@ public class Camera
      */
     public void clearPos()
     {
+        tPos = 0;
         posKeys.clear();
+
+        currentPos = null;
     }
 
     /**
@@ -260,6 +274,8 @@ public class Camera
     {
         tPos = 0;
         this.updatePos(0);
+
+        currentPos = null;
     }
 
     /**
@@ -300,7 +316,7 @@ public class Camera
      *
      * @return removed key or null if not exists
      */
-    public PosKey remove(float t)
+    public PosKey removePosKey(float t)
     {
         return posKeys.remove(t);
     }
@@ -358,5 +374,237 @@ public class Camera
                 return startE.getValue().value;
         }
         return startV.add(vec.multiply(v));
+    }
+
+    // Scale
+    public Map.Entry<Double, ScaleKey> getFirstScaleEntry()
+    {
+        return scaleKeys.firstEntry();
+    }
+
+    public Map.Entry<Double, ScaleKey> getLastScaleEntry()
+    {
+        return scaleKeys.lastEntry();
+    }
+
+    public ScaleKey getFirstScaleKey()
+    {
+        return scaleKeys.firstEntry().getValue();
+    }
+
+    public ScaleKey getLastScaleKey()
+    {
+        return scaleKeys.lastEntry().getValue();
+    }
+
+    public double getFirstScaleTime()
+    {
+        return scaleKeys.firstEntry().getKey();
+    }
+
+    public double getLastScaleTime()
+    {
+        return scaleKeys.lastEntry().getKey();
+    }
+
+    public Map.Entry<Double, ScaleKey> getFloorScaleEntry(double t)
+    {
+        return scaleKeys.floorEntry(t);
+    }
+
+    public ScaleKey getFloorScaleKey(double t)
+    {
+        return scaleKeys.floorEntry(t).getValue();
+    }
+
+    public double getFloorScaleTime(double t)
+    {
+        return scaleKeys.floorEntry(t).getKey();
+    }
+
+    public Map.Entry<Double, ScaleKey> getCeilingScaleEntry(double t)
+    {
+        return scaleKeys.ceilingEntry(t);
+    }
+
+    public ScaleKey getCeilingScaleKey(double t)
+    {
+        return scaleKeys.ceilingEntry(t).getValue();
+    }
+
+    public double getCeilingScaleTime(double t)
+    {
+        return scaleKeys.ceilingEntry(t).getKey();
+    }
+
+    public Map.Entry<Double, ScaleKey> getLowerScaleEntry(double t)
+    {
+        return scaleKeys.lowerEntry(t);
+    }
+
+    public ScaleKey getLowerScaleKey(double t)
+    {
+        return scaleKeys.lowerEntry(t).getValue();
+    }
+
+    public double getLowerScaleTime(double t)
+    {
+        return scaleKeys.lowerEntry(t).getKey();
+    }
+
+    public Map.Entry<Double, ScaleKey> getHigherScaleEntry(double t)
+    {
+        return scaleKeys.higherEntry(t);
+    }
+
+    public ScaleKey getHigherScaleKey(double t)
+    {
+        return scaleKeys.higherEntry(t).getValue();
+    }
+
+    public double getHigherScaleTime(double t)
+    {
+        return scaleKeys.higherEntry(t).getKey();
+    }
+
+    public boolean hasFinishedScale()
+    {
+        return scaleKeys.size() == 0 || tScale >= scaleKeys.lastKey();
+    }
+
+    public double getTScale()
+    {
+        return tScale;
+    }
+
+    public Map.Entry<Double, ScaleKey> getCurrentScaleEntry(double t)
+    {
+        return currentScale;
+    }
+
+    public ScaleKey getCurrentScaleKey(double t)
+    {
+        return currentScale.getValue();
+    }
+
+    public double getCurrentScaleTime(double t)
+    {
+        return currentScale.getKey();
+    }
+
+    // Pos
+    public Map.Entry<Double, PosKey> getFirstPosEntry()
+    {
+        return posKeys.firstEntry();
+    }
+
+    public Map.Entry<Double, PosKey> getFirstLastEntry()
+    {
+        return posKeys.lastEntry();
+    }
+
+    public PosKey getFirstPosKey()
+    {
+        return posKeys.firstEntry().getValue();
+    }
+
+    public PosKey getLastPosKey()
+    {
+        return posKeys.lastEntry().getValue();
+    }
+
+    public double getFirstPosTiùe()
+    {
+        return posKeys.firstEntry().getKey();
+    }
+
+    public double getLastPosTime()
+    {
+        return posKeys.lastEntry().getKey();
+    }
+
+    public Map.Entry<Double, PosKey> getFloorPosEntry(double t)
+    {
+        return posKeys.floorEntry(t);
+    }
+
+    public PosKey getFloorPosKey(double t)
+    {
+        return posKeys.floorEntry(t).getValue();
+    }
+
+    public double getFloorPosTime(double t)
+    {
+        return posKeys.floorEntry(t).getKey();
+    }
+
+    public Map.Entry<Double, PosKey> getCeilingPosEntry(double t)
+    {
+        return posKeys.ceilingEntry(t);
+    }
+
+    public PosKey getCeilingPosKey(double t)
+    {
+        return posKeys.ceilingEntry(t).getValue();
+    }
+
+    public double getCeilingPosTime(double t)
+    {
+        return posKeys.ceilingEntry(t).getKey();
+    }
+
+    public Map.Entry<Double, PosKey> getLowerPosEntry(double t)
+    {
+        return posKeys.lowerEntry(t);
+    }
+
+    public PosKey getLowerPosKey(double t)
+    {
+        return posKeys.lowerEntry(t).getValue();
+    }
+
+    public double getLowerPosTime(double t)
+    {
+        return posKeys.lowerEntry(t).getKey();
+    }
+
+    public Map.Entry<Double, PosKey> getHigherPosEntry(double t)
+    {
+        return posKeys.higherEntry(t);
+    }
+
+    public PosKey getHigherPosKey(double t)
+    {
+        return posKeys.higherEntry(t).getValue();
+    }
+
+    public double getHigherPosTime(double t)
+    {
+        return posKeys.higherEntry(t).getKey();
+    }
+
+    public boolean hasFinishedPos()
+    {
+        return posKeys.size() == 0 || tPos >= posKeys.lastKey();
+    }
+
+    public double getTPos()
+    {
+        return tPos;
+    }
+
+    public Map.Entry<Double, PosKey> getCurrentPosEntry(double t)
+    {
+        return currentPos;
+    }
+
+    public PosKey getCurrentPosKey(double t)
+    {
+        return currentPos.getValue();
+    }
+
+    public double getCurrentPosTime(double t)
+    {
+        return currentPos.getKey();
     }
 }
