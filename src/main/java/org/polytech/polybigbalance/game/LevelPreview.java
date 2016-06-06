@@ -37,7 +37,7 @@ public class LevelPreview extends TextButton
     {
         super(x, y, width, height, font);
         this.level = level;
-        level.initialize();
+        level.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         this.setTextTopCenter();
         this.defaultwidth = width;
         this.defaultHeight = height;

@@ -16,7 +16,6 @@ import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.base.Player;
 import org.polytech.polybigbalance.layers.ActivePlayer;
 import org.polytech.polybigbalance.layers.Level;
@@ -25,8 +24,6 @@ import org.polytech.polybigbalance.layers.TextScore;
 import org.polytech.polybigbalance.score.Score;
 
 import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,13 +33,16 @@ public class Game extends Interface
 {
     private final static int WAITING_TIME = 5000;
 
-    private Map<String, Layer> layers;
     private boolean drawing;
+
+    private Level levelLayer;
+    private TextScore scoreLayer;
+    private ActivePlayer activePlayerLevel;
+    private ScoresSummary scoresSummary;
 
     private Player[] players;
     private int currentPlayer;
 
-    private long waitStartTime;
     private Rectangle drawnRectangle;
 
     private TextButton namefield;
@@ -61,23 +61,20 @@ public class Game extends Interface
      */
     public Game(int nbPlayers, Level level)
     {
-        this.players = new Player[nbPlayers];
+        players = new Player[nbPlayers];
         for (int i = 0; i < nbPlayers; i++)
         {
-            this.players[i] = new Player("Player " + (i + 1));
+            players[i] = new Player("Player " + (i + 1));
         }
-        this.currentPlayer = 0;
+        currentPlayer = 0;
+        drawing = false;
 
-        this.layers = new HashMap<>();
-        this.drawing = false;
-
-        level.initialize();
-        this.layers.put("level", level);
-
-        this.layers.put("score", new TextScore(Constants.WINDOW_WIDTH / 2, 20, 200));
+        level.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        levelLayer = level;
+        scoreLayer = new TextScore(Constants.WINDOW_WIDTH / 2, 20, 200);
 
         String playerName = this.players[this.currentPlayer].getName();
-        this.layers.put("activePlayer", new ActivePlayer(playerName, 20, 20, 200));
+        activePlayerLevel = new ActivePlayer(playerName, 20, 20, 200);
 
         namefield = new TextButton(Constants.WINDOW_WIDTH / 2 - Constants.WINDOW_WIDTH / 8, Constants.WINDOW_HEIGHT / 2 - Constants.WINDOW_HEIGHT / 32, Constants.WINDOW_WIDTH / 4, Constants.WINDOW_HEIGHT / 16, Constants.FONT);
         namefield.setTextMiddleLeft();
@@ -90,36 +87,38 @@ public class Game extends Interface
 
         enteringName = 0;
 
+        scoresSummary = null;
         waitingCircle = new Circle(new Vector2D(Constants.WINDOW_WIDTH - Constants.WINDOW_HEIGHT / 16, Constants.WINDOW_HEIGHT / 20), Constants.WINDOW_HEIGHT/24);
 
-        this.waitStartTime = 0;
-        this.gameFinished = false;
-        this.highScoresRecorded = false;
+        gameFinished = false;
+        highScoresRecorded = false;
     }
 
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
-        if (this.waitStartTime != 0)
+        if (!levelLayer.hasFinishedWaiting())
         {
-            if (this.waitStartTime + WAITING_TIME <= System.currentTimeMillis())
+            if (levelLayer.getEndWaiting() <= System.currentTimeMillis())
             {
-                this.waitStartTime = 0;
-                this.updateScore();
-                this.nextPlayer();
+                levelLayer.setWaitStartTime(0);
+                updateScore();
+                nextPlayer();
             }
-            else if (((Level) this.layers.get("level")).checkRectangleFallen() > 0)
+            else if (levelLayer.checkRectangleFallen())
             {
-                this.players[this.currentPlayer].setLost(true);
-                this.waitStartTime = 0;
-                this.nextPlayer();
+                players[this.currentPlayer].setLost(true);
+                levelLayer.setWaitStartTime(0);
+                nextPlayer();
             }
         }
 
-        for (Layer l : this.layers.values())
-        {
-            l.update(dt);
-        }
+        levelLayer.update(dt);
+        scoreLayer.update(dt);
+        activePlayerLevel.update(dt);
+
+        if (scoresSummary != null)
+            scoresSummary.update(dt);
 
         return EnumSet.of(InterfaceEvent.OK);
     }
@@ -142,23 +141,24 @@ public class Game extends Interface
             return finishGame(input);
         }
 
-        if (this.waitStartTime == 0)
+        if (input.isMouseDown(Input.MOUSE_BUTTON_1))
         {
-            if (input.isMouseDown(Input.MOUSE_BUTTON_1))
-            {
-                this.drawing = true;
-                ((Level) this.layers.get("level")).drawRectangle(input.getMousePosV());
-            }
-            else if (this.drawing)
-            {
-                this.drawing = false;
-                this.drawnRectangle = ((Level) this.layers.get("level")).endDrawRectangle();
+            drawing = true;
+            levelLayer.drawRectangle(input.getMousePosV());
+        }
+        else if (this.drawing && levelLayer.hasFinishedWaiting())
+        {
+            drawing = false;
+            drawnRectangle = levelLayer.endDrawRectangle();
 
-                if (this.drawnRectangle != null)
-                {
-                    this.waitStartTime = System.currentTimeMillis();
-                }
+            if (drawnRectangle != null)
+            {
+                levelLayer.setWaitStartTime(System.currentTimeMillis());
             }
+        }
+        else
+        {
+            this.drawing = false;
         }
 
         return EnumSet.of(InterfaceEvent.OK);
@@ -168,19 +168,22 @@ public class Game extends Interface
     public void render(Graphics g)
     {
         super.render(g);
-        for (Layer l : this.layers.values())
-        {
-            l.render(g);
-        }
+
+        levelLayer.render(g);
+        scoreLayer.render(g);
+        activePlayerLevel.render(g);
 
         namefield.render(g);
 
-        if (waitStartTime > 0)
+        if (!levelLayer.hasFinishedWaiting())
         {
             g.setColor(myColor.BLACK());
-            float rad = (float) (Math.PI/2 + 2*Math.PI * (WAITING_TIME - (System.currentTimeMillis() - waitStartTime)) /WAITING_TIME);
+            float rad = (float) (Math.PI/2 + 2*Math.PI * (WAITING_TIME - (System.currentTimeMillis() - levelLayer.getWaitStartTime())) /WAITING_TIME);
             g.fillCircleFixed(waitingCircle, 60, (float) -Math.PI/2, -rad);
         }
+
+        if (scoresSummary != null)
+            scoresSummary.render(g);
     }
 
     /**
@@ -208,8 +211,8 @@ public class Game extends Interface
             }
         } while (this.players[this.currentPlayer].hasLost() && !this.gameFinished);
 
-        ((ActivePlayer) this.layers.get("activePlayer")).setPlayerName(this.players[this.currentPlayer].getName());
-        ((TextScore) this.layers.get("score")).setScore(this.players[this.currentPlayer].getScore());
+        activePlayerLevel.setPlayerName(this.players[this.currentPlayer].getName());
+        scoreLayer.setScore(this.players[this.currentPlayer].getScore());
     }
 
     /**
@@ -269,43 +272,39 @@ public class Game extends Interface
 
     /**
      * Tasks to do before ending the game (scores summary, highscores)
-     * 
+     *
      * @return true when the tasks are finished
      */
     private Set<InterfaceEvent> finishGame(Input input)
     {
-        if (!this.highScoresRecorded)
+        if (!highScoresRecorded)
         {
-            Level level = (Level) this.layers.get("level");
-
-            if (this.enteringName < 0)
+            if (enteringName < 0)
             {
-                this.enteringName = -this.enteringName - 1;
-
-                level.getHighScores().addScore(new Score(this.players[this.enteringName].getName(), this.players[this.enteringName].getScore()));
-
-                this.enteringName++;
+                enteringName = -enteringName - 1;
+                levelLayer.getHighScores().addScore(new Score(players[enteringName].getName(), players[enteringName].getScore()));
+                enteringName++;
             }
 
-            while (this.enteringName < this.players.length && !level.getHighScores().isHighScore(this.players[this.enteringName].getScore()))
+            while (enteringName < players.length && !levelLayer.getHighScores().isHighScore(players[enteringName].getScore()))
             {
                 this.enteringName++;
             }
 
-            this.enteringName++;
+            enteringName++;
 
-            if (this.enteringName > this.players.length)
+            if (this.enteringName > players.length)
             {
-                this.enteringName = -1;
-                this.highScoresRecorded = true;
-                this.layers.put("scoresSummary", new ScoresSummary(this.players));
+                enteringName = -1;
+                highScoresRecorded = true;
+                scoresSummary = new ScoresSummary(players);
             }
 
             return EnumSet.of(InterfaceEvent.OK);
         }
         else
         {
-            return ((ScoresSummary) this.layers.get("scoresSummary")).handleEvents(input);
+            return scoresSummary.handleEvents(input);
         }
     }
 }

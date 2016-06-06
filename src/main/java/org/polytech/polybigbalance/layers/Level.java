@@ -1,92 +1,172 @@
-/**
- * @author Hugo PIGEON
- */
-
 package org.polytech.polybigbalance.layers;
 
+/**
+ * Inspired form Level
+ */
+
 import org.cora.graphics.graphics.Graphics;
-import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
-import org.cora.maths.collision.CollisionDetectorNoT;
 import org.cora.physics.Engine.Engine;
+import org.cora.physics.entities.Particle;
 import org.cora.physics.entities.RigidBody;
 import org.cora.physics.entities.material.MaterialType;
 import org.cora.physics.force.Gravity;
-import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
+import org.polytech.polybigbalance.game.Camera;
 import org.polytech.polybigbalance.score.HighScores;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * General definition of a level
  */
 public abstract class Level extends Layer
 {
-    private final int BASE;
-    private final Vector2D MIN_SIZE = new Vector2D(2.0f, 2.0f);
 
-    // baseRectangles are allowed to touch the ground
-    protected Map<Rectangle, RigidBody> baseRectangles;
-    protected Map<Rectangle, RigidBody> playerRectangles;
-    private Rectangle groundForm;
+    private static final int DEFAULT_MIN_SIZE = 10;
+    private static final long DEFAULT_WAIT_TIME = 5000; // 5 sec
+
+    //private final int MIN_WIDTH;
+    private float minSurface;
+    private float minSizeWidth = 2.0f;
+    private float minSizeheight = 2.0f;
 
     private Rectangle drawingRectangle;
     private Vector2D drawingFirstPoint;
+    private long waitTime;
 
-    protected Engine physEngine;
+    // Base entities on the ground
+    protected Set<Particle> baseEntities;
+    protected Set<Particle> playerEntities;
+    protected Set<Particle> savedBaseEntities;
+    protected Set<Particle> savedPlayerEntities;
+
+
+    protected long waitStartTime;
+    protected boolean paused;
+
+    protected Engine engine;
+    protected Camera camera;
+
     protected Gravity gravity;
-
     protected MaterialType sticking;
 
     protected HighScores highScores;
 
-    /**
-     * @param base
-     *            value use to calculate the maximum and minimum sizes of drawn
-     *            playerRectangles
-     */
-    public Level(int base)
+    public Level(float minSurface)
     {
         super();
-        super.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 
-        this.playerRectangles = new HashMap<>();
-        this.baseRectangles = new HashMap<>();
+        baseEntities = new HashSet<Particle>();
+        playerEntities = new HashSet<Particle>();
 
-        this.BASE = base;
+        engine = new Engine();
+        engine.setMinDt(0.02f);
+        engine.setThresholdSideDetection(0.06411002f);
+        engine.setDefaultFriction(0.24001002f);
+        gravity = new Gravity(new Vector2D(0, 200.0f));
+        sticking = new MaterialType(0.01f);
+        sticking.addMaterialInformation(sticking, 0.0f, 0.24001002f, 1.0f);
 
-        this.physEngine = new Engine();
-        this.physEngine.setMinDt(0.02f);
-        this.physEngine.setThresholdSideDetection(0.06411002f);
-        this.physEngine.setDefaultFriction(0.24001002f);
-        this.gravity = new Gravity(new Vector2D(0, 200.0f));
-        this.sticking = new MaterialType(0.01f);
-        this.sticking.addMaterialInformation(sticking, 0.0f, 0.24001002f, 1.0f);
+        savedBaseEntities = new HashSet<Particle>();
+        savedPlayerEntities = new HashSet<Particle>();
+        paused = false;
+
+        camera = new Camera();
+        waitStartTime = 0;
+        waitTime = DEFAULT_WAIT_TIME;
+
+        this.minSurface = minSurface;
     }
 
     /**
-     * Adds the starting elements of the level
+     * Initialize data of layer
+     * @param x top left coordinate
+     * @param y top left coordinate
+     * @param width length of layer
+     * @param height length of layer
      */
-    public void initialize()
+    @Override
+    public void initialize(float x, float y, float width, float height)
     {
-        this.groundForm = new Rectangle(new Vector2D(Constants.WINDOW_WIDTH / 2, Constants.WINDOW_HEIGHT - 25), new Vector2D(Constants.WINDOW_WIDTH + 1, 51), 0);
-        this.groundForm.updateCenter();
+        super.initialize(x, y, width, height);
+        camera.initialize(x, y, width, height);
+    }
 
-        RigidBody ground = new RigidBody();
-        ground.setForm(this.groundForm);
-        ground.setPosition(this.groundForm.getCenter());
-        ground.setMaterialType(sticking);
-        this.physEngine.addElement(ground);
+    public void render(Graphics g, Set<Particle> inScreen)
+    {
+        for (Particle p : inScreen)
+        {
+            g.setColor(0.2f, 0.2f, 1.0f);
+            g.fillForm(p.getForm());
+            g.setColor(0.0f, 0.0f, 0.0f);
+            g.drawForm(p.getForm());
+        }
+
+        if (drawingRectangle != null)
+        {
+            if (isRectangleSizeValid(drawingRectangle.getWidth(), drawingRectangle.getHeight())
+                    && !isRectangleColliding(drawingRectangle))
+            {
+                if (waitStartTime == 0)
+                    g.setColor(0.0f, 1.0f, 1.0f);
+                else
+                    g.setColor(0.0f, 0.0f, 1.0f);
+            }
+            else
+            {
+                g.setColor(1.0f, 0.2f, 0.2f);
+            }
+
+            g.fillForm(this.drawingRectangle);
+            g.setColor(0.0f, 0.0f, 0.0f);
+            g.drawForm(this.drawingRectangle);
+        }
+        g.setLineSize(1);
+    }
+
+    @Override
+    public void render(Graphics g)
+    {
+        camera.set(g);
+        Set<Particle> inScreen = engine.getCollisionsQTSet(camera.getRec());
+        render(g, inScreen);
+        camera.unset(g);
+    }
+
+    @Override
+    public void update(float dt)
+    {
+        if (!paused)
+            engine.update(dt);
+    }
+
+    public void resetRectangle()
+    {
+        this.drawingRectangle = null;
+        this.drawingFirstPoint = null;
+    }
+
+    /**
+     * @return ground collision test
+     */
+    public abstract boolean checkRectangleFallen();
+
+    public HighScores getHighScores()
+    {
+        return highScores;
+    }
+
+    public void setHighScores(HighScores hs)
+    {
+        this.highScores = hs;
     }
 
     /**
      * Allows the user to draw a rectangle
-     * 
+     *
      * @param position
      *            mouse cursor's position
      */
@@ -107,188 +187,53 @@ public abstract class Level extends Layer
         }
     }
 
-    public void resetRectangle()
-    {
-        this.drawingRectangle = null;
-        this.drawingFirstPoint = null;
-    }
-
     /**
      * Ends the drawing of the new rectangle and adds it to the list of existing
      * playerRectangles
-     * 
+     *
      * @return the drawn rectangle, or null if the playerRectangles has not been
      *         added
      */
     public Rectangle endDrawRectangle()
     {
         Rectangle drawnRectangle = null;
-
-        if (this.drawingRectangle != null)
+        if (drawingRectangle != null)
         {
-            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle))
+            if (this.isRectangleSizeValid(drawingRectangle.getWidth(), drawingRectangle.getHeight()) && !isRectangleColliding(this.drawingRectangle))
             {
-                this.checkRectangleFallen();
-
-                this.drawingRectangle.updateCenter();
-
                 RigidBody rect = new RigidBody();
-                rect.setForm(this.drawingRectangle);
-                rect.setPosition(this.drawingRectangle.getCenter());
+                rect.setForm(drawingRectangle);
+                rect.setPosition(drawingRectangle.getCenter());
                 rect.setMaterialType(sticking);
                 rect.initPhysics();
 
-                this.physEngine.addElement(rect);
-                this.physEngine.addForce(rect, this.gravity);
+                engine.addElement(rect);
+                engine.addForce(rect, gravity);
 
-                this.playerRectangles.put(this.drawingRectangle, rect);
+                playerEntities.add(rect);
 
-                drawnRectangle = this.drawingRectangle;
+                drawnRectangle = drawingRectangle;
             }
 
-            this.drawingRectangle = null;
+            drawingRectangle = null;
         }
-
         return drawnRectangle;
-    }
-
-    @Override
-    public void render(Graphics g)
-    {
-        g.setLineSize(1);
-
-        g.setColor(0.2f, 0.5f, 0.2f);
-        g.fillForm(this.groundForm);
-        g.setColor(0.0f, 0.0f, 0.0f);
-        g.drawForm(this.groundForm);
-
-        for (Form f : this.baseRectangles.keySet())
-        {
-            g.setColor(0.2f, 0.2f, 1.0f);
-            g.fillForm(f);
-            g.setColor(0.0f, 0.0f, 0.0f);
-            g.drawForm(f);
-        }
-
-        for (Form f : this.playerRectangles.keySet())
-        {
-            g.setColor(0.2f, 0.2f, 1.0f);
-            g.fillForm(f);
-            g.setColor(0.0f, 0.0f, 0.0f);
-            g.drawForm(f);
-        }
-
-        if (this.drawingRectangle != null)
-        {
-            if (this.isRectangleSizeValid(this.drawingRectangle.getWidth(), this.drawingRectangle.getHeight()) && !this.isRectangleColliding(this.drawingRectangle))
-            {
-                g.setColor(0.0f, 1.0f, 1.0f);
-            }
-            else
-            {
-                g.setColor(1.0f, 0.2f, 0.2f);
-            }
-
-            g.fillForm(this.drawingRectangle);
-            g.setColor(0.0f, 0.0f, 0.0f);
-            g.drawForm(this.drawingRectangle);
-        }
-        g.setLineSize(1);
-    }
-
-    @Override
-    public void update(float dt)
-    {
-        this.physEngine.update(dt);
-    }
-
-    /**
-     * Looks for rectangles which are touching the ground and put them in base
-     * rectangles
-     * 
-     * @return the number of rectangles that are touching the ground
-     */
-    public int checkRectangleFallen()
-    {
-        List<Rectangle> toRemove = new LinkedList<>();
-
-        for (Rectangle r : this.playerRectangles.keySet())
-        {
-            Form f = r.clone();
-            f.scale(1.01f);
-
-            if (CollisionDetectorNoT.isColliding(this.groundForm, f))
-            {
-                this.baseRectangles.put(r, this.playerRectangles.get(r));
-                toRemove.add(r);
-            }
-        }
-
-        for (Rectangle r : toRemove)
-        {
-            this.playerRectangles.remove(r);
-        }
-
-        return toRemove.size();
-    }
-
-    public HighScores getHighScores()
-    {
-        return highScores;
-    }
-
-    public void setHighScores(HighScores hs)
-    {
-        this.highScores = hs;
-    }
-
-    /**
-     * Initializes the rectangles created when the game is started
-     * 
-     * @param rectangles
-     *            the rectangles to initialize
-     */
-    protected void initRectangles(Map<Rectangle, RigidBody> rectangles)
-    {
-        for (Rectangle rectForm : rectangles.keySet())
-        {
-            rectForm.updateCenter();
-            RigidBody rect = rectangles.get(rectForm);
-
-            rect.setForm(rectForm);
-            rect.setPosition(rectForm.getCenter());
-            rect.setMaterialType(sticking);
-            rect.initPhysics(100);
-            // float mass = rect.getMass();
-
-            this.physEngine.addElement(rect);
-            this.physEngine.addForce(rect, this.gravity);
-        }
     }
 
     /**
      * Tells if the rectangle is not too large
-     * 
+     *
      * @param width
      *            rectangle's width
      * @param height
      *            rectangle's height
      * @return true if the rectangle's size is valid
      */
-    private boolean isRectangleSizeValid(float width, float height)
+    public boolean isRectangleSizeValid(float width, float height)
     {
-        if (width > MIN_SIZE.x && height > MIN_SIZE.y)
-        {
-            if (width * height < this.BASE * this.BASE)
-            {
-                if (width < this.BASE * 2 && height < this.BASE * 2)
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return (width > minSizeWidth && height > minSizeheight) &&
+                (width * height < minSurface * minSurface) &&
+                (width < minSurface * 2 && height < minSurface * 2);
     }
 
     /**
@@ -300,22 +245,65 @@ public abstract class Level extends Layer
      */
     private boolean isRectangleColliding(Rectangle rect)
     {
-        for (Rectangle r : this.baseRectangles.keySet())
+        return engine.isColliding(rect);
+    }
+
+    /**
+     * Save state of level entities
+     */
+    public void saveEntities()
+    {
+        savedBaseEntities.clear();
+        savedPlayerEntities.clear();
+
+        for (Particle p : baseEntities)
         {
-            if (CollisionDetectorNoT.isColliding(rect, r))
-            {
-                return true;
-            }
+            savedBaseEntities.add((Particle) p.clone());
         }
 
-        for (Rectangle r : this.playerRectangles.keySet())
+        for (Particle p : playerEntities)
         {
-            if (CollisionDetectorNoT.isColliding(rect, r))
-            {
-                return true;
-            }
+            savedPlayerEntities.add((Particle) p.clone());
         }
+    }
 
-        return CollisionDetectorNoT.isColliding(rect, this.groundForm);
+    public long getWaitStartTime()
+    {
+        return waitStartTime;
+    }
+
+    public void setWaitStartTime(long waitStartTime)
+    {
+        this.waitStartTime = waitStartTime;
+    }
+
+    public long getWaiTime()
+    {
+        return waitStartTime;
+    }
+
+    public void setWaitTime(long waitTime)
+    {
+        this.waitTime = waitTime;
+    }
+
+    public boolean hasFinishedWaiting()
+    {
+        return waitStartTime == 0;
+    }
+
+    public long getEndWaiting()
+    {
+        return waitStartTime + waitTime;
+    }
+
+    public boolean isPaused()
+    {
+        return paused;
+    }
+
+    public void setPaused(boolean paused)
+    {
+        this.paused = paused;
     }
 }
