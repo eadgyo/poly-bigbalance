@@ -146,19 +146,27 @@ public class Game extends Interface
             drawing = true;
             levelLayer.drawRectangle(input.getMousePosV());
         }
-        else if (this.drawing && levelLayer.hasFinishedWaiting())
+        else if (drawing)
         {
-            drawing = false;
-            drawnRectangle = levelLayer.endDrawRectangle();
-
-            if (drawnRectangle != null)
+            if (levelLayer.hasFinishedWaiting())
             {
-                levelLayer.setWaitStartTime(System.currentTimeMillis());
+                drawing = false;
+                drawnRectangle = levelLayer.endDrawRectangle();
+
+                if (drawnRectangle != null)
+                {
+                    levelLayer.setWaitStartTime(System.currentTimeMillis());
+                }
+            }
+            else
+            {
+                drawing = false;
+                levelLayer.resetRectangle();
             }
         }
         else
         {
-            this.drawing = false;
+            drawing = false;
         }
 
         return EnumSet.of(InterfaceEvent.OK);

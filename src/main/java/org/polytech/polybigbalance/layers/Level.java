@@ -113,7 +113,7 @@ public abstract class Level extends Layer
                 if (waitStartTime == 0)
                     g.setColor(0.0f, 1.0f, 1.0f);
                 else
-                    g.setColor(0.0f, 0.0f, 1.0f);
+                    g.setColor(1.0f, 0.5f, 0.5f);
             }
             else
             {

@@ -31,6 +31,11 @@ public class Level2 extends LevelGround
                 new Vector2D(width / 2 - 100, height - 75),
                 new Vector2D(50, 50), 0.0f));
 
+
+        recs.add(new Rectangle(
+                new Vector2D(width / 2 + 200, height - 75),
+                new Vector2D(50, 50), 0.0f));
+
         for (Rectangle rec : recs)
         {
             RigidBody r = new RigidBody();
@@ -53,10 +58,7 @@ public class Level2 extends LevelGround
         recs.add(new Rectangle(
                 new Vector2D(width / 2 - 100, height - 175),
                 new Vector2D(50, 50), 0.0f));
-
-        recs.add(new Rectangle(
-                new Vector2D(width / 2 + 200, height - 75),
-                new Vector2D(50, 50), 0.0f));
+;
 
         recs.add(new Rectangle(
                 new Vector2D(width / 2 + 200, height - 125),

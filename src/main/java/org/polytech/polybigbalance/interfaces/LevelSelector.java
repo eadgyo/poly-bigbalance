@@ -1,8 +1,5 @@
 package org.polytech.polybigbalance.interfaces;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import org.cora.graphics.elements.TextButton;
 import org.cora.graphics.font.Alignement;
 import org.cora.graphics.font.TextPosition;
@@ -14,6 +11,9 @@ import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.game.LevelPreview;
 import org.polytech.polybigbalance.level.LevelFactory;
 import org.polytech.polybigbalance.score.HighScoresManager;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * 
@@ -181,10 +181,7 @@ public class LevelSelector extends Back
     {
         for (int i = 0; i < getPageSize(); i++)
         {
-            if (this.selected != getButtonIndex(i))
-            {
-                this.level[getButtonIndex(i)].update(dt);
-            }
+            this.level[getButtonIndex(i)].update(dt);
         }
         return EnumSet.of(InterfaceEvent.OK);
     }

@@ -1,7 +1,6 @@
 package org.polytech.polybigbalance.layers;
 
 import org.cora.graphics.graphics.Graphics;
-import org.cora.graphics.graphics.myColor;
 import org.cora.maths.Rectangle;
 import org.cora.maths.sRectangle;
 import org.cora.physics.entities.Particle;
@@ -48,8 +47,6 @@ public class LevelGround extends Level
     @Override
     public void render(Graphics g, Set<Particle> inScreen)
     {
-        g.translate(100f, 0);
-        g.scale(0.5f);
         super.render(g, inScreen);
         if (inScreen.contains(ground))
         {
@@ -58,16 +55,6 @@ public class LevelGround extends Level
             g.setColor(0.0f, 0.0f, 0.0f);
             g.drawForm(ground.getForm());
         }
-        g.setColor(myColor.RED());
-        sRectangle rec = (sRectangle) engine.getQTBound().clone();
-
-        // Top y
-        float groundY = ground.getForm().getY(2);
-        float height = rec.getMaxY() - groundY;
-        rec.set(rec.getCenterX(), rec.getCenterY() + height, rec.getWidth(), Math.abs(height));
-        g.fillForm(rec);
-        g.scale(2f);
-        g.translate(-100f, 0);
     }
 
     /**
@@ -80,8 +67,8 @@ public class LevelGround extends Level
 
         // Top y
         float groundY = ground.getForm().getY(0);
-        float height = Math.abs(rec.getMaxY() - groundY);
-        rec.set(rec.getCenterX(), rec.getCenterY() - height*0.5f, rec.getWidth(), height);
+        float height = rec.getMaxY() - groundY;
+        rec.set(rec.getCenterX(), groundY + height*0.5f, rec.getWidth(), Math.abs(height));
 
         // Don't forget last collision
         Set<Particle> collidings = engine.getWereCollidingWith(ground);
