@@ -70,7 +70,7 @@ public class Game extends Interface
         drawing = false;
 
         level.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-        level.startCameraToLevel();
+        level.startIntroAnimation();
 
         levelLayer = level;
         scoreLayer = new TextScore(Constants.WINDOW_WIDTH / 2, 20, 200);
@@ -143,7 +143,7 @@ public class Game extends Interface
             return finishGame(input);
         }
 
-        if (input.isMouseDown(Input.MOUSE_BUTTON_1))
+        if (input.isMouseDown(Input.MOUSE_BUTTON_1) && levelLayer.ready())
         {
             drawing = true;
             levelLayer.drawRectangle(input.getMousePosV());

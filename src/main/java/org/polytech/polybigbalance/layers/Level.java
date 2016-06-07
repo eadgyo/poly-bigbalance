@@ -5,6 +5,7 @@ package org.polytech.polybigbalance.layers;
  */
 
 import org.cora.graphics.graphics.Graphics;
+import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
 import org.cora.physics.Engine.Engine;
@@ -13,13 +14,16 @@ import org.cora.physics.entities.RigidBody;
 import org.cora.physics.entities.material.MaterialType;
 import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.base.Layer;
-import org.polytech.polybigbalance.game.Camera;
-import org.polytech.polybigbalance.game.key.KeyType;
-import org.polytech.polybigbalance.game.key.PosKey;
-import org.polytech.polybigbalance.game.key.PosKey2;
+import org.polytech.polybigbalance.game.entity.Camera;
+import org.polytech.polybigbalance.game.entity.Entity;
+import org.polytech.polybigbalance.game.entity.key.KeyType;
+import org.polytech.polybigbalance.game.entity.key.Vector2DKey;
+import org.polytech.polybigbalance.game.entity.key.Vector2DKey1;
+import org.polytech.polybigbalance.interfaces.LevelState;
 import org.polytech.polybigbalance.score.HighScores;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -27,7 +31,6 @@ import java.util.Set;
  */
 public abstract class Level extends Layer
 {
-
     private static final int DEFAULT_MIN_SIZE = 10;
     private static final long DEFAULT_WAIT_TIME = 5000; // 5 sec
 
@@ -40,12 +43,16 @@ public abstract class Level extends Layer
     private Vector2D drawingFirstPoint;
     private long waitTime;
 
+    protected LevelState levelState;
+
+    // Moveable entities
+    protected Set<Entity> decorativeEntities;
+
     // Base entities on the ground
     protected Set<Particle> baseEntities;
     protected Set<Particle> playerEntities;
     protected Set<Particle> savedBaseEntities;
     protected Set<Particle> savedPlayerEntities;
-
 
     protected long waitStartTime;
     protected boolean paused;
@@ -64,13 +71,14 @@ public abstract class Level extends Layer
 
         baseEntities = new HashSet<Particle>();
         playerEntities = new HashSet<Particle>();
+        decorativeEntities = new HashSet<Entity>();
 
         engine = new Engine();
         engine.setMinDt(0.02f);
         engine.setThresholdSideDetection(0.06411002f);
         engine.setDefaultFriction(0.24001002f);
         gravity = new Gravity(new Vector2D(0, 200.0f));
-        sticking = new MaterialType(0.01f);
+        sticking = new MaterialType(0.005f);
         sticking.addMaterialInformation(sticking, 0.0f, 0.24001002f, 1.0f);
 
         savedBaseEntities = new HashSet<Particle>();
@@ -82,6 +90,8 @@ public abstract class Level extends Layer
         waitTime = DEFAULT_WAIT_TIME;
 
         this.minSurface = minSurface;
+
+        levelState = LevelState.INTRO;
     }
 
     /**
@@ -101,23 +111,83 @@ public abstract class Level extends Layer
     /**
      * Start camera translating to level
      */
-    public void startCameraToLevel()
+    public void startIntroAnimation()
     {
         camera.clear();
 
         // Create camera translation
-        PosKey2 start = new PosKey2();
-        PosKey end = new PosKey();
+        Vector2DKey1 start = new Vector2DKey1(KeyType.EXP, new Vector2D(this.getWidth()/2, 1500), -2.0f);
+        Vector2DKey end = new Vector2DKey(new Vector2D(this.getWidth()/2, this.getHeight()/2));
 
-        // Start is a exp with neg factor
-        start.type = KeyType.EXP;
-        start.f1 = -0.5f;
-        start.value = new Vector2D(this.getWidth()/2, 1000);
-        end.type = KeyType.LINEAR;
-        end.value = new Vector2D(this.getWidth()/2, this.getHeight()/2);
-
+        // Create camera animation
         camera.addPosKey(0, start);
-        camera.addPosKey(5, end);
+        camera.addPosKey(2, end);
+
+        // Create decorative elements
+        // Create cloud
+        Form form = new Form();
+        form.addPoint(new Vector2D(0, 100));
+        form.addPoint(new Vector2D(20, 50));
+        form.addPoint(new Vector2D(150, 0));
+        form.addPoint(new Vector2D(250, 5));
+        form.addPoint(new Vector2D(300, 40));
+        form.addPoint(new Vector2D(260, 180));
+        form.addPoint(new Vector2D(160, 220));
+        form.addPoint(new Vector2D(20, 170));
+
+        float xs[] = {this.getWidth()/3   , 500};
+        float xe[] = {-this.getWidth()/3 , this.getWidth()};
+
+        float ys[] = {-this.getHeight() + 100, -100};
+        float ye[] = {-this.getHeight() + 100, -100};
+
+        for (int i = 0; i < xs.length; i++)
+        {
+            Entity cloud = new Entity((Form) form.clone());
+            Vector2DKey startCloud = new Vector2DKey(new Vector2D(xs[i], ys[i]));
+            Vector2DKey endCloud = new Vector2DKey(new Vector2D(xe[i], ye[i]));
+            cloud.addPosKey(0, startCloud);
+            cloud.addPosKey(10, endCloud);
+            cloud.getColor().a = 0.6f;
+            decorativeEntities.add(cloud);
+        }
+    }
+
+    /**
+     * Check if intro animation is finished
+     */
+    public void checkFinishedIntro()
+    {
+        if (decorativeEntities.size() == 0)
+        {
+            levelState = LevelState.PLAY;
+            return;
+        }
+
+        Iterator<Entity> it = decorativeEntities.iterator();
+        if (it.next().hasFinishedPos())
+        {
+            camera.clear();
+            decorativeEntities.clear();
+            levelState = LevelState.PLAY;
+        }
+    }
+
+    public boolean ready()
+    {
+        switch (levelState)
+        {
+            case INTRO:
+                return camera.hasFinishedPos();
+
+            default:
+                return true;
+        }
+    }
+
+    public LevelState getLevelState()
+    {
+        return levelState;
     }
 
     public void render(Graphics g, Set<Particle> inScreen)
@@ -156,6 +226,14 @@ public abstract class Level extends Layer
     public void render(Graphics g)
     {
         camera.set(g);
+        if (levelState == LevelState.INTRO)
+        {
+            for (Entity e : decorativeEntities)
+            {
+                e.render(g);
+            }
+        }
+
         Set<Particle> inScreen = engine.getCollisionsQTSet(camera.getRec());
         render(g, inScreen);
         camera.unset(g);
@@ -166,6 +244,16 @@ public abstract class Level extends Layer
     {
         if (!paused)
             engine.update(dt);
+        if (levelState == LevelState.INTRO)
+        {
+            for (Entity e : decorativeEntities)
+            {
+                e.update(dt);
+            }
+
+            checkFinishedIntro();
+        }
+
         camera.update(dt);
     }
 
