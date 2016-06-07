@@ -3,6 +3,7 @@ package org.polytech.polybigbalance.game;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Vector2D;
 import org.cora.maths.sRectangle;
+import org.polytech.polybigbalance.game.key.*;
 
 import java.util.Map;
 import java.util.NavigableMap;
@@ -21,49 +22,6 @@ import static org.cora.maths.utils.Interpolation.*;
  */
 public class Camera
 {
-    public enum KeyType
-    {
-        LINEAR,
-        EXP,
-        LOG,
-        POW,
-    }
-
-    private abstract class Key
-    {
-        public KeyType type;
-    }
-
-    public class ScaleKey extends Key
-    {
-        public float value;
-    }
-
-    public class ScaleKey1 extends ScaleKey
-    {
-        public float f1;
-    }
-
-    public class ScaleKey2 extends ScaleKey1
-    {
-        public float f2;
-    }
-
-    public class PosKey extends Key
-    {
-        public Vector2D value;
-    }
-
-    public class PosKey1 extends PosKey
-    {
-        public float f1;
-    }
-
-    public class PosKey2 extends PosKey1
-    {
-        public float f2;
-    }
-
     private sRectangle rec;
 
     private NavigableMap<Double, ScaleKey> scaleKeys;
@@ -290,6 +248,7 @@ public class Camera
         // Get current pos
         Vector2D pos = getPosValue(tPos);
         rec.setPos(pos);
+        System.out.println(pos.y);
     }
 
     /**

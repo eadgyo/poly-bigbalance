@@ -14,6 +14,9 @@ import org.cora.physics.entities.material.MaterialType;
 import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.game.Camera;
+import org.polytech.polybigbalance.game.key.KeyType;
+import org.polytech.polybigbalance.game.key.PosKey;
+import org.polytech.polybigbalance.game.key.PosKey2;
 import org.polytech.polybigbalance.score.HighScores;
 
 import java.util.HashSet;
@@ -95,6 +98,28 @@ public abstract class Level extends Layer
         camera.initialize(x, y, width, height);
     }
 
+    /**
+     * Start camera translating to level
+     */
+    public void startCameraToLevel()
+    {
+        camera.clear();
+
+        // Create camera translation
+        PosKey2 start = new PosKey2();
+        PosKey end = new PosKey();
+
+        // Start is a exp with neg factor
+        start.type = KeyType.EXP;
+        start.f1 = -0.5f;
+        start.value = new Vector2D(this.getWidth()/2, 1000);
+        end.type = KeyType.LINEAR;
+        end.value = new Vector2D(this.getWidth()/2, this.getHeight()/2);
+
+        camera.addPosKey(0, start);
+        camera.addPosKey(5, end);
+    }
+
     public void render(Graphics g, Set<Particle> inScreen)
     {
         for (Particle p : inScreen)
@@ -141,6 +166,7 @@ public abstract class Level extends Layer
     {
         if (!paused)
             engine.update(dt);
+        camera.update(dt);
     }
 
     public void resetRectangle()

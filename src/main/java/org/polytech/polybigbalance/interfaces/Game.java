@@ -70,6 +70,8 @@ public class Game extends Interface
         drawing = false;
 
         level.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+        level.startCameraToLevel();
+
         levelLayer = level;
         scoreLayer = new TextScore(Constants.WINDOW_WIDTH / 2, 20, 200);
 
