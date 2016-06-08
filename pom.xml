@@ -6,7 +6,7 @@
 
     <groupId>org.polytech</groupId>
     <artifactId>polybigbalance</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 
     <properties>
         <lwjgl.version>3.0.0b</lwjgl.version>
