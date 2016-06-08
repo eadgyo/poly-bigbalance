@@ -17,10 +17,7 @@ import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
 import org.polytech.polybigbalance.base.Player;
-import org.polytech.polybigbalance.layers.ActivePlayer;
-import org.polytech.polybigbalance.layers.Level;
-import org.polytech.polybigbalance.layers.ScoresSummary;
-import org.polytech.polybigbalance.layers.TextScore;
+import org.polytech.polybigbalance.layers.*;
 import org.polytech.polybigbalance.score.Score;
 
 import java.util.EnumSet;
@@ -53,6 +50,8 @@ public class Game extends Interface
     private boolean highScoresRecorded;
     private Circle waitingCircle;
 
+    private Explosion explosion;
+
     /**
      * @param nbPlayers
      *            number of players
@@ -61,6 +60,7 @@ public class Game extends Interface
      */
     public Game(int nbPlayers, Level level)
     {
+        explosion = new Explosion();
         players = new Player[nbPlayers];
         for (int i = 0; i < nbPlayers; i++)
         {
@@ -120,8 +120,10 @@ public class Game extends Interface
         activePlayerLevel.update(dt);
 
         if (scoresSummary != null)
+        {
             scoresSummary.update(dt);
-
+            explosion.update(dt);
+        }
         return EnumSet.of(InterfaceEvent.OK);
     }
 
@@ -193,7 +195,10 @@ public class Game extends Interface
         }
 
         if (scoresSummary != null)
+        {
             scoresSummary.render(g);
+            explosion.render(g);
+        }
     }
 
     /**
@@ -306,6 +311,7 @@ public class Game extends Interface
             if (this.enteringName > players.length)
             {
                 enteringName = -1;
+                explosion.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
                 highScoresRecorded = true;
                 scoresSummary = new ScoresSummary(players);
             }

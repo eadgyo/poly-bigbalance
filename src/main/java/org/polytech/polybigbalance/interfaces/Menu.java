@@ -10,7 +10,6 @@ import org.cora.graphics.input.Input;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Interface;
 import org.polytech.polybigbalance.base.InterfaceEvent;
-import org.polytech.polybigbalance.layers.Explosion;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -35,8 +34,6 @@ public class Menu extends Interface
     private TextRenderer title;
     private String text;
     private boolean clear;
-
-    private Explosion explosion = new Explosion();
 
     public Menu(final int WIDTH, final int HEIGHT, String[] text, InterfaceEvent[] event)
     {
@@ -76,8 +73,6 @@ public class Menu extends Interface
             this.buttons[i].setHighLightColor(Constants.BUTTON_HIGHLIGHT_COLOR);
             this.buttons[i].setTxt(text[i]);
         }
-
-        explosion.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
     }
 
     // ----- SETTER ----- //
@@ -90,7 +85,6 @@ public class Menu extends Interface
     @Override
     public Set<InterfaceEvent> update(float dt)
     {
-        explosion.update(dt);
         return EnumSet.of(InterfaceEvent.OK);
     }
 
@@ -138,7 +132,5 @@ public class Menu extends Interface
         {
             b.render(g);
         }
-
-        explosion.render(g);
     }
 }
