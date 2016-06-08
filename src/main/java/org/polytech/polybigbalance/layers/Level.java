@@ -116,7 +116,7 @@ public abstract class Level extends Layer
         camera.clear();
 
         // Create camera translation
-        Vector2DKey1 start = new Vector2DKey1(KeyType.EXP, new Vector2D(this.getWidth()/2, 1500), -2.0f);
+        Vector2DKey1 start = new Vector2DKey1(KeyType.EXP, new Vector2D(this.getWidth()/2, 1500), -4.0f);
         Vector2DKey end = new Vector2DKey(new Vector2D(this.getWidth()/2, this.getHeight()/2));
 
         // Create camera animation

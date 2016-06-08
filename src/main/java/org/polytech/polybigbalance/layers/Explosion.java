@@ -11,6 +11,7 @@ import org.cora.physics.entities.RigidBody;
 import org.cora.physics.force.Gravity;
 import org.polytech.polybigbalance.base.Layer;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -35,33 +36,42 @@ public class Explosion extends Layer
         float deltaMax = (float) (5*Math.PI/6);
 
         float velMin = 300;
-        float velMax = 900;
+        float velMax = 600;
 
+        RigidBody body = new RigidBody();
+        Rectangle rec1 = new Rectangle(width*0.5f, height+5, width, 10);
+        body.setForm(rec1);
+        engine.addElement(body);
 
         Gravity gravity = new Gravity(new Vector2D(0, 500));
+
+        Set<Particle> ps = new HashSet();
         for (int i = 0; i < 50; i++)
         {
             float delta = (float) Math.random()*(deltaMax - deltaMin) + deltaMin;
-            float vel = (float) Math.random()*(velMax - velMin) + velMin;
+            float vel   = (float) Math.random()*(velMax - velMin) + velMin;
 
-            System.out.println(vel);
+            Particle p = new Particle();
 
-            RigidBody p = new RigidBody();
-
-            Vector2D velocity = new Vector2D(-(float) Math.cos(delta), -(float) Math.sin(delta));
+            Vector2D velocity = new Vector2D((float) Math.cos(delta), (float) Math.sin(delta));
             velocity.selfMultiply(vel);
             p.setVelocity(velocity);
 
             Rectangle rec = new Rectangle(width/2, height, 6, 6);
             p.setForm(rec);
-            p.setPosition(new Vector2D(width*0.5f, height*1.0f));
-
+            p.setPosition(new Vector2D(width*0.5f, -200));
 
             p.initPhysics(200);
-            engine.addElementNoContact(p);
+            engine.addElement(p);
             engine.addForce(p, gravity);
+            ps.add(p);
         }
 
+        for (Iterator<Particle> iterator = ps.iterator(); iterator.hasNext(); )
+        {
+            Particle next =  iterator.next();
+            next.addNoCollisionElementsFree(ps);
+        }
 
     }
 
@@ -71,7 +81,7 @@ public class Explosion extends Layer
         Set<Particle> r = engine.getAllElements();
         Iterator<Particle> it = r.iterator();
 
-        g.setColor(myColor.BLUE());
+        g.setColor(new myColor(1.0f, 0.95f, 0.1f));
         while (it.hasNext())
         {
             Form f = it.next().getForm();
