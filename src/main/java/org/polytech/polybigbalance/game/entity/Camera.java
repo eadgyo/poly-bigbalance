@@ -1,7 +1,7 @@
 package org.polytech.polybigbalance.game.entity;
 
 import org.cora.graphics.graphics.Graphics;
-import org.cora.maths.Form;
+import org.cora.maths.Vector2D;
 import org.cora.maths.sRectangle;
 
 /**
@@ -25,19 +25,6 @@ public class Camera extends Moveable
     public void initialize(float x, float y, float width, float height)
     {
         ((sRectangle) form).setLeft(x, y, width, height);
-    }
-
-    @Deprecated
-    @Override
-    public Form getForm()
-    {
-        return null;
-    }
-
-    @Deprecated
-    @Override
-    public void setForm(Form form)
-    {
     }
 
     @Override
@@ -76,5 +63,29 @@ public class Camera extends Moveable
     public final sRectangle getRec()
     {
         return (sRectangle) form;
+    }
+
+    /**
+     * Transform mouse in camera coordinates
+     * @param mouse to be transformed
+     */
+    public void selfTransformMouse(Vector2D mouse)
+    {
+        sRectangle rec = (sRectangle) form;
+
+        mouse.translate(rec.getLeft().multiply(-1));
+        mouse.scale(1/rec.getScale(), new Vector2D());
+    }
+
+    /**
+     * Transform mouse in camera coordinates
+     * @param mouse origin coordinates
+     * @return transformed mouse
+     */
+    public Vector2D transformMouse(Vector2D mouse)
+    {
+        Vector2D vec = (Vector2D) mouse.clone();
+        selfTransformMouse(vec);
+        return vec;
     }
 }

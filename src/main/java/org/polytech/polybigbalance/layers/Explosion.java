@@ -30,7 +30,7 @@ public class Explosion extends Layer
     public Explosion()
     {
         launched = false;
-        ps = new HashSet();
+        ps = new HashSet<Particle>();
         engine = new Engine();
         rebound = new MaterialType();
         rebound.addMaterialInformation(rebound, 0.2f, 0.3f, 1.0f);
@@ -113,7 +113,7 @@ public class Explosion extends Layer
         t += dt;
         if (!launched)
         {
-            if (t > 1)
+            if (t > 0.5f)
             {
                 t = 0;
                 launch();
@@ -130,6 +130,5 @@ public class Explosion extends Layer
         }
 
         engine.update(dt);
-
     }
 }

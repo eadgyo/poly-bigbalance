@@ -78,6 +78,29 @@ public abstract class Moveable
     }
 
     /**
+     * Finish all animations
+     */
+    public void finish()
+    {
+        finishRot();
+        finishScale();
+        finishPos();
+    }
+
+    /**
+     * Finish rot
+     */
+    public void finishRot()
+    {
+        Map.Entry<Double, FloatKey> e = getLastRotEntry();
+        if (e != null)
+        {
+            tRot = e.getKey();
+            getForm().setRadians(e.getValue().value);
+        }
+    }
+
+    /**
      * Clear scaling keys
      */
     public void clearRot()
@@ -186,6 +209,19 @@ public abstract class Moveable
                 return powInterpolation(start, end, duration, time, f1, f2);
             default:
                 return startE.getValue().value;
+        }
+    }
+
+    /**
+     * Finish scale
+     */
+    public void finishScale()
+    {
+        Map.Entry<Double, FloatKey> e = getLastScaleEntry();
+        if (e != null)
+        {
+            tScale = e.getKey();
+            getForm().setScale(e.getValue().value);
         }
     }
 
@@ -303,6 +339,19 @@ public abstract class Moveable
 
 
     /**
+     * Finish scale
+     */
+    public void finishPos()
+    {
+        Map.Entry<Double, Vector2DKey> e = getLastPosEntry();
+        if (e != null)
+        {
+            tPos = e.getKey();
+            getForm().setCenter(e.getValue().value);
+        }
+    }
+
+    /**
      * Clear pos keys
      */
     public void clearPos()
@@ -377,8 +426,8 @@ public abstract class Moveable
     public Vector2D getPosValue(double t)
     {
         // Get start and end pos
-        Map.Entry<Double, Vector2DKey> startE = posKeys.floorEntry(tScale);
-        Map.Entry<Double, Vector2DKey> endE = posKeys.higherEntry(tScale);
+        Map.Entry<Double, Vector2DKey> startE = posKeys.floorEntry(tPos);
+        Map.Entry<Double, Vector2DKey> endE = posKeys.higherEntry(tPos);
 
         if (startE == null)
             return form.getCenter();
@@ -660,7 +709,7 @@ public abstract class Moveable
         return posKeys.firstEntry();
     }
 
-    public Map.Entry<Double, Vector2DKey> getFirstLastEntry()
+    public Map.Entry<Double, Vector2DKey> getLastPosEntry()
     {
         return posKeys.lastEntry();
     }

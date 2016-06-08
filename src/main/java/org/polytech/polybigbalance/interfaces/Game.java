@@ -145,7 +145,12 @@ public class Game extends Interface
             return finishGame(input);
         }
 
-        if (input.isMouseDown(Input.MOUSE_BUTTON_1) && levelLayer.ready())
+        if (input.isMouseScrolling())
+        {
+            levelLayer.move(input.getMouseWheelY());
+            input.clearMouse();
+        }
+        else if (input.isMouseDown(Input.MOUSE_BUTTON_1) && levelLayer.ready())
         {
             drawing = true;
             levelLayer.drawRectangle(input.getMousePosV());

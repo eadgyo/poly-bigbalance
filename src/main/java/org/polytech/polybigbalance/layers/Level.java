@@ -158,31 +158,45 @@ public abstract class Level extends Layer
      */
     public void checkFinishedIntro()
     {
-        if (decorativeEntities.size() == 0)
+        if (levelState == LevelState.INTRO && camera.hasFinishedPos())
         {
             levelState = LevelState.PLAY;
-            return;
+            camera.clear();
         }
 
         Iterator<Entity> it = decorativeEntities.iterator();
         if (it.next().hasFinishedPos())
         {
-            camera.clear();
             decorativeEntities.clear();
             levelState = LevelState.PLAY;
         }
     }
 
+    public void move(float a)
+    {
+        if (levelState == LevelState.INTRO)
+            return;
+
+        // We first check if we are allowed to move up
+        // Just check the highest element from quadTree
+        // code...
+        camera.finishPos();
+        camera.clearPos();
+
+        Vector2D vec = camera.getRec().getCenter();
+
+        // Create camera translation
+        Vector2DKey start = new Vector2DKey(KeyType.LINEAR, vec);
+        Vector2DKey end = new Vector2DKey(vec.add(new Vector2D(0, 100 * a)));
+
+        // Create camera animation
+        camera.addPosKey(0, start);
+        camera.addPosKey(0.10f, end);
+    }
+
     public boolean ready()
     {
-        switch (levelState)
-        {
-            case INTRO:
-                return camera.hasFinishedPos();
-
-            default:
-                return true;
-        }
+        return levelState == LevelState.PLAY;
     }
 
     public LevelState getLevelState()
@@ -226,7 +240,7 @@ public abstract class Level extends Layer
     public void render(Graphics g)
     {
         camera.set(g);
-        if (levelState == LevelState.INTRO)
+        if (decorativeEntities.size() != 0)
         {
             for (Entity e : decorativeEntities)
             {
@@ -244,7 +258,7 @@ public abstract class Level extends Layer
     {
         if (!paused)
             engine.update(dt);
-        if (levelState == LevelState.INTRO)
+        if (decorativeEntities.size() != 0)
         {
             for (Entity e : decorativeEntities)
             {
@@ -281,11 +295,13 @@ public abstract class Level extends Layer
     /**
      * Allows the user to draw a rectangle
      *
-     * @param position
+     * @param mouse
      *            mouse cursor's position
      */
-    public void drawRectangle(Vector2D position)
+    public void drawRectangle(Vector2D mouse)
     {
+        Vector2D position = camera.transformMouse(mouse);
+
         if (this.drawingRectangle != null)
         {
             Vector2D center = new Vector2D((this.drawingFirstPoint.x + position.x) / 2, (this.drawingFirstPoint.y + position.y) / 2);
