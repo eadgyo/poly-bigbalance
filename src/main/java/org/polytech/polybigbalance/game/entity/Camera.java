@@ -10,8 +10,8 @@ import org.cora.maths.sRectangle;
 
 /**
  * Class that handle camera and allow scaling and position transitions
- * Init --> left pos
- * Pos --> center pos
+ * Init -- left pos
+ * Pos -- center pos
  */
 public class Camera extends Moveable
 {
