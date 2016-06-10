@@ -43,14 +43,15 @@ public class Camera extends Moveable
     public void set(Graphics g)
     {
         sRectangle rec = (sRectangle) form;
+        float scale = rec.getScale();
 
         g.pushMatrix();
 
-        g.translate(rec.getCenter());
-        g.scale(rec.getScale());
-        g.translateNeg(rec.getCenter());
+        Vector2D realCenter = rec.getCenter().multiply(scale);
 
-        g.translateNeg(rec.getCenter().add(new Vector2D(-Constants.WINDOW_WIDTH*0.5f, Constants.WINDOW_HEIGHT*(-1.0f + 0.5f*rec.getScale()))));
+        g.translateNeg(realCenter);
+        g.scale(rec.getScale());
+        g.translate(new Vector2D(Constants.WINDOW_WIDTH*0.5f*1/getScale(), Constants.WINDOW_HEIGHT*0.5f*1/getScale()));
     }
 
     /**
