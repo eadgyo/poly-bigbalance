@@ -7,6 +7,7 @@ import org.cora.graphics.font.TextPosition;
 import org.cora.graphics.font.TextRenderer;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.graphics.graphics.myColor;
+import org.cora.maths.Vector2D;
 import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.layers.Level;
 import org.polytech.polybigbalance.score.HighScoresManager;
@@ -31,6 +32,13 @@ public class LevelPreview extends TextButton
 
     private int scoreFieldHeight;
 
+    private final static float FIRST_IA_WAITING_1 = 10;
+    private final static float FIRST_IA_WAITING_2 = 15;
+    private final static float IA_WAITING_1 = 5;
+    private final static float IA_WAITING_2 = 7;
+    private float tIA;
+
+
     private HighScoresManager hsm;
 
     public LevelPreview(int x, int y, int width, int height, Font font, Level level, int id, HighScoresManager hsm)
@@ -50,6 +58,8 @@ public class LevelPreview extends TextButton
         this.scoreText.setVerticalSpacing(24);
         this.id = id;
         this.hsm = hsm;
+
+        tIA = (float) Math.random()*(FIRST_IA_WAITING_2 - FIRST_IA_WAITING_1) + FIRST_IA_WAITING_1;
 
         this.scoreFieldHeight = (this.hsm.getHighScores(this.id).getSize() + 1) * (this.scoreText.getHeight() + this.scoreText.getVerticalSpacing());
     }
@@ -109,6 +119,22 @@ public class LevelPreview extends TextButton
     public void update(float dt)
     {
         level.update(dt);
+
+        // Update IA waiting
+
+        tIA -= dt;
+        if (tIA < 0)
+        {
+            float x = (float) Math.random()*Constants.WINDOW_WIDTH;
+            float y = -200;
+            float w = 50;
+            float h = 100;
+
+            level.drawRectangle(new Vector2D(x, y));
+            level.drawRectangle(new Vector2D(x + w, y + h));
+            level.endDrawRectangle();
+            tIA = (float) Math.random()*(IA_WAITING_2 - IA_WAITING_1) + IA_WAITING_1;;
+        }
     }
 
     public void setHighlighted(boolean isHighlighted)
