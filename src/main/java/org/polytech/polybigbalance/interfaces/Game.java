@@ -28,8 +28,6 @@ import java.util.Set;
  */
 public class Game extends Interface
 {
-    private final static int WAITING_TIME = 5000;
-
     private boolean drawing;
 
     private Level levelLayer;
@@ -38,6 +36,7 @@ public class Game extends Interface
     private ScoresSummary scoresSummary;
 
     private Player[] players;
+    private int lastPlayer;
     private int currentPlayer;
 
     private Rectangle drawnRectangle;
@@ -67,6 +66,7 @@ public class Game extends Interface
             players[i] = new Player("Player " + (i + 1));
         }
         currentPlayer = 0;
+        lastPlayer = 0;
         drawing = false;
 
         level.initialize(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
@@ -113,6 +113,12 @@ public class Game extends Interface
                 levelLayer.setWaitStartTime(0);
                 nextPlayer();
             }
+        }
+        else if (levelLayer.checkRectangleFallen())
+        {
+            players[this.lastPlayer].setLost(true);
+            if (lastPlayer == currentPlayer)
+                nextPlayer();
         }
 
         levelLayer.update(dt);
@@ -195,7 +201,7 @@ public class Game extends Interface
         if (!levelLayer.hasFinishedWaiting())
         {
             g.setColor(myColor.BLACK());
-            float rad = (float) (Math.PI/2 + 2*Math.PI * (WAITING_TIME - (System.currentTimeMillis() - levelLayer.getWaitStartTime())) /WAITING_TIME);
+            float rad = (float) (Math.PI/2 + 2*Math.PI * (levelLayer.getWaiTime() - (System.currentTimeMillis() - levelLayer.getWaitStartTime())) /levelLayer.getWaiTime());
             g.fillCircleFixed(waitingCircle, 60, (float) -Math.PI/2, -rad);
         }
 
@@ -212,7 +218,7 @@ public class Game extends Interface
     private void nextPlayer()
     {
         int cpt = 0;
-
+        lastPlayer = currentPlayer;
         do
         {
             if (this.currentPlayer < this.players.length - 1)
@@ -226,6 +232,9 @@ public class Game extends Interface
 
                 if (cpt > 1)
                 {
+                    levelLayer.restoreEntities();
+                    levelLayer.startEndAnimation();
+
                     this.gameFinished = true;
                 }
             }

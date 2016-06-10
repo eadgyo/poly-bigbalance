@@ -3,6 +3,7 @@ package org.polytech.polybigbalance.game.entity;
 import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Vector2D;
 import org.cora.maths.sRectangle;
+import org.polytech.polybigbalance.Constants;
 
 /**
  * Created by ronan-j on 05/06/16. Mamene
@@ -15,6 +16,7 @@ import org.cora.maths.sRectangle;
  */
 public class Camera extends Moveable
 {
+    private Vector2D vec;
 
     public Camera()
     {
@@ -24,7 +26,9 @@ public class Camera extends Moveable
 
     public void initialize(float x, float y, float width, float height)
     {
-        ((sRectangle) form).setLeft(x, y, width, height);
+        ((sRectangle) form).set(x, y, width, height);
+
+        vec = new Vector2D(-width*0.5f, -height*0.5f);
     }
 
     @Override
@@ -41,8 +45,12 @@ public class Camera extends Moveable
         sRectangle rec = (sRectangle) form;
 
         g.pushMatrix();
-        g.translate(rec.getLeft());
+
+        g.translate(rec.getCenter());
         g.scale(rec.getScale());
+        g.translateNeg(rec.getCenter());
+
+        g.translateNeg(rec.getCenter().add(new Vector2D(-Constants.WINDOW_WIDTH*0.5f, Constants.WINDOW_HEIGHT*(-1.0f + 0.5f*rec.getScale()))));
     }
 
     /**
@@ -73,7 +81,7 @@ public class Camera extends Moveable
     {
         sRectangle rec = (sRectangle) form;
 
-        mouse.translate(rec.getLeft().multiply(-1));
+        mouse.translate(rec.getLeft());
         mouse.scale(1/rec.getScale(), new Vector2D());
     }
 

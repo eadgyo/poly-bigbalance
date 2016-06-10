@@ -25,9 +25,9 @@ public abstract class Moveable
     private Map.Entry<Double, FloatKey> currentScale;
     private Map.Entry<Double, Vector2DKey> currentPos;
 
-    private double tRot;
-    private double tScale;
-    private double tPos;
+    protected double tRot;
+    protected double tScale;
+    protected double tPos;
 
     public Moveable()
     {
@@ -165,6 +165,11 @@ public abstract class Moveable
         return rotKeys.remove(t);
     }
 
+    public float getOmega()
+    {
+        return form.getOmega();
+    }
+
     /**
      * Get rot at given time
      *
@@ -179,7 +184,7 @@ public abstract class Moveable
         Map.Entry<Double, FloatKey> endE = rotKeys.higherEntry(tRot);
 
         if (startE == null)
-            return form.getOmega();
+            return getOmega();
 
         if (endE == null) // Just return start
             return startE.getValue().value;
@@ -290,6 +295,11 @@ public abstract class Moveable
         return scaleKeys.remove(t);
     }
 
+    public float getScale()
+    {
+        return form.getScale();
+    }
+
     /**
      * Get scale at given time
      *
@@ -304,7 +314,7 @@ public abstract class Moveable
         Map.Entry<Double, FloatKey> endE = scaleKeys.higherEntry(tScale);
 
         if (startE == null)
-            return form.getScale();
+            return getScale();
 
         if (endE == null) // Just return start
             return startE.getValue().value;
@@ -339,7 +349,7 @@ public abstract class Moveable
 
 
     /**
-     * Finish scale
+     * Finish Pos
      */
     public void finishPos()
     {
@@ -416,6 +426,11 @@ public abstract class Moveable
         return posKeys.remove(t);
     }
 
+    public Vector2D getPosValue()
+    {
+        return form.getCenter();
+    }
+
     /**
      * Get pos at given time
      *
@@ -430,7 +445,7 @@ public abstract class Moveable
         Map.Entry<Double, Vector2DKey> endE = posKeys.higherEntry(tPos);
 
         if (startE == null)
-            return form.getCenter();
+            return getPosValue();
 
         if (endE == null) // Just return start
             return startE.getValue().value;

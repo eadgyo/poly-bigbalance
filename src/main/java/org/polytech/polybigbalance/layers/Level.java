@@ -8,23 +8,22 @@ import org.cora.graphics.graphics.Graphics;
 import org.cora.maths.Form;
 import org.cora.maths.Rectangle;
 import org.cora.maths.Vector2D;
+import org.cora.maths.sRectangle;
 import org.cora.physics.Engine.Engine;
+import org.cora.physics.Engine.QuadTree;
 import org.cora.physics.entities.Particle;
 import org.cora.physics.entities.RigidBody;
 import org.cora.physics.entities.material.MaterialType;
 import org.cora.physics.force.Gravity;
+import org.polytech.polybigbalance.Constants;
 import org.polytech.polybigbalance.base.Layer;
 import org.polytech.polybigbalance.game.entity.Camera;
 import org.polytech.polybigbalance.game.entity.Entity;
-import org.polytech.polybigbalance.game.entity.key.KeyType;
-import org.polytech.polybigbalance.game.entity.key.Vector2DKey;
-import org.polytech.polybigbalance.game.entity.key.Vector2DKey1;
+import org.polytech.polybigbalance.game.entity.key.*;
 import org.polytech.polybigbalance.interfaces.LevelState;
 import org.polytech.polybigbalance.score.HighScores;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * General definition of a level
@@ -32,7 +31,7 @@ import java.util.Set;
 public abstract class Level extends Layer
 {
     private static final int DEFAULT_MIN_SIZE = 10;
-    private static final long DEFAULT_WAIT_TIME = 5000; // 5 sec
+    private static final long DEFAULT_WAIT_TIME = 1000; // 5 sec
 
     //private final int MIN_WIDTH;
     private float minSurface;
@@ -57,6 +56,7 @@ public abstract class Level extends Layer
     protected long waitStartTime;
     protected boolean paused;
 
+    protected QuadTree savedQuadTree;
     protected Engine engine;
     protected Camera camera;
 
@@ -74,7 +74,7 @@ public abstract class Level extends Layer
         decorativeEntities = new HashSet<Entity>();
 
         engine = new Engine();
-        engine.setMinDt(0.02f);
+        engine.setMinDt(0.015f);
         engine.setThresholdSideDetection(0.06411002f);
         engine.setDefaultFriction(0.24001002f);
         gravity = new Gravity(new Vector2D(0, 200.0f));
@@ -105,7 +105,7 @@ public abstract class Level extends Layer
     public void initialize(float x, float y, float width, float height)
     {
         super.initialize(x, y, width, height);
-        camera.initialize(x, y, width, height);
+        camera.initialize(x + width*0.5f, y + height*0.5f, width, height);
     }
 
     /**
@@ -116,12 +116,12 @@ public abstract class Level extends Layer
         camera.clear();
 
         // Create camera translation
-        Vector2DKey1 start = new Vector2DKey1(KeyType.EXP, new Vector2D(this.getWidth()/2, 1500), -4.0f);
-        Vector2DKey end = new Vector2DKey(new Vector2D(this.getWidth()/2, this.getHeight()/2));
+        Vector2DKey1 start = new Vector2DKey1(KeyType.EXP, new Vector2D(getWidth()*0.5f, -1500), -10.0f);
+        Vector2DKey end = new Vector2DKey(new Vector2D(getWidth()*0.5f, getHeight()*0.5f));
 
         // Create camera animation
         camera.addPosKey(0, start);
-        camera.addPosKey(2, end);
+        camera.addPosKey(1, end);
 
         // Create decorative elements
         // Create cloud
@@ -153,6 +153,44 @@ public abstract class Level extends Layer
         }
     }
 
+    public void startEndAnimation()
+    {
+        camera.clear();
+
+        sRectangle rec = savedQuadTree.getRect();
+
+        camera.clearPos();
+        camera.clearScale();
+
+        float scale = (Constants.WINDOW_HEIGHT)/(rec.getHeight()*1.1f);
+
+        // Create camera translation
+        Vector2DKey1 start = new Vector2DKey1(KeyType.EXP, camera.getRec().getCenter(), -2.0f);
+        Vector2D a = (Vector2D) rec.getCenter().clone();
+        a.x = getWidth()*0.5f;
+        //a.y -= rec.getHeight()*0.025f;
+
+        Vector2DKey end = new Vector2DKey(a);
+
+        // Create camera animation
+        camera.addPosKey(0, start);
+        camera.addPosKey(1, end);
+
+        // Create camera scaling
+        FloatKey1 startScale = new FloatKey1(KeyType.EXP, camera.getRec().getScale(), -2.0f);
+        FloatKey endScale = new FloatKey(scale);
+
+        camera.addScaleKey(0, startScale);
+        camera.addScaleKey(1, endScale);
+
+        levelState = LevelState.END;
+    }
+
+    public sRectangle getLevelBound()
+    {
+        return engine.getQTBound();
+    }
+
     /**
      * Check if intro animation is finished
      */
@@ -174,7 +212,7 @@ public abstract class Level extends Layer
 
     public void move(float a)
     {
-        if (levelState == LevelState.INTRO)
+        if (levelState != LevelState.PLAY)
             return;
 
         // We first check if we are allowed to move up
@@ -183,11 +221,11 @@ public abstract class Level extends Layer
         camera.finishPos();
         camera.clearPos();
 
-        Vector2D vec = camera.getRec().getCenter();
+        Vector2D vec = (Vector2D) camera.getRec().getCenter().clone();
 
         // Create camera translation
-        Vector2DKey start = new Vector2DKey(KeyType.LINEAR, vec);
-        Vector2DKey end = new Vector2DKey(vec.add(new Vector2D(0, 100 * a)));
+        Vector2DKey start = new Vector2DKey1(KeyType.EXP, vec, -50.0f);
+        Vector2DKey end = new Vector2DKey(vec.add(new Vector2D(0, - 100 * a)));
 
         // Create camera animation
         camera.addPosKey(0, start);
@@ -240,15 +278,24 @@ public abstract class Level extends Layer
     public void render(Graphics g)
     {
         camera.set(g);
-        if (decorativeEntities.size() != 0)
+        Set<Particle> inScreen;
+        if (paused)
         {
-            for (Entity e : decorativeEntities)
-            {
-                e.render(g);
-            }
+            inScreen = new HashSet<>();
+            savedQuadTree.retrieve(camera.getRec(), inScreen);
         }
+        else
+        {
+            if (decorativeEntities.size() != 0)
+            {
+                for (Entity e : decorativeEntities)
+                {
+                    e.render(g);
+                }
+            }
 
-        Set<Particle> inScreen = engine.getCollisionsQTSet(camera.getRec());
+            inScreen = engine.getCollisionsQTSet(camera.getRec());
+        }
         render(g, inScreen);
         camera.unset(g);
     }
@@ -257,15 +304,17 @@ public abstract class Level extends Layer
     public void update(float dt)
     {
         if (!paused)
-            engine.update(dt);
-        if (decorativeEntities.size() != 0)
         {
-            for (Entity e : decorativeEntities)
+            engine.update(dt);
+            if (decorativeEntities.size() != 0)
             {
-                e.update(dt);
-            }
+                for (Entity e : decorativeEntities)
+                {
+                    e.update(dt);
+                }
 
-            checkFinishedIntro();
+                checkFinishedIntro();
+            }
         }
 
         camera.update(dt);
@@ -331,6 +380,8 @@ public abstract class Level extends Layer
         {
             if (this.isRectangleSizeValid(drawingRectangle.getWidth(), drawingRectangle.getHeight()) && !isRectangleColliding(this.drawingRectangle))
             {
+                saveEntities();
+
                 RigidBody rect = new RigidBody();
                 rect.setForm(drawingRectangle);
                 rect.setPosition(drawingRectangle.getCenter());
@@ -383,18 +434,46 @@ public abstract class Level extends Layer
      */
     public void saveEntities()
     {
+        Map<Particle, Particle> changes = new HashMap<>();
+        saveEntities(changes);
+        savedQuadTree = (QuadTree) engine.getQuadtree().clone(changes);
+    }
+
+    /**
+     * Save state of level entities
+     */
+    public void saveEntities(Map<Particle, Particle> changes)
+    {
         savedBaseEntities.clear();
         savedPlayerEntities.clear();
 
         for (Particle p : baseEntities)
         {
-            savedBaseEntities.add((Particle) p.clone());
+            Particle p1 = (Particle) p.clone();
+            changes.put(p, p1);
+            savedBaseEntities.add(p1);
         }
 
         for (Particle p : playerEntities)
         {
-            savedPlayerEntities.add((Particle) p.clone());
+            Particle p1 = (Particle) p.clone();
+            changes.put(p, p1);
+            savedPlayerEntities.add(p1);
         }
+    }
+
+    /**
+     * Restore last state of level
+     */
+    public void restoreEntities()
+    {
+        baseEntities.clear();
+        playerEntities.clear();
+
+        baseEntities.addAll(savedBaseEntities);
+        playerEntities.addAll(savedPlayerEntities);
+
+        paused = true;
     }
 
     public long getWaitStartTime()
@@ -409,7 +488,7 @@ public abstract class Level extends Layer
 
     public long getWaiTime()
     {
-        return waitStartTime;
+        return waitTime;
     }
 
     public void setWaitTime(long waitTime)

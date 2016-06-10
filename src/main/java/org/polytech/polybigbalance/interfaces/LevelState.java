@@ -7,4 +7,5 @@ public enum LevelState
 {
     INTRO,
     PLAY,
+    END,
 }

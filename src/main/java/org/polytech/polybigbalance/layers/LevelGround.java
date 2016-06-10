@@ -6,6 +6,7 @@ import org.cora.maths.sRectangle;
 import org.cora.physics.entities.Particle;
 import org.cora.physics.entities.RigidBody;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -14,7 +15,6 @@ import java.util.Set;
 public class LevelGround extends Level
 {
     private Particle ground;
-    private Particle savedGround;
 
     public LevelGround(float minSurface)
     {
@@ -48,6 +48,7 @@ public class LevelGround extends Level
     public void render(Graphics g, Set<Particle> inScreen)
     {
         super.render(g, inScreen);
+
         if (inScreen.contains(ground))
         {
             g.setColor(0.2f, 0.5f, 0.2f);
@@ -55,6 +56,14 @@ public class LevelGround extends Level
             g.setColor(0.0f, 0.0f, 0.0f);
             g.drawForm(ground.getForm());
         }
+
+    }
+
+    @Override
+    public void saveEntities(Map<Particle, Particle> changes)
+    {
+        super.saveEntities(changes);
+        changes.put(ground, ground);
     }
 
     /**
@@ -84,15 +93,5 @@ public class LevelGround extends Level
         collidings.remove(ground);
         collidings.removeAll(baseEntities);
         return (collidings.size() != 0);
-    }
-
-    /**
-     * Save state of level entities
-     */
-    @Override
-    public void saveEntities()
-    {
-        super.saveEntities();
-        savedGround = (Particle) ground.clone();
     }
 }
